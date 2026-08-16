@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kusal Nirmala — AI Researcher &amp; ML Engineer in training</title>
+<meta name="description" content="Portfolio of Kusal Nirmala — BSc (Hons) AI undergraduate, Shotokan karateka, and creator of the KaratePose_AI research project.">
+<meta name="theme-color" content="#17140f">
+
+<!-- Favicon -->
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kusal Nirmala — AI Researcher & ML Engineer in training">
+<meta property="og:description" content="BSc (Hons) AI undergraduate, Shotokan karateka, and creator of the KaratePose_AI research project.">
+<meta property="og:image" content="https://kusalnirmala.dev/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://kusalnirmala.dev">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Kusal Nirmala — AI Researcher & ML Engineer in training">
+<meta name="twitter:description" content="BSc (Hons) AI undergraduate, Shotokan karateka, and creator of the KaratePose_AI research project.">
+<meta name="twitter:image" content="https://kusalnirmala.dev/assets/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,400;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+JP:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#17140f;
+    --ink-2:#1f1b14;
+    --ink-3:#252017;
+    --paper:#f4ead9;
+    --text:#f2e8d8;
+    --text-dim:#b6ab95;
+    --text-faint:#7d745f;
+    --seal:#a8402f;
+    --seal-bright:#c9573f;
+    --gold:#b6913f;
+    --gold-bright:#d4af5f;
+    --line:rgba(244,234,217,0.12);
+    --line-strong:rgba(244,234,217,0.22);
+    --shadow: 0 20px 60px rgba(0,0,0,0.45);
+    --ease: cubic-bezier(.45,0,.2,1);
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--text);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    margin:0;
+    line-height:1.08;
+    letter-spacing:-0.01em;
+  }
+  p{ margin:0; }
+  strong{ color:var(--paper); font-weight:600; }
+  a{ color:inherit; text-decoration:none; }
+  ul{ margin:0; padding:0; list-style:none; }
+  img,svg{ display:block; max-width:100%; }
+  button{ font-family:inherit; }
+
+  ::selection{ background:var(--seal); color:var(--paper); }
+
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--gold-bright);
+    outline-offset:4px;
+    border-radius:2px;
+  }
+
+  .skip-link{
+    position:absolute; left:-9999px; top:0; z-index:1000;
+    background:var(--seal); color:var(--paper); padding:12px 20px;
+    font-family:'IBM Plex Mono', monospace; font-size:13px; text-decoration:none;
+  }
+  .skip-link:focus{ left:12px; top:12px; }
+
+  @media (pointer: fine){
+    body, a, button, .btn{ cursor:none; }
+    input, textarea{ cursor:text; }
+  }
+  .cursor-dot{
+    position:fixed; top:0; left:0; width:6px; height:6px; border-radius:50%;
+    background:var(--gold-bright); pointer-events:none; z-index:9999;
+    transform:translate(-50%,-50%); opacity:0; transition:opacity .2s;
+  }
+  .cursor-ring{
+    position:fixed; top:0; left:0; width:30px; height:30px; border-radius:50%;
+    border:1px solid var(--gold-bright); pointer-events:none; z-index:9998;
+    transform:translate(-50%,-50%); opacity:0;
+    transition:width .25s var(--ease), height .25s var(--ease), border-color .25s var(--ease), opacity .2s;
+  }
+  .cursor-dot.active{ opacity:1; }
+  .cursor-ring.active{ opacity:0.5; }
+  .cursor-ring.hover{ width:50px; height:50px; border-color:var(--seal-bright); opacity:0.85; }
+
+  .kanji{ font-family:'Noto Serif JP', serif; }
+
+  .wrap{
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--gold-bright);
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px;
+    height:1px;
+    background:var(--gold);
+  }
+
+  /* ---------- grain overlay ---------- */
+  .grain{
+    position:fixed; inset:0;
+    z-index:200;
+    pointer-events:none;
+    opacity:0.05;
+    mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- nav ---------- */
+  .nav{
+    position:fixed; top:0; left:0; right:0;
+    z-index:100;
+    padding:22px 0;
+    transition:background .4s var(--ease), padding .4s var(--ease), border-color .4s var(--ease);
+    border-bottom:1px solid transparent;
+  }
+  .nav.scrolled{
+    padding:14px 0;
+    background:rgba(23,20,15,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 32px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:14px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+  }
+  .logo .kanji{ font-size:20px; color:var(--gold-bright); }
+  .nav-links{
+    display:flex;
+    align-items:center;
+    gap:34px;
+  }
+  .nav-links a{
+    position:relative;
+    font-size:13.5px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--text-dim);
+    font-family:'IBM Plex Mono', monospace;
+    padding:4px 0;
+    transition:color .25s var(--ease);
+  }
+  .nav-links a::after{
+    content:"";
+    position:absolute; left:0; bottom:0;
+    width:0; height:1px;
+    background:var(--gold-bright);
+    transition:width .3s var(--ease);
+  }
+  .nav-links a:hover, .nav-links a.active{ color:var(--paper); }
+  .nav-links a:hover::after, .nav-links a.active::after{ width:100%; }
+
+  .nav-toggle{
+    display:none;
+    flex-direction:column;
+    gap:5px;
+    background:none;
+    border:none;
+    cursor:pointer;
+    padding:8px;
+  }
+  .nav-toggle span{
+    width:22px; height:1.5px;
+    background:var(--paper);
+    transition:transform .3s var(--ease), opacity .3s var(--ease);
+  }
+  .nav-toggle.open span:nth-child(1){ transform:translateY(6.5px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2){ opacity:0; }
+  .nav-toggle.open span:nth-child(3){ transform:translateY(-6.5px) rotate(-45deg); }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    overflow:hidden;
+    padding-top:80px;
+  }
+  .hero-kanji{
+    position:absolute;
+    top:50%; right:-4vw;
+    transform:translateY(-50%);
+    font-size:clamp(220px, 42vw, 560px);
+    color:var(--paper);
+    opacity:0.05;
+    user-select:none;
+    pointer-events:none;
+    line-height:1;
+    will-change:transform;
+  }
+  .hero-inner{
+    position:relative;
+    z-index:2;
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 32px;
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:60px;
+  }
+  .hero-text{ flex:1 1 auto; min-width:0; }
+  .hero-portrait{
+    flex:0 0 auto;
+    width:clamp(200px, 25vw, 320px);
+    opacity:0;
+    transform:translateY(20px) scale(0.98);
+    animation: rise .9s var(--ease) .35s forwards;
+  }
+  .hero-portrait-frame{
+    position:relative;
+    border:1px solid var(--line-strong);
+    border-radius:3px;
+    overflow:hidden;
+    box-shadow:0 30px 70px rgba(0,0,0,0.5);
+  }
+  .hero-portrait-frame img{ width:100%; height:auto; display:block; }
+  .hero-portrait-frame::after{
+    content:"";
+    position:absolute; inset:0;
+    border:1px solid rgba(212,175,95,0.22);
+    pointer-events:none;
+  }
+  .portrait-seal{
+    position:absolute; bottom:-14px; right:-14px;
+    width:52px; height:52px;
+    background:var(--ink);
+    border:1px solid var(--gold);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Noto Serif JP', serif;
+    font-size:22px;
+    color:var(--gold-bright);
+    box-shadow:0 8px 20px rgba(0,0,0,0.45);
+  }
+  .hero-kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--gold-bright);
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:22px;
+    opacity:0;
+    transform:translateY(14px);
+    animation:rise .8s var(--ease) .1s forwards;
+  }
+  .hero-kicker .kanji{ font-size:20px; }
+  .hero h1{
+    font-size:clamp(2.6rem, 7.4vw, 6rem);
+    font-weight:600;
+    color:var(--paper);
+    opacity:0;
+    transform:translateY(18px);
+    animation:rise .9s var(--ease) .25s forwards;
+  }
+  .hero-role{
+    margin-top:18px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:clamp(14px, 2vw, 18px);
+    color:var(--seal-bright);
+    min-height:26px;
+    opacity:0;
+    transform:translateY(14px);
+    animation:rise .9s var(--ease) .45s forwards;
+  }
+  .hero-role .cursor{
+    display:inline-block;
+    width:2px; height:1em;
+    background:var(--seal-bright);
+    margin-left:2px;
+    vertical-align:-2px;
+    animation:blink 1s steps(1) infinite;
+  }
+  .hero-tagline{
+    margin-top:30px;
+    max-width:560px;
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:clamp(1.15rem, 2.2vw, 1.5rem);
+    line-height:1.5;
+    color:var(--text);
+    opacity:0;
+    transform:translateY(14px);
+    animation:rise .9s var(--ease) .6s forwards;
+  }
+  .hero-cta{
+    margin-top:44px;
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+    opacity:0;
+    transform:translateY(14px);
+    animation:rise .9s var(--ease) .78s forwards;
+  }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:14px 26px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    border-radius:2px;
+    transition:transform .3s var(--ease), background .3s var(--ease), border-color .3s var(--ease), color .3s var(--ease);
+  }
+  .btn-primary{
+    background:var(--seal);
+    color:var(--paper);
+    border:1px solid var(--seal);
+  }
+  .btn-primary:hover{ background:var(--seal-bright); border-color:var(--seal-bright); transform:translateY(-2px); }
+  .btn-ghost{
+    background:transparent;
+    color:var(--text);
+    border:1px solid var(--line-strong);
+  }
+  .btn-ghost:hover{ border-color:var(--gold-bright); color:var(--gold-bright); transform:translateY(-2px); }
+
+  .scroll-cue{
+    position:absolute;
+    left:32px; bottom:36px;
+    display:flex; align-items:center; gap:12px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+  }
+  .scroll-cue .line{
+    width:1px; height:34px;
+    background:linear-gradient(var(--gold), transparent);
+    animation:pulseLine 2.2s ease-in-out infinite;
+  }
+
+  @keyframes rise{ to{ opacity:1; transform:translateY(0); } }
+  @keyframes blink{ 50%{ opacity:0; } }
+  @keyframes pulseLine{ 0%,100%{ opacity:0.35; } 50%{ opacity:1; } }
+
+  /* ---------- sections ---------- */
+  .section{ padding:130px 0; position:relative; }
+  .section-head{ margin-bottom:56px; }
+  .section-head h2{
+    margin-top:14px;
+    font-size:clamp(1.9rem, 4vw, 2.9rem);
+    color:var(--paper);
+  }
+
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .8s var(--ease), transform .8s var(--ease); }
+  .reveal.in-view{ opacity:1; transform:translateY(0); }
+
+  /* ---------- about ---------- */
+  .about-grid{
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:64px;
+    align-items:start;
+  }
+  .about-text p{
+    font-size:1.05rem;
+    color:var(--text-dim);
+    max-width:56ch;
+  }
+  .about-text p + p{ margin-top:20px; }
+  .about-text strong{ color:var(--paper); font-weight:600; }
+
+  .note-card{
+    background:var(--ink-2);
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:34px;
+    position:relative;
+  }
+  .note-card::before{
+    content:"型";
+    font-family:'Noto Serif JP', serif;
+    position:absolute;
+    top:18px; right:20px;
+    font-size:26px;
+    color:var(--gold);
+    opacity:0.3;
+  }
+  .note-list{ display:flex; flex-direction:column; gap:18px; margin-top:4px; }
+  .note-item{ display:flex; flex-direction:column; gap:2px; }
+  .note-item .k{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-bright);
+  }
+  .note-item .v{ font-size:15px; color:var(--text); }
+
+  /* ---------- timeline ---------- */
+  .timeline{ position:relative; padding-left:56px; }
+  .tl-line{
+    position:absolute; left:17px; top:6px; bottom:6px;
+    width:1px;
+    background:var(--line-strong);
+    transform-origin:top;
+  }
+  .tl-item{ position:relative; padding-bottom:52px; }
+  .tl-item:last-child{ padding-bottom:0; }
+  .tl-index{
+    position:absolute; left:-56px; top:-2px;
+    width:36px; height:36px;
+    border:1px solid var(--gold);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--gold-bright);
+    background:var(--ink);
+  }
+  .tl-content h3{
+    font-size:1.28rem;
+    color:var(--paper);
+    font-weight:600;
+  }
+  .tl-meta{
+    margin-top:8px;
+    font-size:14.5px;
+    color:var(--text-dim);
+    max-width:52ch;
+  }
+  .tl-tag{
+    display:inline-block;
+    margin-top:12px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--seal-bright);
+    border:1px solid var(--seal);
+    padding:4px 10px;
+    border-radius:2px;
+  }
+  .tl-aside{
+    margin-top:38px;
+    margin-left:0;
+    padding:22px 24px;
+    border-left:2px solid var(--gold);
+    background:var(--ink-2);
+    max-width:60ch;
+  }
+  .tl-aside .k{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-bright);
+    display:block;
+    margin-bottom:8px;
+  }
+  .tl-aside p{ font-size:14.5px; color:var(--text-dim); }
+
+  /* ---------- research ---------- */
+  .research{ background:var(--ink-2); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .research-grid{
+    display:grid;
+    grid-template-columns:0.95fr 1.05fr;
+    gap:64px;
+    align-items:center;
+  }
+  .badge{
+    display:inline-block;
+    margin-top:16px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--paper);
+    background:var(--seal);
+    padding:6px 12px;
+    border-radius:2px;
+  }
+  .research-text h2{ margin-top:14px; font-size:clamp(2rem,4vw,2.8rem); color:var(--paper); }
+  .research-text p{
+    margin-top:22px;
+    font-size:1rem;
+    color:var(--text-dim);
+    max-width:52ch;
+  }
+  .research-visual{
+    background:var(--ink);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:24px;
+    position:relative;
+  }
+  .research-visual svg{ width:100%; height:auto; }
+  .visual-caption{
+    margin-top:16px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--text-faint);
+    line-height:1.6;
+  }
+
+  /* ---------- involvement ---------- */
+  .involve-grid{ display:grid; grid-template-columns:0.95fr 1.05fr; gap:64px; align-items:start; }
+  .involve-intro{ font-size:1rem; color:var(--text-dim); max-width:52ch; margin-bottom:36px; }
+  .involve-photo{ border:1px solid var(--line); border-radius:4px; overflow:hidden; }
+  .involve-photo img{ width:100%; height:auto; display:block; }
+  .doc-card{
+    margin-top:28px;
+    background:var(--ink-2);
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:16px 20px;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    transition:border-color .3s var(--ease), transform .3s var(--ease);
+  }
+  .doc-card:hover{
+    border-color:var(--gold-bright);
+    transform:translateY(-2px);
+  }
+  .doc-card-thumb{
+    width:56px;
+    height:74px;
+    border-radius:2px;
+    overflow:hidden;
+    border:1px solid var(--line-strong);
+    flex-shrink:0;
+    cursor:zoom-in;
+    background:#0d0b08;
+    position:relative;
+  }
+  .doc-card-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .doc-card-thumb::after{
+    content:"🔍";
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px;
+    background:rgba(23,20,15,0.65);
+    opacity:0;
+    transition:opacity .2s;
+  }
+  .doc-card-thumb:hover::after{ opacity:1; }
+  .doc-card-info{ flex:1; min-width:0; }
+  .doc-card-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-bright);
+    margin-bottom:4px;
+  }
+  .doc-card-title{
+    font-size:14px;
+    font-weight:600;
+    color:var(--paper);
+    line-height:1.35;
+  }
+  .doc-card-action{
+    margin-top:6px;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--gold);
+    cursor:zoom-in;
+    transition:color .2s;
+  }
+  .doc-card-action:hover{ color:var(--gold-bright); }
+
+  /* ---------- recognition ---------- */
+  .recognition-text p{
+    font-size:1.05rem;
+    color:var(--text-dim);
+    max-width:66ch;
+  }
+  .recognition-text p + p{ margin-top:18px; }
+  .stat-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:40px;
+    margin-top:34px;
+    padding-top:28px;
+    border-top:1px solid var(--line);
+  }
+  .stat{ display:flex; flex-direction:column; gap:6px; }
+  .stat .k{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-bright);
+  }
+  .stat .v{ font-size:15px; color:var(--paper); font-weight:600; }
+
+  .gallery{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:16px;
+    margin-top:52px;
+  }
+  .gallery-item{
+    aspect-ratio:4/3;
+    border:1px dashed var(--line-strong);
+    border-radius:3px;
+    background:var(--ink-2);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    text-align:center;
+    padding:14px;
+    transition:border-color .3s var(--ease), transform .3s var(--ease);
+  }
+  .gallery-item:hover{ border-color:var(--gold); transform:translateY(-3px); }
+  .gallery-item svg{ width:24px; height:24px; color:var(--text-faint); opacity:0.7; }
+  .gallery-item span{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.06em;
+    color:var(--text-faint);
+    line-height:1.5;
+  }
+  .gallery-item img{ width:100%; height:100%; object-fit:cover; border-radius:2px; }
+  .gallery-credit{
+    margin-top:20px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--text-faint);
+  }
+
+  /* ---------- craft / skills ---------- */
+  .craft-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .craft-cat{
+    background:var(--ink);
+    padding:32px 30px;
+  }
+  .craft-cat h3{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-bright);
+    font-weight:500;
+  }
+  .chip-list{ margin-top:20px; display:flex; flex-wrap:wrap; gap:10px; }
+  .chip{
+    font-size:13px;
+    color:var(--text);
+    border:1px solid var(--line-strong);
+    padding:7px 13px;
+    border-radius:2px;
+    transition:border-color .25s var(--ease), transform .25s var(--ease), color .25s var(--ease);
+  }
+  .chip:hover{ border-color:var(--gold-bright); color:var(--gold-bright); transform:translateY(-2px); }
+
+  /* ---------- beyond ---------- */
+  .beyond-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:28px;
+  }
+  .interest-card{
+    background:var(--ink-2);
+    border:1px solid var(--line);
+    padding:34px 28px;
+    border-radius:3px;
+    transition:transform .35s var(--ease), border-color .35s var(--ease);
+  }
+  .interest-card:hover{ transform:translateY(-6px); border-color:var(--gold); }
+  .interest-icon{
+    width:44px; height:44px;
+    color:var(--gold-bright);
+    margin-bottom:22px;
+  }
+  .interest-card h3{ font-size:1.15rem; color:var(--paper); }
+  .interest-card p{ margin-top:12px; font-size:14.5px; color:var(--text-dim); line-height:1.65; }
+
+  /* ---------- contact ---------- */
+  .contact-grid{
+    display:grid;
+    grid-template-columns:1.2fr 0.8fr;
+    gap:64px;
+    align-items:end;
+  }
+  .contact h2{ font-size:clamp(2.1rem,5vw,3.4rem); color:var(--paper); max-width:14ch; }
+  .contact-sub{ margin-top:20px; font-size:1.05rem; color:var(--text-dim); max-width:44ch; }
+  .contact-email{
+    display:inline-flex;
+    align-items:center;
+    gap:14px;
+    margin-top:34px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:clamp(15px,2vw,19px);
+    color:var(--paper);
+    border-bottom:1px solid var(--line-strong);
+    padding-bottom:10px;
+    transition:border-color .3s var(--ease), color .3s var(--ease), gap .3s var(--ease);
+  }
+  .contact-email:hover{ border-color:var(--seal-bright); color:var(--seal-bright); gap:20px; }
+  .elsewhere{ display:flex; flex-direction:column; gap:4px; }
+  .elsewhere .k{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+    margin-bottom:14px;
+  }
+  .elsewhere a{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 0;
+    border-bottom:1px solid var(--line);
+    font-size:14.5px;
+    color:var(--text-dim);
+    transition:color .25s var(--ease), padding-left .25s var(--ease);
+  }
+  .elsewhere a:hover{ color:var(--paper); padding-left:6px; }
+  .elsewhere a span{ color:var(--gold-bright); font-family:'IBM Plex Mono', monospace; }
+
+  /* ---------- contact form ---------- */
+  .contact-form{ margin-top:64px; padding-top:48px; border-top:1px solid var(--line); }
+  .contact-form h3{ font-size:1.1rem; color:var(--paper); font-weight:600; margin-bottom:24px; }
+  .form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; max-width:640px; }
+  .form-field{ display:flex; flex-direction:column; gap:8px; }
+  .form-field.full{ grid-column:1 / -1; }
+  .form-field label{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-faint); }
+  .form-field input, .form-field textarea{
+    background:var(--ink-2); border:1px solid var(--line-strong); color:var(--paper);
+    font-family:'IBM Plex Sans', sans-serif; font-size:14.5px; padding:12px 14px; border-radius:2px;
+    transition:border-color .25s var(--ease);
+  }
+  .form-field input:focus, .form-field textarea:focus{ outline:none; border-color:var(--gold-bright); }
+  .form-field textarea{ resize:vertical; min-height:120px; font-family:inherit; }
+  .form-submit-row{ grid-column:1/-1; display:flex; align-items:center; gap:18px; margin-top:4px; flex-wrap:wrap; }
+  .form-status{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--text-dim); }
+  .form-status.success{ color:var(--gold-bright); }
+  .form-status.error{ color:var(--seal-bright); }
+  .hp-field{ position:absolute; left:-9999px; opacity:0; height:0; width:0; }
+  @media (max-width:600px){ .form-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- footer ---------- */
+  .footer{
+    border-top:1px solid var(--line);
+    padding:34px 0;
+  }
+  .footer-inner{
+    max-width:1120px; margin:0 auto; padding:0 32px;
+    display:flex; align-items:center; justify-content:space-between;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--text-faint);
+  }
+  .footer-inner .kanji{ color:var(--gold); font-size:16px; margin:0 8px; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 880px){
+    .nav-links{
+      position:fixed; top:0; right:0;
+      height:100vh; width:min(78vw,320px);
+      background:var(--ink-2);
+      border-left:1px solid var(--line);
+      flex-direction:column;
+      justify-content:center;
+      align-items:flex-start;
+      gap:28px;
+      padding:0 40px;
+      transform:translateX(100%);
+      transition:transform .4s var(--ease);
+      z-index:99;
+    }
+    .nav-links.open{ transform:translateX(0); }
+    .nav-toggle{ display:flex; }
+    .about-grid, .research-grid, .contact-grid{ grid-template-columns:1fr; }
+    .craft-grid{ grid-template-columns:1fr; }
+    .beyond-grid{ grid-template-columns:1fr; }
+    .gallery{ grid-template-columns:repeat(2, 1fr); }
+    .hero-inner{ flex-direction:column-reverse; gap:40px; }
+    .hero-portrait{ width:min(60vw, 280px); align-self:center; }
+    .section{ padding:90px 0; }
+    .contact-grid{ align-items:start; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; }
+    html{ scroll-behavior:auto; }
+  }
+
+  /* ---------- lightbox modal ---------- */
+  .lightbox-modal{
+    position:fixed; inset:0; z-index:99999;
+    background:rgba(15,13,10,0.92);
+    backdrop-filter:blur(8px);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:24px; opacity:0; pointer-events:none;
+    transition:opacity .3s var(--ease);
+  }
+  .lightbox-modal.active{ opacity:1; pointer-events:auto; }
+  .lightbox-content{
+    position:relative; max-width:min(90vw, 1000px); max-height:85vh;
+    display:flex; flex-direction:column; align-items:center;
+    transform:scale(0.96); transition:transform .3s var(--ease);
+  }
+  .lightbox-modal.active .lightbox-content{ transform:scale(1); }
+  .lightbox-img{
+    max-width:100%; max-height:78vh; object-fit:contain;
+    border-radius:3px; border:1px solid var(--line-strong);
+    box-shadow:0 24px 60px rgba(0,0,0,0.7);
+  }
+  .lightbox-cap{
+    margin-top:14px; font-family:'IBM Plex Mono', monospace; font-size:12px;
+    letter-spacing:0.04em; color:var(--paper); text-align:center; max-width:600px; line-height:1.5;
+  }
+  .lightbox-close{
+    position:absolute; top:20px; right:24px; z-index:10;
+    background:rgba(23,20,15,0.85); border:1px solid var(--line-strong);
+    color:var(--paper); font-size:24px; width:44px; height:44px;
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:all .25s var(--ease);
+  }
+  .lightbox-close:hover{ background:var(--seal); border-color:var(--seal); }
+  [data-zoomable]{ cursor:zoom-in; }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Kusal Nirmala",
+  "url": "https://kusalnirmala.dev",
+  "jobTitle": "AI Researcher & Machine Learning Engineer",
+  "description": "BSc (Hons) Artificial Intelligence undergraduate, Shotokan karateka, and creator of the KaratePose_AI research project.",
+  "sameAs": [
+    "https://github.com/kusalxn0506",
+    "https://www.linkedin.com/in/kusalnirmala"
+  ],
+  "email": "mailto:kusal.xn@gmail.com",
+  "affiliation": [
+    { "@type": "CollegeOrUniversity", "name": "NSBM Green University" },
+    { "@type": "CollegeOrUniversity", "name": "University of Plymouth" },
+    { "@type": "CollegeOrUniversity", "name": "Birmingham City University" }
+  ],
+  "knowsAbout": [
+    "Artificial Intelligence",
+    "Machine Learning",
+    "Computer Vision",
+    "Human Pose Estimation",
+    "Software Engineering",
+    "Shotokan Karate"
+  ]
+}
+</script>
+</head>
+<body>
+
+<a href="#top" class="skip-link">Skip to content</a>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav" id="siteNav">
+  <div class="nav-inner">
+    <a href="#top" class="logo"><span class="kanji">型</span>KUSAL NIRMALA</a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#about" data-nav>About</a>
+      <a href="#path" data-nav>Path</a>
+      <a href="#research" data-nav>Research</a>
+      <a href="#recognition" data-nav>Recognition</a>
+      <a href="#involvement" data-nav>Involvement</a>
+      <a href="#craft" data-nav>Craft</a>
+      <a href="projects.html">Projects</a>
+      <a href="#beyond" data-nav>Beyond</a>
+      <a href="#contact" data-nav>Contact</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="top" tabindex="-1">
+    <div class="hero-kanji kanji" id="heroKanji" aria-hidden="true">型</div>
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="hero-kicker"><span class="kanji">型</span> FORM · PATTERN · DISCIPLINE</div>
+        <h1>Kusal Nirmala</h1>
+        <div class="hero-role"><span id="typewriter"></span><span class="cursor"></span></div>
+        <p class="hero-tagline">I study the shapes patterns take — in a dataset, in a kata, in a well-built sentence.</p>
+        <div class="hero-cta">
+          <a href="karatepose-ai.html" class="btn btn-primary">See KaratePose_AI</a>
+          <a href="#contact" class="btn btn-ghost">Get in touch</a>
+        </div>
+      </div>
+      <div class="hero-portrait" data-zoomable data-caption="Kusal Nirmala — AI Researcher &amp; ML Engineer in training">
+        <div class="hero-portrait-frame">
+          <img src="assets/portrait.jpg" alt="Portrait of Kusal Nirmala">
+          <div class="portrait-seal kanji" aria-hidden="true">型</div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-cue"><span class="line"></span>Scroll</div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">About</span>
+        <h2>Twenty-one, and still building form</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <p>I'm <strong>21</strong>, reading for a <strong>BSc (Hons) in Artificial Intelligence</strong>, awarded by the <strong>University of Plymouth</strong> and delivered at <strong>NSBM Green University</strong> — while studying <strong>Software Engineering</strong> through a UK-affiliated programme alongside it. Before that came the slower groundwork: a Professional Diploma and a Higher Diploma in Software Engineering, both in, both finished before the degree began.</p>
+          <p>My near-term goal is straightforward — work as a <strong>Machine Learning Engineer</strong>, building things that actually ship. The longer-term one is quieter: I'd like to end up back in a classroom or a lab, on the research and academia side of the table.</p>
+          <p>Outside the coursework, I hold a <strong>black belt in Shotokan Karate</strong>, play guitar in whatever hour is left in the day, and keep returning to <strong>Dostoevsky</strong> the way other people return to a gym.</p>
+        </div>
+        <div class="note-card reveal">
+          <div class="note-list">
+            <div class="note-item"><span class="k">Studying</span><span class="v">AI &amp; Software Engineering</span></div>
+            <div class="note-item"><span class="k">Practising</span><span class="v">Shotokan Karate — Black Belt</span></div>
+            <div class="note-item"><span class="k">Building</span><span class="v">KaratePose_AI</span></div>
+            <div class="note-item"><span class="k">Led</span><span class="v">Team Hades — 2nd Runner-up, SLIOT</span></div>
+            <div class="note-item"><span class="k">Reading</span><span class="v">Fyodor Dostoevsky</span></div>
+            <div class="note-item"><span class="k">Playing</span><span class="v">Guitar</span></div>
+            <div class="note-item"><span class="k">Aiming for</span><span class="v">ML Engineering → Research</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PATH -->
+  <section class="section" id="path">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">The Path</span>
+        <h2>Two diplomas, then a degree</h2>
+      </div>
+
+      <div class="timeline">
+        <div class="tl-line" id="tlLine"></div>
+
+        <div class="tl-item reveal">
+          <div class="tl-index">01</div>
+          <div class="tl-content">
+            <h3>Professional Diploma in Software Engineering</h3>
+            <p class="tl-meta">Foundation coursework in programming fundamentals and software design — the first pass at thinking like an engineer.</p>
+          </div>
+        </div>
+
+        <div class="tl-item reveal">
+          <div class="tl-index">02</div>
+          <div class="tl-content">
+            <h3>Higher Diploma in Software Engineering</h3>
+            <p class="tl-meta">Built on the Professional Diploma with deeper project work, ahead of moving into degree-level study.</p>
+          </div>
+        </div>
+
+        <div class="tl-item reveal">
+          <div class="tl-index">03</div>
+          <div class="tl-content">
+            <h3>BSc (Hons) Artificial Intelligence</h3>
+            <p class="tl-meta">University of Plymouth, delivered at NSBM Green University. Currently in progress, with a research focus that led to KaratePose_AI.</p>
+            <span class="tl-tag">In progress</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-aside reveal">
+        <span class="k">Running alongside the degree</span>
+        <p><strong>BSc (Hons) Software Engineering (Top-Up)</strong> — Birmingham City University, UK. Not a step in the sequence above, but studied concurrently, with a focus on enterprise and full-stack development.</p>
+        <div class="chip-list">
+          <span class="chip">Java Enterprise</span>
+          <span class="chip">PHP</span>
+          <span class="chip">React Native</span>
+          <span class="chip">Node.js</span>
+          <span class="chip">MongoDB</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESEARCH -->
+  <section class="section research" id="research">
+    <div class="wrap">
+      <div class="research-grid">
+        <div class="research-text reveal">
+          <span class="eyebrow">Current Research</span>
+          <h2>KaratePose_AI</h2>
+          <span class="badge">In progress · Computer Vision</span>
+          <p>This is where my two disciplines meet. KaratePose_AI applies pose estimation and computer vision to karate technique — tracking joints and stances through video to analyse form, and eventually help correct it. It's early-stage work, built on years of Shotokan training and a still-developing AI education, more than it is a finished result.</p>
+          <p>The sketch on the right is exactly that — a sketch: the kind of joint-tracking overlay the project is built around, not a screenshot of output.</p>
+          <a href="karatepose-ai.html" class="btn btn-ghost" style="margin-top:26px;">Read the full proposal →</a>
+        </div>
+        <div class="research-visual reveal">
+          <svg viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg" id="poseSkeleton" role="img" aria-label="Animated stick-figure diagram morphing between a karate guard stance and a lunge punch, illustrating pose estimation">
+            <defs>
+              <pattern id="dotgrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                <circle cx="1" cy="1" r="1" fill="rgba(244,234,217,0.08)"/>
+              </pattern>
+            </defs>
+            <rect x="0" y="0" width="400" height="320" fill="url(#dotgrid)"/>
+            <line x1="20" y1="300" x2="380" y2="300" stroke="rgba(244,234,217,0.15)" stroke-width="1"/>
+
+            <!-- bones -->
+            <g stroke="#b6913f" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.9">
+              <line id="b-neckhead" x1="190" y1="85" x2="190" y2="50">
+                <animate attributeName="x1" values="190;230;190" dur="3.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" keyTimes="0;0.5;1"/>
+                <animate attributeName="y1" values="85;80;85" dur="3.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" keyTimes="0;0.5;1"/>
+                <animate attributeName="x2" values="190;230;190" dur="3.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" keyTimes="0;0.5;1"/>
+                <animate attributeName="y2" values="50;45;50" dur="3.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" keyTimes="0;0.5;1"/>
+              </line>
+              <line id="b-necklsh" x1="190" y1="85" x2="165" y2="90">
+                <animate attributeName="x1" values="190;230;190" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y1" values="85;80;85" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="x2" values="165;200;165" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y2" values="90;85;90" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+              </line>
+              <line id="b-neckrsh" x1="190" y1="85" x2="215" y2="90">
+                <animate attributeName="x1" values="190;230;190" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y1" values="85;80;85" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="x2" values="215;260;215" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y2" values="90;90;90" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+              </line>
+              <line id="b-lupper" x1="165" y1="90" x2="150" y2="125">
+                <animate attributeName="x1" values="165;200;165" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y1" values="90;85;90" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="x2" values="150;175;150" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y2" values="125;110;125" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+              </line>
+              <line id="b-llower" x1="150" y1="125" x2="140" y2="160">
+                <animate attributeName="x1" values="150;175;150" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y1" values="125;110;125" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="x2" values="140;165;140" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y2" values="160;150;160" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+              </line>
+              <line id="b-rupper" x1="215" y1="90" x2="235" y2="120">
+                <animate attributeName="x1" values="215;260;215" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y1" values="90;90;90" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="x2" values="235;310;235" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y2" values="120;88;120" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+              </line>
+              <line id="b-rlower" x1="235" y1="120" x2="250" y2="90">
+                <animate attributeName="x1" values="235;310;235" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y1" values="120;88;120" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="x2" values="250;350;250" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y2" values="90;86;90" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+              </line>
+              <line id="b-torsoL" x1="165" y1="90" x2="175" y2="180">
+                <animate attributeName="x1" values="165;200;165" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y1" values="90;85;90" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="x2" values="175;210;175" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y2" values="180;175;180" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+              </line>
+              <line id="b-torsoR" x1="215" y1="90" x2="205" y2="180">
+                <animate attributeName="x1" values="215;260;215" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y1" values="90;90;90" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="x2" values="205;245;205" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y2" values="180;180;180" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+              </line>
+              <line id="b-hips" x1="175" y1="180" x2="205" y2="180">
+                <animate attributeName="x1" values="175;210;175" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y1" values="180;175;180" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="x2" values="205;245;205" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y2" values="180;180;180" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+              </line>
+              <line id="b-lthigh" x1="175" y1="180" x2="160" y2="235">
+                <animate attributeName="x1" values="175;210;175" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y1" values="180;175;180" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="x2" values="160;165;160" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y2" values="235;225;235" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+              </line>
+              <line id="b-lshin" x1="160" y1="235" x2="150" y2="290">
+                <animate attributeName="x1" values="160;165;160" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y1" values="235;225;235" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="x2" values="150;140;150" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y2" values="290;285;290" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+              </line>
+              <line id="b-rthigh" x1="205" y1="180" x2="220" y2="230">
+                <animate attributeName="x1" values="205;245;205" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y1" values="180;180;180" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="x2" values="220;290;220" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y2" values="230;215;230" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+              </line>
+              <line id="b-rshin" x1="220" y1="230" x2="235" y2="285">
+                <animate attributeName="x1" values="220;290;220" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y1" values="230;215;230" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="x2" values="235;325;235" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+                <animate attributeName="y2" values="285;280;285" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+              </line>
+            </g>
+
+            <!-- head -->
+            <circle cx="190" cy="50" r="15" fill="none" stroke="#f2e8d8" stroke-width="2.5">
+              <animate attributeName="cx" values="190;230;190" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+              <animate attributeName="cy" values="50;45;50" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
+            </circle>
+
+            <!-- joints -->
+            <g fill="#c9573f">
+              <circle r="4.5"><animate attributeName="cx" values="165;200;165" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/><animate attributeName="cy" values="90;85;90" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/></circle>
+              <circle r="4.5"><animate attributeName="cx" values="215;260;215" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/><animate attributeName="cy" values="90;90;90" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/></circle>
+              <circle r="4.5"><animate attributeName="cx" values="150;175;150" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/><animate attributeName="cy" values="125;110;125" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/></circle>
+              <circle r="4.5"><animate attributeName="cx" values="235;310;235" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/><animate attributeName="cy" values="120;88;120" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/></circle>
+              <circle r="4.5"><animate attributeName="cx" values="140;165;140" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/><animate attributeName="cy" values="160;150;160" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/></circle>
+              <circle r="4.5"><animate attributeName="cx" values="250;350;250" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/><animate attributeName="cy" values="90;86;90" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/></circle>
+              <circle r="4.5"><animate attributeName="cx" values="175;210;175" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/><animate attributeName="cy" values="180;175;180" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/></circle>
+              <circle r="4.5"><animate attributeName="cx" values="205;245;205" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/><animate attributeName="cy" values="180;180;180" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/></circle>
+              <circle r="4.5"><animate attributeName="cx" values="160;165;160" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/><animate attributeName="cy" values="235;225;235" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/></circle>
+              <circle r="4.5"><animate attributeName="cx" values="220;290;220" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/><animate attributeName="cy" values="230;215;230" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/></circle>
+              <circle r="4.5"><animate attributeName="cx" values="150;140;150" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/><animate attributeName="cy" values="290;285;290" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/></circle>
+              <circle r="4.5"><animate attributeName="cx" values="235;325;235" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/><animate attributeName="cy" values="285;280;285" dur="3.6s" repeatCount="indefinite" keyTimes="0;0.5;1"/></circle>
+            </g>
+          </svg>
+          <p class="visual-caption">01 — guard stance → 02 — lunge punch (oi-zuki) → loop. Illustrative only.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECOGNITION -->
+  <section class="section" id="recognition">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Competition</span>
+        <h2>Leading Team Hades</h2>
+      </div>
+
+      <div class="recognition-text reveal">
+        <p>I led <strong>Team Hades</strong> through the <strong>SLIOT tournament</strong>, hosted at the <strong>University of Moratuwa</strong>, where we placed <strong>2nd runner-up</strong> in the university category. Our entry was a tracking system for fishery boats, built around a LoRa module and a PCB we designed ourselves — long-range, low-power tracking for boats that spend most of their time well outside normal network coverage.</p>
+        <p>It was the first time I'd taken a project from a whiteboard idea through to working hardware, with a team depending on me to hold the schedule together.</p>
+
+        <div class="stat-row">
+          <div class="stat"><span class="k">Event</span><span class="v">SLIOT Tournament</span></div>
+          <div class="stat"><span class="k">Host</span><span class="v">University of Moratuwa</span></div>
+          <div class="stat"><span class="k">Result</span><span class="v">2nd Runner-up — University Category</span></div>
+          <div class="stat"><span class="k">Build</span><span class="v">LoRa Tracking + Custom PCB</span></div>
+        </div>
+        <a href="team-hades.html" class="btn btn-ghost" style="margin-top:32px;">Read the full story →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- INVOLVEMENT -->
+  <section class="section" id="involvement">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Community &amp; Leadership</span>
+        <h2>Leo Club — District IT Teams</h2>
+      </div>
+
+      <div class="involve-grid">
+        <div class="reveal">
+          <p class="involve-intro">Leo Clubs International is the youth service arm of Lions Clubs International. Alongside coursework and competitions, I've supported two district-level IT teams — the same technical skills, applied in a service context.</p>
+
+          <div class="timeline">
+            <div class="tl-line"></div>
+
+            <div class="tl-item">
+              <div class="tl-index">01</div>
+              <div class="tl-content">
+                <h3>IT Team Member</h3>
+                <p class="tl-meta">Leo District 306B2 — Leo Year 2023/24</p>
+                <span class="tl-tag">Completed</span>
+              </div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-index">02</div>
+              <div class="tl-content">
+                <h3>IT Team Member</h3>
+                <p class="tl-meta">Leo District 306D5 — Leo Year 2026/27</p>
+                <span class="tl-tag">Incoming</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="doc-card reveal" data-zoomable data-caption="Official Appointment Letter — IT Team Member, Leo District 306B2">
+            <div class="doc-card-thumb">
+              <img src="assets/leo-appointment-letter.jpg" loading="lazy" alt="Thumbnail of Leo District 306B2 IT Team Appointment Letter">
+            </div>
+            <div class="doc-card-info">
+              <div class="doc-card-label">Official Documentation</div>
+              <div class="doc-card-title">Leo District 306B2 — Appointment Letter</div>
+              <span class="doc-card-action">Preview Letter ↗</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <div class="involve-photo" data-zoomable data-caption="20th Annual District Installation Ceremony — 'The Coronation, Chapter 01,' Leo District 306B2">
+            <img src="assets/leo-ceremony.jpg" loading="lazy" alt="Kusal Nirmala being presented with materials on stage at a Leo District installation ceremony">
+          </div>
+          <p class="visual-caption">20th Annual District Installation Ceremony — "The Coronation, Chapter 01," Leo District 306B2.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CRAFT -->
+  <section class="section" id="craft">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Technical Form</span>
+        <h2>What I'm building with</h2>
+      </div>
+      <div class="craft-grid reveal">
+        <div class="craft-cat">
+          <h3>Core</h3>
+          <div class="chip-list">
+            <span class="chip">Python</span>
+            <span class="chip">SQL</span>
+            <span class="chip">Git</span>
+            <span class="chip">Data Structures</span>
+          </div>
+        </div>
+        <div class="craft-cat">
+          <h3>AI / ML</h3>
+          <div class="chip-list">
+            <span class="chip">Machine Learning</span>
+            <span class="chip">Deep Learning</span>
+            <span class="chip">Computer Vision</span>
+            <span class="chip">Pose Estimation</span>
+          </div>
+        </div>
+        <div class="craft-cat">
+          <h3>Applied Engineering</h3>
+          <div class="chip-list">
+            <span class="chip">Java Enterprise</span>
+            <span class="chip">PHP</span>
+            <span class="chip">React Native</span>
+            <span class="chip">Node.js</span>
+            <span class="chip">MongoDB</span>
+            <span class="chip">PCB Design</span>
+            <span class="chip">LoRa / IoT</span>
+          </div>
+        </div>
+        <div class="craft-cat">
+          <h3>Practice</h3>
+          <div class="chip-list">
+            <span class="chip">Software Engineering</span>
+            <span class="chip">Applied Research</span>
+            <span class="chip">Technical Writing</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEYOND -->
+  <section class="section" id="beyond">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Beyond the Dojo</span>
+        <h2>The rest of the form</h2>
+      </div>
+      <div class="beyond-grid">
+        <div class="interest-card reveal">
+          <svg class="interest-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="20" width="36" height="9" rx="1"/>
+            <path d="M20 20 L18 29 M28 20 L30 29"/>
+            <circle cx="24" cy="24.5" r="4" fill="currentColor" stroke="none" opacity="0.85"/>
+          </svg>
+          <h3>Karate</h3>
+          <p>Shotokan Karate, Black Belt. Years on the floor before years at a keyboard — kata is where I first learned that repetition is how precision gets made.</p>
+        </div>
+        <div class="interest-card reveal">
+          <svg class="interest-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="18" cy="30" r="9"/>
+            <circle cx="26" cy="20" r="6.5"/>
+            <line x1="30" y1="15.5" x2="40" y2="6"/>
+            <line x1="35" y1="10" x2="38" y2="13"/>
+          </svg>
+          <h3>Guitar</h3>
+          <p>Six strings, mostly for myself. Practising an instrument and training a model aren't so different — small corrections, repeated often, until it holds.</p>
+        </div>
+        <div class="interest-card reveal">
+          <svg class="interest-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 10 C 14 6, 20 8, 24 12 C 28 8, 34 6, 42 10 L42 36 C34 32, 28 34, 24 38 C20 34, 14 32, 6 36 Z"/>
+            <line x1="24" y1="12" x2="24" y2="38"/>
+          </svg>
+          <h3>Dostoevsky</h3>
+          <p><em>Crime and Punishment</em> started it. I go back to Dostoevsky for the same reason I go back to kata — both reward slow, deliberate attention.</p>
+        </div>
+      </div>
+      <a href="beyond.html" class="btn btn-ghost reveal" style="margin-top:36px;">More on all three →</a>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section contact" id="contact">
+    <div class="wrap">
+      <div class="contact-grid">
+        <div class="reveal">
+          <span class="eyebrow">Contact</span>
+          <h2 style="margin-top:14px;">Let's talk</h2>
+          <p class="contact-sub">Open to Machine Learning Engineer roles, research collaborations, or a conversation about Dostoevsky.</p>
+          <a href="mailto:kusal.xn@gmail.com" class="contact-email">kusal.xn@gmail.com →</a>
+          <div style="margin-top:22px; display:flex; gap:12px; flex-wrap:wrap;">
+            <a href="assets/kusal-nirmala-cv.pdf" target="_blank" rel="noopener" class="btn btn-primary">View CV ↗</a>
+            <a href="assets/kusal-nirmala-cv.pdf" download class="btn btn-ghost">Download PDF</a>
+          </div>
+        </div>
+        <div class="elsewhere reveal">
+          <span class="k">Elsewhere</span>
+          <a href="https://github.com/kusalxn0506" target="_blank" rel="noopener">GitHub <span>↗</span></a>
+          <a href="https://www.linkedin.com/in/kusalnirmala" target="_blank" rel="noopener">LinkedIn <span>↗</span></a>
+          <a href="karatepose-ai.html">KaratePose_AI <span>↗</span></a>
+        </div>
+      </div>
+
+      <div class="contact-form reveal">
+        <h3>Or send a message directly</h3>
+        <form id="contactForm" class="form-grid" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <div class="form-field">
+            <label for="cf-name">Name</label>
+            <input type="text" id="cf-name" name="name" required>
+          </div>
+          <div class="form-field">
+            <label for="cf-email">Email</label>
+            <input type="email" id="cf-email" name="email" required>
+          </div>
+          <div class="form-field full">
+            <label for="cf-message">Message</label>
+            <textarea id="cf-message" name="message" required></textarea>
+          </div>
+          <input type="text" name="_gotcha" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="form-submit-row">
+            <button type="submit" class="btn btn-primary">Send Message</button>
+            <span class="form-status" id="formStatus"></span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span>Kusal Nirmala<span class="kanji">型</span>Designed &amp; built with care</span>
+    <span id="year"></span>
+  </div>
+</footer>
+
+<script>
+  // ---------- reduced motion check ----------
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---------- year ----------
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ---------- nav scroll state ----------
+  var nav = document.getElementById('siteNav');
+  function onScroll(){
+    if(window.scrollY > 40){ nav.classList.add('scrolled'); }
+    else{ nav.classList.remove('scrolled'); }
+  }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
+
+  // ---------- mobile nav toggle ----------
+  var toggle = document.getElementById('navToggle');
+  var links = document.getElementById('navLinks');
+  toggle.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open);
+  });
+  links.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      links.classList.remove('open');
+      toggle.classList.remove('open');
+      toggle.setAttribute('aria-expanded', false);
+    });
+  });
+
+  // ---------- active section highlight ----------
+  var navAnchors = document.querySelectorAll('[data-nav]');
+  var sections = document.querySelectorAll('main section[id]');
+  var navObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        navAnchors.forEach(function(a){ a.classList.remove('active'); });
+        var match = document.querySelector('[data-nav][href="#' + entry.target.id + '"]');
+        if(match) match.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-45% 0px -45% 0px' });
+  sections.forEach(function(s){ navObserver.observe(s); });
+
+  // ---------- scroll reveal ----------
+  var revealEls = document.querySelectorAll('.reveal');
+  if(reduceMotion){
+    revealEls.forEach(function(el){ el.classList.add('in-view'); });
+  } else {
+    var revealObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('in-view');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(function(el){ revealObserver.observe(el); });
+  }
+
+  // ---------- typewriter ----------
+  var roles = [
+    'Machine Learning Engineer in training',
+    'Shotokan Karateka — Black Belt',
+    'Guitarist',
+    'Reader of Dostoevsky'
+  ];
+  var twEl = document.getElementById('typewriter');
+  if(reduceMotion){
+    twEl.textContent = roles[0];
+  } else {
+    var ri = 0, ci = 0, deleting = false;
+    function tick(){
+      var current = roles[ri];
+      if(!deleting){
+        ci++;
+        twEl.textContent = current.slice(0, ci);
+        if(ci === current.length){
+          deleting = true;
+          setTimeout(tick, 1600);
+          return;
+        }
+      } else {
+        ci--;
+        twEl.textContent = current.slice(0, ci);
+        if(ci === 0){
+          deleting = false;
+          ri = (ri + 1) % roles.length;
+        }
+      }
+      setTimeout(tick, deleting ? 28 : 55);
+    }
+    tick();
+  }
+
+  // ---------- hero kanji parallax ----------
+  var heroKanji = document.getElementById('heroKanji');
+  if(!reduceMotion && window.matchMedia('(pointer:fine)').matches){
+    document.querySelector('.hero').addEventListener('mousemove', function(e){
+      var x = (e.clientX / window.innerWidth - 0.5) * 24;
+      var y = (e.clientY / window.innerHeight - 0.5) * 24;
+      heroKanji.style.transform = 'translate(' + x + 'px,' + 'calc(-50% + ' + y + 'px))';
+    });
+  }
+
+  // ---------- timeline line draw (handles every .timeline on the page) ----------
+  document.querySelectorAll('.timeline').forEach(function(tl){
+    var line = tl.querySelector('.tl-line');
+    if(!line) return;
+    if(reduceMotion){
+      line.style.transform = 'scaleY(1)';
+    } else {
+      line.style.transform = 'scaleY(0)';
+      line.style.transition = 'transform 1.4s cubic-bezier(.45,0,.2,1)';
+      var obs = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){
+            line.style.transform = 'scaleY(1)';
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      obs.observe(tl);
+    }
+  });
+
+  // ---------- contact form ----------
+  var contactForm = document.getElementById('contactForm');
+  var formStatus = document.getElementById('formStatus');
+  if(contactForm){
+    contactForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var data = new FormData(contactForm);
+      var name = data.get('name') || '';
+      var email = data.get('email') || '';
+      var message = data.get('message') || '';
+
+      if(contactForm.action.indexOf('YOUR_FORM_ID') !== -1){
+        // Open default mail client with pre-filled message
+        var mailtoUrl = 'mailto:kusal.xn@gmail.com?subject=' + encodeURIComponent('Portfolio Contact from ' + name) + '&body=' + encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\nMessage:\n' + message);
+        window.location.href = mailtoUrl;
+        formStatus.textContent = 'Opening your email client…';
+        formStatus.className = 'form-status success';
+        return;
+      }
+
+      formStatus.textContent = 'Sending…';
+      formStatus.className = 'form-status';
+      fetch(contactForm.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      }).then(function(response){
+        if(response.ok){
+          formStatus.textContent = "Sent — thanks, I'll get back to you.";
+          formStatus.className = 'form-status success';
+          contactForm.reset();
+        } else {
+          formStatus.textContent = 'Something went wrong — email me directly at kusal.xn@gmail.com.';
+          formStatus.className = 'form-status error';
+        }
+      }).catch(function(){
+        formStatus.textContent = 'Something went wrong — email me directly at kusal.xn@gmail.com.';
+        formStatus.className = 'form-status error';
+      });
+    });
+  }
+
+  // ---------- pause SVG skeleton animation under reduced motion ----------
+  if(reduceMotion){
+    var poseSvg = document.getElementById('poseSkeleton');
+    if(poseSvg && poseSvg.pauseAnimations){ poseSvg.pauseAnimations(); }
+  }
+
+  // ---------- custom cursor ----------
+  if(!reduceMotion && window.matchMedia('(pointer:fine)').matches){
+    var cdot = document.createElement('div'); cdot.className = 'cursor-dot';
+    var cring = document.createElement('div'); cring.className = 'cursor-ring';
+    document.body.appendChild(cdot);
+    document.body.appendChild(cring);
+    var cmx = window.innerWidth/2, cmy = window.innerHeight/2, crx = cmx, cry = cmy;
+    window.addEventListener('mousemove', function(e){
+      cmx = e.clientX; cmy = e.clientY;
+      cdot.style.left = cmx + 'px'; cdot.style.top = cmy + 'px';
+      cdot.classList.add('active'); cring.classList.add('active');
+    });
+    document.addEventListener('mouseleave', function(){ cdot.classList.remove('active'); cring.classList.remove('active'); });
+    (function cloop(){
+      crx += (cmx - crx) * 0.18; cry += (cmy - cry) * 0.18;
+      cring.style.left = crx + 'px'; cring.style.top = cry + 'px';
+      requestAnimationFrame(cloop);
+    })();
+    document.querySelectorAll('a, button, .btn').forEach(function(el){
+      el.addEventListener('mouseenter', function(){ cring.classList.add('hover'); });
+      el.addEventListener('mouseleave', function(){ cring.classList.remove('hover'); });
+    });
+  }
+  // ---------- lightbox modal ----------
+  var lbModal = document.createElement('div');
+  lbModal.className = 'lightbox-modal';
+  lbModal.id = 'lightboxModal';
+  lbModal.setAttribute('role', 'dialog');
+  lbModal.setAttribute('aria-modal', 'true');
+  lbModal.setAttribute('aria-hidden', 'true');
+  lbModal.innerHTML = '<button class="lightbox-close" aria-label="Close image preview">&times;</button>' +
+    '<div class="lightbox-content">' +
+      '<img class="lightbox-img" src="" alt="">' +
+      '<div class="lightbox-cap"></div>' +
+    '</div>';
+  document.body.appendChild(lbModal);
+
+  var lbImg = lbModal.querySelector('.lightbox-img');
+  var lbCap = lbModal.querySelector('.lightbox-cap');
+  var lbClose = lbModal.querySelector('.lightbox-close');
+
+  function openLightbox(src, alt, caption){
+    lbImg.src = src;
+    lbImg.alt = alt || '';
+    lbCap.textContent = caption || alt || '';
+    lbModal.classList.add('active');
+    lbModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox(){
+    lbModal.classList.remove('active');
+    lbModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    setTimeout(function(){ lbImg.src = ''; }, 300);
+  }
+
+  lbClose.addEventListener('click', closeLightbox);
+  lbModal.addEventListener('click', function(e){
+    if(e.target === lbModal || e.target.classList.contains('lightbox-content')){
+      closeLightbox();
+    }
+  });
+  window.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && lbModal.classList.contains('active')){
+      closeLightbox();
+    }
+  });
+
+  document.querySelectorAll('[data-zoomable]').forEach(function(el){
+    el.addEventListener('click', function(){
+      var img = el.tagName === 'IMG' ? el : el.querySelector('img');
+      if(img){
+        var cap = el.dataset.caption || img.alt || '';
+        openLightbox(img.src, img.alt, cap);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
