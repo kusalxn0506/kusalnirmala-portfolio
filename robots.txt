@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://kusalnirmala.dev/sitemap.xml
+Sitemap: https://kusalnirmala.pages.dev/sitemap.xml
