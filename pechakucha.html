@@ -2,171 +2,341 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Vote — PechaKucha 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NSBM FOC 26.2 — PechaKucha Voting</title>
+<meta name="description" content="Official audience voting portal for the NSBM Faculty of Computing PechaKucha 2026 presentation tournament.">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,400&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,400&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════════
-   MOBILE VOTING APP — PECHAKUCHA 2026
-   ═══════════════════════════════════════════════════ */
 :root {
-  --bg: #08060a;
-  --surface: #141118;
-  --surface-hover: #1f1a24;
-  --text: #ffffff;
-  --text-dim: #9b94a8;
-  --gold: #fce373;
-  --accent: #ff4d4d;
+  --ink: #0d0b08; --ink-2: #151210; --ink-3: #1c1916;
+  --paper: #f4ead9; --text: #f2e8d8; --text-dim: #b6ab95; --text-faint: #7d745f;
+  --seal: #a8402f; --seal-bright: #c9573f; --seal-glow: rgba(168,64,47,0.35);
+  --gold: #b6913f; --gold-bright: #d4af5f; --gold-glow: rgba(212,175,95,0.25);
+  --line: rgba(244,234,217,0.08); --line-strong: rgba(244,234,217,0.15);
+  --glass: rgba(21,18,16,0.75); --glass-border: rgba(244,234,217,0.1);
+  --ease: cubic-bezier(.45,0,.2,1);
+  --ease-spring: cubic-bezier(.34,1.56,.64,1);
 }
-
-*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 body {
-  background: var(--bg); color: var(--text);
-  font-family: 'IBM Plex Sans', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  padding: 20px;
+  margin: 0; background: var(--ink); color: var(--text);
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 16px; line-height: 1.7;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden; min-height: 100vh;
+}
+h1,h2,h3 { font-family: 'Fraunces', serif; color: var(--paper); margin: 0; }
+a { color: var(--gold-bright); text-decoration: none; }
+button { cursor: pointer; border: none; font-family: inherit; }
+::selection { background: var(--seal); color: var(--paper); }
+
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -20%, var(--seal-glow), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 110%, var(--gold-glow), transparent 60%);
 }
 
-.header { text-align: center; margin-bottom: 30px; margin-top: 20px; }
-.title { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 600; margin-bottom: 8px; }
-.title .accent { color: var(--gold); }
-.subtitle { font-size: 0.9rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
+/* ═══════════════ TOP BAR ═══════════════ */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 28px;
+  background: rgba(13,11,8,0.85); backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-brand {
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint);
+}
+.topbar-brand strong { color: var(--gold-bright); font-weight: 500; }
+.topbar-user {
+  display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text-dim);
+}
+.topbar-user img {
+  width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--line-strong);
+}
+.btn-signout {
+  background: transparent; color: var(--text-faint); border: 1px solid var(--line-strong);
+  padding: 6px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.06em; border-radius: 4px;
+  transition: border-color 0.25s, color 0.25s;
+}
+.btn-signout:hover { border-color: var(--seal); color: var(--seal-bright); }
 
-/* Grid Layout for Participants */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 15px;
-  max-width: 600px;
-  margin: 0 auto;
-  padding-bottom: 40px;
+/* ═══════════════ HERO ═══════════════ */
+.hero { text-align: center; padding: 80px 24px 50px; position: relative; }
+.hero-badge {
+  display: inline-block; font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--gold-bright); background: rgba(182,145,63,0.1);
+  border: 1px solid rgba(182,145,63,0.2); padding: 8px 18px; border-radius: 100px; margin-bottom: 28px;
+}
+.hero h1 {
+  font-size: clamp(2.5rem, 7vw, 4.5rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.05;
+}
+.hero h1 .accent {
+  background: linear-gradient(135deg, var(--gold-bright), var(--seal-bright));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero-sub {
+  margin-top: 20px; font-size: 1.15rem; color: var(--text-dim);
+  max-width: 52ch; margin-left: auto; margin-right: auto;
+}
+.hero-stats { display: flex; justify-content: center; gap: 40px; margin-top: 40px; flex-wrap: wrap; }
+.hero-stat { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.hero-stat .num { font-family: 'Fraunces', serif; font-size: 2rem; color: var(--paper); font-weight: 600; }
+.hero-stat .label {
+  font-family: 'IBM Plex Mono', monospace; font-size: 10.5px;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint);
+}
+.hero-divider {
+  width: 80px; height: 1px; margin: 50px auto 0;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
 }
 
-/* Participant Card */
+/* ═══════════════ AUTH ═══════════════ */
+.auth-section { display: flex; flex-direction: column; align-items: center; padding: 60px 24px 80px; }
+.auth-card {
+  background: var(--glass); backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border); border-radius: 16px;
+  padding: 48px 40px; text-align: center; max-width: 420px; width: 100%;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+}
+.auth-card h2 { font-size: 1.6rem; margin-bottom: 12px; }
+.auth-card p { color: var(--text-dim); font-size: 15px; margin-bottom: 28px; }
+.btn-google {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--paper); color: var(--ink); padding: 14px 32px;
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 600;
+  border-radius: 8px; transition: transform 0.2s var(--ease), box-shadow 0.2s;
+}
+.btn-google:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+.btn-google svg { width: 20px; height: 20px; }
+.auth-note {
+  margin-top: 20px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-faint);
+}
+
+/* ═══════════════ VOTING SECTION ═══════════════ */
+#votingSection { display: none; }
+.vote-prompt {
+  text-align: center; padding: 10px 24px 40px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: var(--text-dim);
+}
+.vote-prompt .status { color: var(--gold-bright); font-size: 15px; }
+.vote-prompt .status.done { color: var(--seal-bright); }
+
+/* ═══════════════ VOTING CLOSED BANNER ═══════════════ */
+.closed-banner {
+  text-align: center; padding: 40px 24px;
+  background: rgba(168,64,47,0.08); border: 1px solid rgba(168,64,47,0.2);
+  border-radius: 12px; margin: 0 20px 30px; display: none;
+}
+.closed-banner h2 {
+  font-size: 1.8rem; color: var(--seal-bright); margin-bottom: 8px;
+}
+.closed-banner p { color: var(--text-dim); font-size: 15px; }
+.closed-banner .lock-icon { font-size: 3rem; margin-bottom: 16px; display: block; }
+
+/* ═══════════════ GRID ═══════════════ */
+.grid-wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px 80px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+
+/* ═══════════════ CARD ═══════════════ */
 .card {
-  background: var(--surface);
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 16px;
-  padding: 15px;
-  text-align: center;
-  cursor: pointer;
-  transition: transform 0.2s, background 0.2s, border-color 0.2s;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
+  position: relative; border-radius: 12px; overflow: hidden;
+  background: var(--ink-2); border: 1px solid var(--line);
+  transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  transform-style: preserve-3d; will-change: transform;
+  opacity: 0; transform: translateY(40px);
+  animation: cardEnter 0.6s var(--ease-spring) forwards;
 }
-.card:active { transform: scale(0.96); background: var(--surface-hover); border-color: rgba(252,227,115,0.3); }
-
+.card:hover { border-color: var(--gold); box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px var(--gold-glow); }
+.card.locked { opacity: 0.5; pointer-events: none; }
+@keyframes cardEnter { to { opacity: 1; transform: translateY(0); } }
 .card-img-wrap {
-  width: 80px; height: 80px;
-  margin: 0 auto 12px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid rgba(255,255,255,0.1);
-  transition: border-color 0.3s;
+  position: relative; width: 100%; aspect-ratio: 3/4; overflow: hidden; background: #1a1713;
 }
-.card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-.card:active .card-img-wrap { border-color: var(--gold); }
-
-.card-name { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 600; line-height: 1.2; }
-
-/* Success & Lockout States */
-.state-message {
-  display: none; flex-direction: column; align-items: center; justify-content: center;
-  height: 60vh; text-align: center;
+.card-img-wrap img {
+  width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s var(--ease);
 }
-.state-icon { font-size: 4rem; margin-bottom: 20px; }
-.state-title { font-family: 'Fraunces', serif; font-size: 2rem; color: var(--gold); margin-bottom: 10px; }
-.state-desc { color: var(--text-dim); font-size: 1.1rem; line-height: 1.5; max-width: 300px; }
-.state-locked .state-title { color: var(--accent); }
+.card:hover .card-img-wrap img { transform: scale(1.05); }
+.card-number {
+  position: absolute; top: 12px; left: 12px; z-index: 2;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  background: rgba(13,11,8,0.7); backdrop-filter: blur(8px);
+  color: var(--gold-bright); padding: 5px 10px; border-radius: 4px;
+  border: 1px solid rgba(182,145,63,0.2);
+}
+.card-body { padding: 18px 16px 20px; text-align: center; }
+.card-name { font-family: 'Fraunces', serif; font-size: 1.1rem; color: var(--paper); margin-bottom: 4px; }
+.card-topic {
+  font-size: 12px; color: var(--text-faint); font-family: 'IBM Plex Mono', monospace;
+  margin-bottom: 16px; line-height: 1.5;
+}
+.btn-vote {
+  width: 100%; padding: 12px; border-radius: 6px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600;
+  background: linear-gradient(135deg, var(--seal), var(--seal-bright)); color: var(--paper);
+  transition: transform 0.2s var(--ease), box-shadow 0.2s;
+}
+.btn-vote:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px var(--seal-glow); }
+.btn-vote:disabled { background: var(--ink-3); color: var(--text-faint); cursor: not-allowed; border: 1px solid var(--line); }
 
-/* ═══════════════ STUDENT ID MODAL ═══════════════ */
+/* ═══════════════ BIO MODAL ═══════════════ */
 .modal-overlay {
-  position: fixed; inset: 0; z-index: 1000;
-  background: rgba(5, 3, 10, 0.8);
-  backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.65); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+  opacity: 0; pointer-events: none; transition: opacity 0.35s var(--ease);
 }
-.modal-overlay.active { opacity: 1; pointer-events: auto; }
-
-.modal-content {
-  background: linear-gradient(145deg, rgba(30, 26, 36, 0.9), rgba(20, 17, 24, 0.9));
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 24px; padding: 30px 24px; width: 90%; max-width: 360px;
-  text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-  transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.modal-overlay.open { opacity: 1; pointer-events: auto; }
+.modal {
+  background: var(--glass); backdrop-filter: blur(30px);
+  border: 1px solid var(--glass-border); border-radius: 20px;
+  max-width: 440px; width: 100%; overflow: hidden;
+  transform: translateY(30px) scale(0.95); transition: transform 0.4s var(--ease-spring);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.6);
 }
-.modal-overlay.active .modal-content { transform: translateY(0); }
-
-.modal-title { font-family: 'Fraunces', serif; font-size: 1.5rem; color: var(--gold); margin-bottom: 10px; }
-.modal-desc { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 24px; line-height: 1.4; }
-
-.modal-input {
-  width: 100%; padding: 16px; border-radius: 12px;
-  background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
-  color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-size: 1.1rem;
-  text-align: center; outline: none; transition: border-color 0.3s;
-  margin-bottom: 24px;
+.modal-overlay.open .modal { transform: translateY(0) scale(1); }
+.modal-img { width: 100%; height: 280px; object-fit: cover; }
+.modal-body { padding: 28px 24px 24px; }
+.modal-number {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+  color: var(--gold-bright); letter-spacing: 0.1em; text-transform: uppercase;
 }
-.modal-input:focus { border-color: var(--gold); }
-.modal-input::placeholder { color: rgba(255,255,255,0.2); }
-
+.modal-name { font-family: 'Fraunces', serif; font-size: 1.6rem; color: var(--paper); margin: 8px 0 6px; }
+.modal-topic { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text-faint); margin-bottom: 14px; }
+.modal-bio { font-size: 14px; color: var(--text-dim); line-height: 1.7; margin-bottom: 24px; }
 .modal-actions { display: flex; gap: 12px; }
-.btn {
-  flex: 1; padding: 16px; border-radius: 12px; font-weight: 600; font-size: 1rem;
-  border: none; cursor: pointer; transition: opacity 0.2s, transform 0.1s;
+.modal-actions .btn-vote { flex: 1; }
+.btn-close {
+  padding: 12px 20px; background: var(--ink-3); color: var(--text-dim);
+  border: 1px solid var(--line-strong); border-radius: 6px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  text-transform: uppercase; letter-spacing: 0.06em; transition: border-color 0.2s, color 0.2s;
 }
-.btn:active { transform: scale(0.96); }
-.btn-cancel { background: rgba(255,255,255,0.1); color: #fff; }
-.btn-confirm { background: linear-gradient(135deg, var(--gold), #ffca28); color: #000; }
-.btn-confirm:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-close:hover { border-color: var(--paper); color: var(--paper); }
 
+/* ═══════════════ CONFETTI ═══════════════ */
+.confetti-piece {
+  position: fixed; z-index: 300; pointer-events: none;
+  width: 10px; height: 10px; border-radius: 2px;
+  animation: confettiFall 2.5s ease-out forwards;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg) scale(0.3); opacity: 0; }
+}
+
+/* ═══════════════ FOOTER ═══════════════ */
+.footer {
+  border-top: 1px solid var(--line); padding: 24px;
+  text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text-faint);
+}
+.footer a { color: var(--gold-bright); }
+
+/* ═══════════════ RESPONSIVE ═══════════════ */
+@media (max-width: 600px) {
+  .hero h1 { font-size: 2.2rem; }
+  .hero-stats { gap: 24px; }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .card-body { padding: 14px 12px 16px; }
+  .card-name { font-size: 0.95rem; }
+  .auth-card { padding: 36px 24px; }
+  .modal-img { height: 220px; }
+  .topbar { padding: 12px 16px; }
+}
+@media (max-width: 380px) { .grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="subtitle">Live Audience Voting</div>
-  <h1 class="title">Pecha<span class="accent">Kucha</span></h1>
+<!-- ═══════════════ TOP BAR ═══════════════ -->
+<header class="topbar" id="topbar">
+  <div class="topbar-brand"><strong>NSBM FOC 26.2</strong> &nbsp;PechaKucha</div>
+  <div class="topbar-user" id="topbarUser" style="display:none;">
+    <img id="userPhoto" src="" alt="User">
+    <span id="userNameTop"></span>
+    <button class="btn-signout" id="logoutBtn">Sign Out</button>
+  </div>
+</header>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+  <div class="hero-badge">Live Event · Audience Vote</div>
+  <h1>Pecha<span class="accent">Kucha</span> 2026</h1>
+  <p class="hero-sub">Official audience voting portal for the NSBM Faculty of Computing PechaKucha presentation tournament.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="num" id="statParticipants">5</span><span class="label">Presenters</span></div>
+    <div class="hero-stat"><span class="num" id="statSlides">20</span><span class="label">Slides Each</span></div>
+    <div class="hero-stat"><span class="num" id="statSeconds">20s</span><span class="label">Per Slide</span></div>
+  </div>
+  <div class="hero-divider"></div>
+</section>
+
+<!-- ═══════════════ AUTH ═══════════════ -->
+<section class="auth-section" id="authSection">
+  <div class="auth-card">
+    <h2>Cast Your Vote</h2>
+    <p>Sign in with your Google account. Each student gets exactly one vote.</p>
+    <button class="btn-google" id="loginBtn">
+      <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Sign in with Google
+    </button>
+    <p class="auth-note">One vote per account · Votes are final &amp; cannot be changed</p>
+  </div>
+</section>
+
+<!-- ═══════════════ VOTING CLOSED BANNER ═══════════════ -->
+<div class="closed-banner" id="closedBanner">
+  <span class="lock-icon">🔒</span>
+  <h2>Voting Has Ended</h2>
+  <p>The voting window has closed. Thank you for participating!</p>
 </div>
 
-<!-- Main Voting Grid -->
-<div class="grid" id="votingGrid"></div>
+<!-- ═══════════════ VOTING SECTION ═══════════════ -->
+<section id="votingSection">
+  <div class="vote-prompt">
+    <p class="status" id="statusMessage">Tap a presenter card to view their bio, then cast your vote.</p>
+  </div>
+  <div class="grid-wrap">
+    <div class="grid" id="participantsGrid"></div>
+  </div>
+</section>
 
-<!-- Success Message (Shown after voting) -->
-<div class="state-message" id="successState">
-  <div class="state-icon">✅</div>
-  <div class="state-title">Vote Cast!</div>
-  <div class="state-desc">Your vote has been sent directly to the projector. Keep your eyes on the screen!</div>
-</div>
-
-<!-- Locked Message (Shown when admin closes voting) -->
-<div class="state-message state-locked" id="lockedState">
-  <div class="state-icon">🔒</div>
-  <div class="state-title">Voting Closed</div>
-  <div class="state-desc">The countdown has ended. Voting is no longer accepting new submissions.</div>
-</div>
-
-<!-- Student ID Modal -->
-<div class="modal-overlay" id="voteModal">
-  <div class="modal-content">
-    <h3 class="modal-title" id="modalTitle">Confirm Vote</h3>
-    <p class="modal-desc">Please enter your NSBM Student ID to cast your official vote.</p>
-    <input type="text" class="modal-input" id="studentIdInput" placeholder="e.g. 10012345" autocomplete="off">
-    <div class="modal-actions">
-      <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-confirm" id="confirmVoteBtn">Submit Vote</button>
+<!-- ═══════════════ BIO MODAL ═══════════════ -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <img class="modal-img" id="modalImg" src="" alt="">
+    <div class="modal-body">
+      <p class="modal-number" id="modalNumber"></p>
+      <h2 class="modal-name" id="modalName"></h2>
+      <p class="modal-topic" id="modalTopic"></p>
+      <p class="modal-bio" id="modalBio"></p>
+      <div class="modal-actions">
+        <button class="btn-vote" id="modalVoteBtn">Confirm Vote</button>
+        <button class="btn-close" id="modalCloseBtn">Close</button>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="footer">
+  Built by <a href="index.html">Kusal Nirmala</a> · Powered by Firebase
+</footer>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-/* FIREBASE CONFIG */
+/* ───── Firebase Config ───── */
 const firebaseConfig = {
   apiKey: "AIzaSyA9Tdj5TUnaN67thSjkDIjUHB00zQTDXJ4",
   authDomain: "pechakucha-nsbm.firebaseapp.com",
@@ -175,104 +345,218 @@ const firebaseConfig = {
   messagingSenderId: "188251897901",
   appId: "1:188251897901:web:d579281f4689db24fcb8a4"
 };
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
-/* PARTICIPANTS */
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+/* ───── Participants ───── */
 const participants = [
-  { id: "p1", name: "Kusal Nirmala", image: "assets/portrait.jpg" },
-  { id: "p2", name: "Amara Perera", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop&crop=face" },
-  { id: "p3", name: "Dineth Silva", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" },
-  { id: "p4", name: "Nethmi Fernando", image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop&crop=face" },
-  { id: "p5", name: "Ravindu Jayasekara", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face" }
+  { id: "p1", name: "Kusal Nirmala", number: "#001", topic: "AI in Martial Arts",
+    bio: "BSc (Hons) AI undergraduate applying computer vision to karate biomechanics. Creator of KaratePose-AI and Team Hades lead.",
+    image: "assets/portrait.jpg" },
+  { id: "p2", name: "Amara Perera", number: "#002", topic: "Sustainable Computing",
+    bio: "Software Engineering student passionate about green computing and energy-efficient algorithm design for cloud platforms.",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=500&fit=crop&crop=face" },
+  { id: "p3", name: "Dineth Silva", number: "#003", topic: "Blockchain for Education",
+    bio: "Exploring decentralized credentialing systems to make academic certificates tamper-proof and globally verifiable.",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face" },
+  { id: "p4", name: "Nethmi Fernando", number: "#004", topic: "UX in Healthcare Apps",
+    bio: "Researching how thoughtful UX design can reduce medication errors in hospital information systems across Sri Lanka.",
+    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=500&fit=crop&crop=face" },
+  { id: "p5", name: "Ravindu Jayasekara", number: "#005", topic: "IoT Smart Agriculture",
+    bio: "Building low-cost sensor networks using LoRa and ESP32 to monitor soil conditions for smallholder tea farmers.",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=500&fit=crop&crop=face" }
 ];
 
-let votingLocked = true; // Locked by default until config loads
-let pendingVoteId = null;
-const grid = document.getElementById('votingGrid');
-const lockedState = document.getElementById('lockedState');
-const successState = document.getElementById('successState');
+/* ───── DOM ───── */
+const authSection = document.getElementById('authSection');
+const votingSection = document.getElementById('votingSection');
+const loginBtn = document.getElementById('loginBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const topbarUser = document.getElementById('topbarUser');
+const userNameTop = document.getElementById('userNameTop');
+const userPhoto = document.getElementById('userPhoto');
+const gridEl = document.getElementById('participantsGrid');
+const statusMsg = document.getElementById('statusMessage');
+const closedBanner = document.getElementById('closedBanner');
+const modalOverlay = document.getElementById('modalOverlay');
+const modalImg = document.getElementById('modalImg');
+const modalNumber = document.getElementById('modalNumber');
+const modalName = document.getElementById('modalName');
+const modalTopic = document.getElementById('modalTopic');
+const modalBio = document.getElementById('modalBio');
+const modalVoteBtn = document.getElementById('modalVoteBtn');
+const modalCloseBtn = document.getElementById('modalCloseBtn');
 
-/* RENDER GRID */
-participants.forEach(p => {
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.onclick = () => openModal(p.id, p.name);
-  card.innerHTML = `
-    <div class="card-img-wrap"><img src="${p.image}" alt="${p.name}"></div>
-    <div class="card-name">${p.name}</div>
-  `;
-  grid.appendChild(card);
-});
+document.getElementById('statParticipants').textContent = participants.length;
 
-/* MODAL LOGIC */
-window.openModal = function(pId, pName) {
-  if (votingLocked) return;
-  pendingVoteId = pId;
-  document.getElementById('modalTitle').textContent = `Vote for ${pName}`;
-  document.getElementById('studentIdInput').value = '';
-  document.getElementById('voteModal').classList.add('active');
-  setTimeout(() => document.getElementById('studentIdInput').focus(), 100);
-}
+let selectedParticipant = null;
+let hasVoted = false;
+let votingClosed = false;
 
-window.closeModal = function() {
-  document.getElementById('voteModal').classList.remove('active');
-  pendingVoteId = null;
-}
-
-document.getElementById('confirmVoteBtn').addEventListener('click', async () => {
-  const studentId = document.getElementById('studentIdInput').value.trim();
-  
-  if (!studentId || studentId.length < 4) {
-    alert("Please enter a valid Student ID.");
-    return;
+/* ───── Confetti ───── */
+function confettiBurst() {
+  const colors = ['#d4af5f','#c9573f','#b6913f','#f4ead9','#a8402f','#f2e8d8'];
+  for (let i = 0; i < 80; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = (Math.random() * 100) + 'vw';
+    piece.style.top = '-10px';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.width = (6 + Math.random() * 8) + 'px';
+    piece.style.height = (6 + Math.random() * 8) + 'px';
+    piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+    piece.style.animationDelay = (Math.random() * 0.8) + 's';
+    document.body.appendChild(piece);
+    setTimeout(() => piece.remove(), 4500);
   }
-  
-  const btn = document.getElementById('confirmVoteBtn');
-  btn.disabled = true;
-  btn.textContent = "Sending...";
+}
 
+/* ───── 3D Tilt ───── */
+function initTilt(card) {
+  if (window.matchMedia('(pointer: fine)').matches) {
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      card.style.transform = `perspective(600px) rotateY(${px*10}deg) rotateX(${py*-10}deg) translateY(-4px)`;
+    });
+    card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+  }
+}
+
+/* ───── Modal ───── */
+function openModal(p) {
+  selectedParticipant = p;
+  modalImg.src = p.image; modalImg.alt = p.name;
+  modalNumber.textContent = `Participant ${p.number}`;
+  modalName.textContent = p.name; modalTopic.textContent = p.topic;
+  modalBio.textContent = p.bio;
+  const disabled = hasVoted || votingClosed;
+  modalVoteBtn.disabled = disabled;
+  modalVoteBtn.textContent = votingClosed ? '🔒 Voting Closed' : (hasVoted ? 'You Already Voted' : `Vote for ${p.name.split(' ')[0]}`);
+  modalOverlay.classList.add('open');
+}
+function closeModal() { modalOverlay.classList.remove('open'); selectedParticipant = null; }
+modalCloseBtn.addEventListener('click', closeModal);
+modalOverlay.addEventListener('click', (e) => { if(e.target === modalOverlay) closeModal(); });
+
+/* ───── Render Cards ───── */
+function renderParticipants() {
+  gridEl.innerHTML = '';
+  participants.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'card' + ((hasVoted || votingClosed) ? ' locked' : '');
+    card.style.animationDelay = (i * 0.08) + 's';
+    card.innerHTML = `
+      <div class="card-img-wrap">
+        <span class="card-number">${p.number}</span>
+        <img src="${p.image}" alt="${p.name}" loading="lazy">
+      </div>
+      <div class="card-body">
+        <h3 class="card-name">${p.name}</h3>
+        <p class="card-topic">${p.topic}</p>
+        <button class="btn-vote" ${(hasVoted || votingClosed) ? 'disabled' : ''}>
+          ${votingClosed ? '🔒 Closed' : (hasVoted ? 'Voted' : 'View & Vote')}
+        </button>
+      </div>
+    `;
+    gridEl.appendChild(card);
+    if (!hasVoted && !votingClosed) initTilt(card);
+    card.querySelector('.btn-vote').addEventListener('click', (e) => { e.stopPropagation(); openModal(p); });
+    card.addEventListener('click', () => { if (!hasVoted && !votingClosed) openModal(p); });
+  });
+}
+
+/* ───── Cast Vote ───── */
+async function castVote() {
+  const user = auth.currentUser;
+  if (!user || !selectedParticipant || votingClosed) return;
+  modalVoteBtn.disabled = true; modalVoteBtn.textContent = 'Casting...';
   try {
-    // SECURITY MAGIC: We use the studentId as the document name in Firestore.
-    // If they vote again, it overwrites their previous vote instead of adding a new one!
-    // Total votes on projector will remain perfectly accurate.
-    await setDoc(doc(db, "votes", studentId), {
-      participantId: pendingVoteId,
-      studentId: studentId,
+    await setDoc(doc(db, "votes", user.uid), {
+      participantId: selectedParticipant.id,
+      participantName: selectedParticipant.name,
+      userEmail: user.email, userName: user.displayName,
       timestamp: new Date()
     });
-    
-    closeModal();
-    grid.style.display = 'none';
-    successState.style.display = 'flex';
+    hasVoted = true; closeModal(); confettiBurst();
+    statusMsg.textContent = '✓ Vote successfully cast! Thank you for participating.';
+    statusMsg.classList.add('done');
+    renderParticipants();
   } catch (error) {
-    console.error("Error casting vote: ", error);
-    alert("Failed to connect. Please try again.");
-    btn.disabled = false;
-    btn.textContent = "Submit Vote";
+    console.error("Error casting vote:", error);
+    modalVoteBtn.textContent = 'Error — Try Again'; modalVoteBtn.disabled = false;
+  }
+}
+modalVoteBtn.addEventListener('click', castVote);
+
+/* ───── Listen for Voting Closed signal from admin ───── */
+function listenForVotingStatus() {
+  onSnapshot(doc(db, "config", "voting"), (snapshot) => {
+    if (snapshot.exists()) {
+      const data = snapshot.data();
+      if (data.open === false && !votingClosed) {
+        votingClosed = true;
+        closedBanner.style.display = 'block';
+        statusMsg.textContent = '🔒 Voting has ended. Thank you for participating!';
+        statusMsg.classList.add('done');
+        closeModal();
+        renderParticipants();
+      } else if (data.open === true) {
+        votingClosed = false;
+        closedBanner.style.display = 'none';
+        if (!hasVoted) {
+          statusMsg.textContent = 'Tap a presenter card to view their bio, then cast your vote.';
+          statusMsg.classList.remove('done');
+        }
+        renderParticipants();
+      }
+    }
+  }, (error) => {
+    // Config document might not exist yet, that's OK
+    console.log("Config listener:", error.message);
+  });
+}
+
+/* ───── Auth ───── */
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    authSection.style.display = 'none';
+    votingSection.style.display = 'block';
+    topbarUser.style.display = 'flex';
+    userNameTop.textContent = user.displayName;
+    userPhoto.src = user.photoURL || '';
+
+    const voteDoc = await getDoc(doc(db, "votes", user.uid));
+    if (voteDoc.exists()) {
+      hasVoted = true;
+      statusMsg.textContent = '✓ You have already cast your vote. Thank you!';
+      statusMsg.classList.add('done');
+    } else {
+      hasVoted = false;
+      statusMsg.textContent = 'Tap a presenter card to view their bio, then cast your vote.';
+      statusMsg.classList.remove('done');
+    }
+    renderParticipants();
+    listenForVotingStatus();
+  } else {
+    authSection.style.display = 'flex';
+    votingSection.style.display = 'none';
+    topbarUser.style.display = 'none';
+    hasVoted = false;
   }
 });
 
-/* REAL-TIME LOCKOUT LISTENER */
-onSnapshot(doc(db, "config", "voting"), (docSnap) => {
-  if (docSnap.exists()) {
-    const data = docSnap.data();
-    votingLocked = data.open === false;
-    
-    if (votingLocked) {
-      grid.style.display = 'none';
-      successState.style.display = 'none';
-      lockedState.style.display = 'flex';
-      closeModal(); // Force close modal if time runs out while typing
-    } else if (successState.style.display !== 'flex') {
-      // Only show grid if they haven't already voted successfully
-      grid.style.display = 'grid';
-      lockedState.style.display = 'none';
-    }
-  }
-}, (error) => {
-  console.error("Error listening to config:", error);
+loginBtn.addEventListener('click', () => {
+  signInWithPopup(auth, provider).catch(error => {
+    console.error("Login failed:", error);
+    alert("Failed to login. Please try again.");
+  });
 });
+logoutBtn.addEventListener('click', () => signOut(auth));
 </script>
 </body>
 </html>
