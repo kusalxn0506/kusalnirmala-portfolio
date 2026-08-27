@@ -619,32 +619,13 @@ function triggerWinnerReveal() {
 
   // GSAP TIMELINE: The dramatic reveal sequence
   const tl = gsap.timeline();
-
-  // Phase 1: Fade in black overlay
   tl.to(overlay, { opacity: 1, duration: 1.2, ease: "power2.inOut" });
-
-  // Phase 2: "And the winner is..." text
   tl.to('#winnerSuspense', { opacity: 1, duration: 0.8, ease: "power2.out" }, "+=0.5");
-
-  // Phase 3: Pause for suspense
   tl.to({}, { duration: 2.5 });
-
-  // Phase 4: Fade out suspense text
   tl.to('#winnerSuspense', { opacity: 0, duration: 0.4 });
-
-  // Phase 5: Photo reveal with scale spring
-  tl.to('#winnerPhotoWrap', {
-    opacity: 1, scale: 1, duration: 1,
-    ease: "elastic.out(1, 0.5)"
-  }, "+=0.3");
-
-  // Phase 6: Name reveal
+  tl.to('#winnerPhotoWrap', { opacity: 1, scale: 1, duration: 1, ease: "elastic.out(1, 0.5)" }, "+=0.3");
   tl.to('#winnerName', { opacity: 1, duration: 0.8, ease: "power2.out" }, "-=0.3");
-
-  // Phase 7: Stats reveal
   tl.to('#winnerStats', { opacity: 1, duration: 0.6, ease: "power2.out" }, "-=0.2");
-
-  // Phase 8: Badge reveal
   tl.to('#winnerBadge', { opacity: 1, duration: 0.6, ease: "power2.out" }, "-=0.1");
 }
 
@@ -691,26 +672,12 @@ function animateWinnerParticles() {
   wParticles.forEach(p => {
     if (p.opacity <= 0) return;
     alive = true;
-    p.x += p.vx;
-    p.y += p.vy;
-    p.vy += p.gravity;
-    p.opacity -= p.decay;
-    p.rotation += p.rotSpeed;
-
-    wCtx.save();
-    wCtx.translate(p.x, p.y);
-    wCtx.rotate(p.rotation * Math.PI / 180);
-    wCtx.globalAlpha = Math.max(p.opacity, 0);
-    wCtx.fillStyle = p.color;
-    wCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-    wCtx.restore();
+    p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.opacity -= p.decay; p.rotation += p.rotSpeed;
+    wCtx.save(); wCtx.translate(p.x, p.y); wCtx.rotate(p.rotation * Math.PI / 180);
+    wCtx.globalAlpha = Math.max(p.opacity, 0); wCtx.fillStyle = p.color;
+    wCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size); wCtx.restore();
   });
-
-  if (alive) {
-    requestAnimationFrame(animateWinnerParticles);
-  } else {
-    wAnimating = false;
-  }
+  if (alive) { requestAnimationFrame(animateWinnerParticles); } else { wAnimating = false; }
 }
 
 /* ═══════════════ AUTH + REAL-TIME ═══════════════ */
@@ -725,7 +692,6 @@ onAuthStateChanged(auth, (user) => {
     document.getElementById('resultsBoard').style.display = 'block';
     document.getElementById('adminControls').style.display = 'flex';
 
-    // Entrance animation
     participants.forEach((p, i) => {
       gsap.to(`#row-${p.id}`, { opacity: 1, delay: i * 0.12, duration: 0.6, ease: "power2.out" });
     });
@@ -746,7 +712,6 @@ onAuthStateChanged(auth, (user) => {
       });
       latestCounts = { ...counts };
 
-      // New vote flash
       if (!isFirstSnapshot && totalVotes > prevTotal) {
         snapshot.docChanges().forEach(change => {
           if (change.type === 'added') {
@@ -760,26 +725,45 @@ onAuthStateChanged(auth, (user) => {
 
       // Sort
       const sorted = [...participants].sort((a, b) => counts[b.id] - counts[a.id]);
-      const maxVotes = Math.max(...Object.values(counts), 1);
+      
+      // ===== CALCULATE TRUE TIE RANKS =====
+      let currentRank = 1;
+      let previousVotes = -1;
+      const trueRanks = {};
 
-      // Lead margin
+      sorted.forEach((p, index) => {
+        const pVotes = counts[p.id];
+        // Only increase the rank number if they have fewer votes than the person above them
+        if (pVotes !== previousVotes) {
+          currentRank = index + 1; 
+        }
+        trueRanks[p.id] = currentRank;
+        previousVotes = pVotes;
+      });
+
+      // Lead margin (Only show if Rank 1 and Rank 2 exist and aren't tied)
       if (sorted.length >= 2) {
         const margin = counts[sorted[0].id] - counts[sorted[1].id];
         leadMarginEl.textContent = margin > 0 ? `+${margin}` : '—';
       }
       animateCount(totalVotesEl, totalVotes);
 
-      // Update bars
+      // Update bars with True Rank
       sorted.forEach((p, i) => {
         const row = document.getElementById(`row-${p.id}`);
         const fill = document.getElementById(`fill-${p.id}`);
         const countEl = document.getElementById(`count-${p.id}`);
         const pctEl = document.getElementById(`pct-${p.id}`);
         const rankEl = document.getElementById(`rank-${p.id}`);
+        
+        const actualRank = trueRanks[p.id];
 
+        // Move row based on array index (so ties stay grouped)
         gsap.to(row, { top: i * ROW_HEIGHT, duration: 0.9, ease: "power3.inOut" });
-        row.dataset.rank = i + 1;
-        rankEl.textContent = i + 1;
+        
+        // Assign visual rank and badge based on true mathematically tied rank
+        row.dataset.rank = actualRank;
+        rankEl.textContent = actualRank;
 
         const pct = totalVotes === 0 ? 0 : (counts[p.id] / totalVotes) * 100;
         gsap.to(fill, { width: `${Math.max(pct, counts[p.id] > 0 ? 2 : 0)}%`, duration: 0.8, ease: "power2.out" });
