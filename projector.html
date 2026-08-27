@@ -3,122 +3,98 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Live Results — PechaKucha 2026 (Glassmorphism)</title>
+<title>Live Results — PechaKucha 2026 (Cinematic Glass)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,400&family=IBM+Plex+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- GSAP for UI Animation -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<!-- Canvas Confetti Physics Engine -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 <style>
 /* ═══════════════════════════════════════════════════
-   GLASSMORPHISM DESIGN SYSTEM — PROJECTOR BUILD
+   GLASSMORPHISM DESIGN SYSTEM
    ═══════════════════════════════════════════════════ */
 :root {
-  --bg: #050308;
   --text: #ffffff; --text-dim: #b8b2c6; --text-faint: #746d88;
   --gold: #fce373; --gold-dim: #cba83b;
   --silver: #dbe4ee; --bronze: #e09653;
   --accent: #ff4d4d; --accent-glow: rgba(255,77,77,0.5);
   --amber: #ffaa00; --amber-glow: rgba(255,170,0,0.4);
-  --bar-fill: linear-gradient(90deg, #814dff, #ff4d4d, #fce373);
+  --bar-fill: linear-gradient(90deg, #1aa3ff, #ff4d4d, #fce373);
   --bar-fill-leader: linear-gradient(90deg, #fce373, #ffeba3, #fff);
   
   /* Glass Variables */
   --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-bg-hover: rgba(255, 255, 255, 0.06);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-border-light: rgba(255, 255, 255, 0.15);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body {
   width: 100%; height: 100%; overflow: hidden;
-  background: var(--bg); color: var(--text);
+  color: var(--text);
   font-family: 'IBM Plex Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Custom Scrollbar for Glass */
+/* ═══════════════ CINEMATIC BACKGROUND ═══════════════ */
+body {
+  background-color: #050308;
+  background-image: url('assets/bg.jpg'); /* User uploaded abstract background */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+/* Darkening overlay so white text remains perfectly readable on a projector */
+body::after {
+  content: ""; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: rgba(5, 3, 10, 0.65);
+}
+
+/* Custom Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
-
-/* ═══════════════ AMBIENT BACKGROUND ═══════════════ */
-#particleCanvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
-
-/* Floating Glowing Orbs (The secret to good glassmorphism) */
-.ambient-orbs { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-.orb {
-  position: absolute; border-radius: 50%; filter: blur(90px);
-  opacity: 0.45; mix-blend-mode: screen;
-  animation: floatOrb 25s infinite ease-in-out alternate;
-}
-.orb-1 { width: 600px; height: 600px; background: #814dff; top: -100px; left: -100px; }
-.orb-2 { width: 500px; height: 500px; background: #ff4d4d; bottom: -150px; right: 10%; animation-delay: -7s; }
-.orb-3 { width: 450px; height: 450px; background: #cba83b; top: 30%; left: 40%; animation-delay: -14s; }
-
-@keyframes floatOrb {
-  0% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(150px, 100px) scale(1.2); }
-  100% { transform: translate(-50px, 150px) scale(0.9); }
-}
 
 /* ═══════════════ LAYOUT ═══════════════ */
 .app { position: relative; z-index: 2; display: flex; flex-direction: column; height: 100vh; }
 
 /* ═══════════════ HEADER ═══════════════ */
-.header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 30px 50px; flex-shrink: 0;
-}
+.header { display: flex; align-items: center; justify-content: space-between; padding: 30px 50px; flex-shrink: 0; }
 .header-left { display: flex; align-items: center; gap: 24px; }
 .live-badge {
   display: inline-flex; align-items: center; gap: 10px;
   background: var(--accent); padding: 8px 20px; border-radius: 100px;
-  font-family: 'IBM Plex Mono', monospace; font-size: 14px;
-  font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-  color: #fff; animation: livePulse 2s ease-in-out infinite;
-  box-shadow: 0 0 20px var(--accent-glow);
+  font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 700; letter-spacing: 0.1em;
+  color: #fff; animation: livePulse 2s ease-in-out infinite; box-shadow: 0 0 20px var(--accent-glow);
 }
-.live-badge .dot {
-  width: 10px; height: 10px; background: #fff; border-radius: 50%;
-  animation: dotPulse 1.2s ease-in-out infinite;
-}
+.live-badge .dot { width: 10px; height: 10px; background: #fff; border-radius: 50%; animation: dotPulse 1.2s ease-in-out infinite; }
 .live-badge.closed { background: rgba(255,255,255,0.1); animation: none; box-shadow: none; color: var(--text-dim); }
 .live-badge.closed .dot { animation: none; opacity: 0.4; }
-@keyframes livePulse {
-  0%,100% { box-shadow: 0 0 10px var(--accent-glow); }
-  50% { box-shadow: 0 0 25px 8px var(--accent-glow); }
-}
+@keyframes livePulse { 0%,100% { box-shadow: 0 0 10px var(--accent-glow); } 50% { box-shadow: 0 0 25px 8px var(--accent-glow); } }
 @keyframes dotPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-.header-title {
-  font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 600;
-  text-shadow: 0 4px 20px rgba(0,0,0,0.5);
-}
-.header-title .accent {
-  background: linear-gradient(135deg, var(--gold), #fff);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
+.header-title { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 600; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+.header-title .accent { background: linear-gradient(135deg, var(--gold), #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .header-right { display: flex; align-items: center; gap: 20px; }
 
-/* Glass Pills for Header Stats */
 .stat-pill {
   background: var(--glass-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--glass-border); border-top: 1px solid var(--glass-border-light);
   border-radius: 100px; padding: 12px 30px; display: flex; align-items: center; gap: 16px;
-  box-shadow: var(--glass-shadow);
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.3);
 }
-.stat-pill .num { font-family: 'IBM Plex Mono', monospace; font-size: 2rem; font-weight: 700; line-height: 1; color: var(--gold); }
-.stat-pill .label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); }
+.stat-pill .num { font-family: 'IBM Plex Mono', monospace; font-size: 2rem; font-weight: 700; color: var(--gold); text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+.stat-pill .label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.7); }
 
 /* ═══════════════ MAIN CONTENT AREA ═══════════════ */
 #resultsBoard { display: none; flex: 1; padding: 10px 50px 30px; overflow: hidden; }
 .main-content { display: flex; gap: 50px; height: 100%; max-width: 1500px; margin: 0 auto; align-items: center; }
 .leaderboard-area { flex: 1; position: relative; height: 100%; display: flex; align-items: center; }
-.leaderboard { position: relative; width: 100%; height: 500px; } /* Fixed height container for GSAP absolute rows */
+.leaderboard { position: relative; width: 100%; height: 500px; } 
 
-/* ═══════════════ COUNTDOWN PANEL (Glass Card) ═══════════════ */
+/* ═══════════════ COUNTDOWN PANEL ═══════════════ */
 .countdown-panel {
   width: 320px; flex-shrink: 0;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px;
@@ -144,10 +120,7 @@ html, body {
 .countdown-time.amber { color: var(--amber); }
 .countdown-time.red { color: var(--accent); }
 .countdown-time.final { font-size: 5.5rem; color: var(--accent); }
-.countdown-label {
-  font-family: 'IBM Plex Mono', monospace; font-size: 13px;
-  letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim);
-}
+.countdown-label { font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); }
 .countdown-label.urgent { color: var(--accent); animation: labelBlink 0.8s ease-in-out infinite; text-shadow: 0 0 10px var(--accent-glow); }
 .countdown-waiting { font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: var(--text-faint); text-align: center; line-height: 1.6; }
 
@@ -157,20 +130,39 @@ html, body {
   display: flex; align-items: center; gap: 20px;
   height: 80px; padding: 0 20px 0 10px; border-radius: 100px;
   background: linear-gradient(90deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border); border-top: 1px solid var(--glass-border-light);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   transition: border-color 0.4s, background 0.4s, box-shadow 0.4s;
   will-change: top, transform;
 }
 
+/* 🌟 SPOTLIGHT LAYER 🌟 */
+.spotlight-layer {
+  position: absolute; inset: 0; border-radius: 100px; overflow: hidden; pointer-events: none; z-index: 0;
+}
+.bar-row.is-leader-row .spotlight-layer::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(110deg, transparent 20%, rgba(255,255,255,0.1) 40%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.1) 60%, transparent 80%);
+  width: 200%; height: 100%; top: 0; left: -100%;
+  animation: sweepSpotlight 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  mix-blend-mode: overlay;
+}
+@keyframes sweepSpotlight {
+  0% { transform: translateX(-20%); }
+  100% { transform: translateX(120%); }
+}
+
 /* King of the Hill Pop-out */
 .bar-row.is-leader-row {
-  background: linear-gradient(90deg, rgba(252, 227, 115, 0.1), rgba(255,255,255,0.02));
-  border-color: rgba(252, 227, 115, 0.4); border-top: 1px solid rgba(252, 227, 115, 0.6);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.5), 0 0 30px rgba(252, 227, 115, 0.15);
+  background: linear-gradient(90deg, rgba(252, 227, 115, 0.15), rgba(255,255,255,0.02));
+  border-color: rgba(252, 227, 115, 0.5); border-top: 1px solid rgba(252, 227, 115, 0.7);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 40px rgba(252, 227, 115, 0.2);
   z-index: 10;
 }
+
+/* Ensure content stays above spotlight */
+.bar-row > * { position: relative; z-index: 1; }
 
 .rank-badge {
   width: 54px; height: 54px; flex-shrink: 0;
@@ -182,16 +174,14 @@ html, body {
 }
 .bar-row[data-rank="1"] .rank-badge {
   background: linear-gradient(135deg, var(--gold), #fff); color: #000;
-  border-color: var(--gold); box-shadow: 0 0 20px rgba(252, 227, 115, 0.4);
-  transform: scale(1.1);
+  border-color: var(--gold); box-shadow: 0 0 20px rgba(252, 227, 115, 0.4); transform: scale(1.1);
 }
 .bar-row[data-rank="2"] .rank-badge { background: linear-gradient(135deg, var(--silver), #fff); color: #000; }
 .bar-row[data-rank="3"] .rank-badge { background: linear-gradient(135deg, var(--bronze), #ffcaa3); color: #000; }
 
 .participant-photo {
   width: 56px; height: 56px; flex-shrink: 0; border-radius: 50%; object-fit: cover;
-  border: 2px solid rgba(255,255,255,0.15); box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-  transition: border-color 0.4s;
+  border: 2px solid rgba(255,255,255,0.15); box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: border-color 0.4s;
 }
 .bar-row[data-rank="1"] .participant-photo { border-color: var(--gold); box-shadow: 0 0 15px rgba(252, 227, 115, 0.4); }
 
@@ -200,23 +190,23 @@ html, body {
   font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   text-shadow: 0 2px 5px rgba(0,0,0,0.5); transition: color 0.4s;
 }
-.bar-row[data-rank="1"] .participant-name { color: var(--gold); }
+.bar-row[data-rank="1"] .participant-name { color: var(--gold); text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
 
 .bar-track {
-  flex: 1; height: 24px; background: rgba(0,0,0,0.4);
+  flex: 1; height: 24px; background: rgba(0,0,0,0.5);
   border: 1px solid rgba(255,255,255,0.05); border-radius: 100px;
-  overflow: hidden; position: relative; box-shadow: inset 0 2px 8px rgba(0,0,0,0.6);
+  overflow: hidden; position: relative; box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
 }
 .bar-fill {
   height: 100%; width: 0%; background: var(--bar-fill); border-radius: 100px; position: relative;
-  box-shadow: 0 0 15px rgba(129,77,255,0.4);
+  box-shadow: 0 0 15px rgba(26,163,255,0.4);
 }
 .bar-row[data-rank="1"] .bar-fill {
   background: var(--bar-fill-leader); box-shadow: 0 0 20px rgba(252, 227, 115, 0.5);
 }
 .bar-row[data-rank="1"] .bar-fill::after {
   content: ""; position: absolute; inset: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%);
   animation: shimmer 2s ease-in-out infinite;
 }
 @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
@@ -224,25 +214,24 @@ html, body {
 .vote-count {
   width: 90px; flex-shrink: 0; text-align: right;
   font-family: 'IBM Plex Mono', monospace; font-size: 2.2rem; font-weight: 700;
-  text-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: color 0.4s;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.8); transition: color 0.4s;
 }
 .bar-row[data-rank="1"] .vote-count { color: var(--gold); }
 .vote-pct {
   width: 65px; flex-shrink: 0; text-align: right;
-  font-family: 'IBM Plex Mono', monospace; font-size: 1rem; color: var(--text-dim);
+  font-family: 'IBM Plex Mono', monospace; font-size: 1rem; color: rgba(255,255,255,0.6);
 }
 
 /* ═══════════════ WINNER OVERLAY (Cinematic Heavy Blur) ═══════════════ */
 .winner-overlay {
   position: fixed; inset: 0; z-index: 500;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  background: rgba(5, 3, 8, 0.5); /* Let orbs shine through */
-  backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); /* Heavy cinematic blur */
+  background: rgba(5, 3, 10, 0.6); 
+  backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); 
   opacity: 0; pointer-events: none; transition: opacity 1s;
 }
 .winner-overlay.active { pointer-events: auto; }
-#winnerCanvas { position: absolute; inset: 0; z-index: 0; mix-blend-mode: screen; }
-.winner-content { position: relative; z-index: 1; text-align: center; }
+.winner-content { position: relative; z-index: 10; text-align: center; } /* Above confetti */
 .winner-suspense { font-family: 'Fraunces', serif; font-style: italic; font-size: 2.5rem; color: var(--text-dim); opacity: 0; text-shadow: 0 4px 20px rgba(0,0,0,0.8); }
 
 .winner-profiles { display: flex; justify-content: center; gap: 60px; margin-top: 30px; opacity: 0; flex-wrap: wrap; }
@@ -253,51 +242,51 @@ html, body {
 }
 .winner-photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
 .winner-name {
-  font-family: 'Fraunces', serif; font-size: 4rem; font-weight: 900;
+  font-family: 'Fraunces', serif; font-size: 4.5rem; font-weight: 900;
   margin-top: 24px; line-height: 1.1;
   background: linear-gradient(135deg, var(--gold), #fff, var(--gold));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
 }
 .winner-stats { display: flex; gap: 50px; justify-content: center; margin-top: 30px; opacity: 0; }
 .winner-stat { text-align: center; }
 .winner-stat .num { font-family: 'IBM Plex Mono', monospace; font-size: 3rem; font-weight: 700; color: var(--gold); text-shadow: 0 4px 20px rgba(252,227,115,0.3); }
-.winner-stat .label { font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-top: 4px; }
+.winner-stat .label { font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.8); margin-top: 4px; }
 .winner-badge {
   display: inline-block; margin-top: 30px; padding: 12px 36px;
   background: rgba(252,227,115,0.1); backdrop-filter: blur(10px);
   border: 1px solid rgba(252,227,115,0.4); border-radius: 100px;
   font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 700;
   letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); opacity: 0;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
 /* ═══════════════ FINAL STANDINGS CORNER BOARD (Glass) ═══════════════ */
 .mini-scoreboard {
-  position: absolute; bottom: 50px; right: 50px; z-index: 2;
-  background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  position: absolute; bottom: 50px; right: 50px; z-index: 10;
+  background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
   backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--glass-border); border-top: 1px solid var(--glass-border-light);
+  border: 1px solid var(--glass-border); border-top: 1px solid rgba(255,255,255,0.2);
   border-radius: 24px; padding: 28px; width: 360px; opacity: 0;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.05);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.05);
   max-height: calc(100vh - 100px); overflow-y: auto;
 }
 .mini-header {
   font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700;
-  letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim);
-  margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.6);
+  margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 .mini-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
 .mini-row:last-child { margin-bottom: 0; }
-.mini-rank { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 700; width: 28px; color: var(--text-faint); text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.mini-rank { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 700; width: 28px; color: rgba(255,255,255,0.5); text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
 .mini-row[data-rank="1"] .mini-rank { color: var(--gold); }
 .mini-row[data-rank="2"] .mini-rank { color: var(--silver); }
 .mini-row[data-rank="3"] .mini-rank { color: var(--bronze); }
-.mini-photo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); }
+.mini-photo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.2); }
 .mini-row[data-rank="1"] .mini-photo { border-color: var(--gold); }
-.mini-name { flex: 1; font-family: 'IBM Plex Sans', sans-serif; font-size: 1.05rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.mini-name { flex: 1; font-family: 'IBM Plex Sans', sans-serif; font-size: 1.05rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
 .mini-row[data-rank="1"] .mini-name { color: var(--gold); }
-.mini-score { font-family: 'IBM Plex Mono', monospace; font-size: 1.2rem; font-weight: 700; color: var(--text); text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.mini-score { font-family: 'IBM Plex Mono', monospace; font-size: 1.2rem; font-weight: 700; color: var(--text); text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
 .mini-row[data-rank="1"] .mini-score { color: var(--gold); }
 
 /* ═══════════════ ADMIN ═══════════════ */
@@ -305,39 +294,14 @@ html, body {
 .btn-admin { background: linear-gradient(135deg, var(--gold-dim), var(--gold)); color: #000; border: none; padding: 18px 44px; font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; border-radius: 100px; cursor: pointer; transition: transform 0.2s, box-shadow 0.3s; }
 .btn-admin:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(252,227,115,0.3); }
 .admin-controls { position: fixed; bottom: 30px; right: 30px; z-index: 150; display: flex; gap: 12px; }
-.btn-ctrl { padding: 14px 28px; border-radius: 100px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; border: none; transition: transform 0.2s, opacity 0.2s; box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+.btn-ctrl { padding: 14px 28px; border-radius: 100px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; border: none; transition: transform 0.2s, opacity 0.2s; box-shadow: 0 8px 20px rgba(0,0,0,0.6); }
 .btn-ctrl:hover { transform: translateY(-2px); }
 .btn-ctrl:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
 .btn-start { background: var(--gold); color: #000; }
-.btn-reset { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); color: var(--text); border: 1px solid rgba(255,255,255,0.1); }
-
-/* RESPONSIVE */
-@media (max-width: 1000px) {
-  .header { padding: 20px 30px; }
-  #resultsBoard { padding: 10px 30px; }
-  .countdown-panel { width: 240px; padding: 30px 20px; }
-  .countdown-ring-wrap, .countdown-svg { width: 180px; height: 180px; }
-  .countdown-time { font-size: 2.8rem; }
-  .bar-row { height: 70px; }
-  .participant-name { width: 120px; font-size: 1.1rem; }
-  .vote-count { font-size: 1.8rem; width: 60px; }
-  .vote-pct { display: none; }
-  .winner-name { font-size: 2.8rem; }
-  .winner-photo-wrap { width: 180px; height: 180px; }
-  .winner-profiles { gap: 30px; }
-  .mini-scoreboard { right: 20px; bottom: 20px; width: 300px; padding: 20px; }
-}
+.btn-reset { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); color: var(--text); border: 1px solid rgba(255,255,255,0.2); }
 </style>
 </head>
 <body>
-
-<!-- Ambient Background -->
-<div class="ambient-orbs">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-</div>
-<canvas id="particleCanvas"></canvas>
 
 <div class="app">
   <header class="header">
@@ -380,7 +344,6 @@ html, body {
 
 <!-- WINNER OVERLAY -->
 <div class="winner-overlay" id="winnerOverlay">
-  <canvas id="winnerCanvas"></canvas>
   <div class="winner-content">
     <div class="winner-suspense" id="winnerSuspense">And the winner is...</div>
     <div class="winner-profiles" id="winnerProfiles"></div>
@@ -390,7 +353,6 @@ html, body {
     </div>
     <div class="winner-badge" id="winnerBadge">🏆 PechaKucha 2026 Champion</div>
   </div>
-  
   <div class="mini-scoreboard" id="miniScoreboard"></div>
 </div>
 
@@ -422,48 +384,16 @@ const participants = [
   { id: "p5", name: "Ravindu Jayasekara", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face" }
 ];
 
-/* AMBIENT PARTICLES (Foreground) */
-const pCanvas = document.getElementById('particleCanvas');
-const pCtx = pCanvas.getContext('2d');
-let particles = [];
-function resizeCanvas() { pCanvas.width = window.innerWidth; pCanvas.height = window.innerHeight; }
-resizeCanvas(); window.addEventListener('resize', resizeCanvas);
-class Particle {
-  constructor() { this.reset(); }
-  reset() {
-    this.x = Math.random() * pCanvas.width; this.y = Math.random() * pCanvas.height;
-    this.size = Math.random() * 2 + 0.5;
-    this.speedX = (Math.random() - 0.5) * 0.2; this.speedY = (Math.random() - 0.5) * 0.15 - 0.1;
-    this.opacity = Math.random() * 0.4 + 0.1;
-    this.hue = Math.random() > 0.6 ? 45 : (Math.random() > 0.5 ? 280 : 0);
-  }
-  update() {
-    this.x += this.speedX; this.y += this.speedY;
-    if (this.y < -10 || this.x < -10 || this.x > pCanvas.width + 10) this.reset();
-    if (this.y < 0) this.y = pCanvas.height;
-  }
-  draw() {
-    pCtx.beginPath(); pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    pCtx.fillStyle = `hsla(${this.hue}, 80%, 80%, ${this.opacity})`; pCtx.fill();
-  }
-}
-for (let i = 0; i < 100; i++) particles.push(new Particle());
-function animateParticles() {
-  pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
-  particles.forEach(p => { p.update(); p.draw(); });
-  requestAnimationFrame(animateParticles);
-}
-animateParticles();
-
 /* BUILD LEADERBOARD */
 const leaderboard = document.getElementById('leaderboard');
-const ROW_HEIGHT = 100; // Increased for taller glass pills + gap
+const ROW_HEIGHT = 100;
 
 participants.forEach((p, i) => {
   const row = document.createElement('div');
   row.className = 'bar-row'; row.id = `row-${p.id}`; row.dataset.rank = i + 1;
   row.style.top = (i * ROW_HEIGHT) + 'px'; row.style.opacity = '0';
   row.innerHTML = `
+    <div class="spotlight-layer"></div>
     <div class="rank-badge" id="rank-${p.id}">${i + 1}</div>
     <img class="participant-photo" src="${p.image}" alt="${p.name}">
     <div class="participant-name">${p.name}</div>
@@ -561,6 +491,30 @@ function resetCountdown() {
 btnStart.addEventListener('click', startCountdown);
 btnReset.addEventListener('click', resetCountdown);
 
+/* 🌟 PHYSICS CONFETTI CANNON 🌟 */
+function fireConfettiCannons() {
+  const duration = 5000;
+  const end = Date.now() + duration;
+  const colors = ['#fce373', '#1aa3ff', '#ff4d4d', '#ffffff'];
+
+  (function frame() {
+    // Left Cannon
+    confetti({
+      particleCount: 8, angle: 60, spread: 55, origin: { x: 0, y: 1 },
+      colors: colors, zIndex: 1000
+    });
+    // Right Cannon
+    confetti({
+      particleCount: 8, angle: 120, spread: 55, origin: { x: 1, y: 1 },
+      colors: colors, zIndex: 1000
+    });
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  }());
+}
+
 /* WINNER REVEAL SEQUENCE */
 function triggerWinnerReveal() {
   const sorted = [...participants].sort((a, b) => (latestCounts[b.id] || 0) - (latestCounts[a.id] || 0));
@@ -604,7 +558,6 @@ function triggerWinnerReveal() {
   miniScoreboard.innerHTML = `<div class="mini-header">Final Standings</div>${miniHTML}`;
   
   overlay.classList.add('active');
-  startWinnerParticles();
 
   const tl = gsap.timeline();
   tl.to(overlay, { opacity: 1, duration: 1.5, ease: "power2.inOut" });
@@ -612,46 +565,15 @@ function triggerWinnerReveal() {
   tl.to({}, { duration: 2.5 }); 
   tl.to(suspenseText, { opacity: 0, duration: 0.4 });
   tl.set(profilesContainer, { opacity: 1 });
-  tl.fromTo('.winner-photo-wrap', { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 1, ease: "elastic.out(1, 0.5)", stagger: 0.2 }, "+=0.3");
+  
+  // Confetti Blast exactly as photos explode
+  tl.call(fireConfettiCannons);
+
+  tl.fromTo('.winner-photo-wrap', { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 1, ease: "elastic.out(1, 0.5)", stagger: 0.2 });
   tl.fromTo('.winner-name', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out", stagger: 0.2 }, "-=0.6");
   tl.to('#winnerStats', { opacity: 1, duration: 0.6, ease: "power2.out" }, "-=0.2");
   tl.to(badgeText, { opacity: 1, duration: 0.6, ease: "power2.out" }, "-=0.1");
   tl.fromTo(miniScoreboard, { x: 50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8, ease: "power2.out" }, "-=0.2");
-}
-
-/* WINNER PARTICLES */
-const wCanvas = document.getElementById('winnerCanvas');
-const wCtx = wCanvas.getContext('2d');
-let wParticles = [];
-let wAnimating = false;
-function startWinnerParticles() {
-  wCanvas.width = window.innerWidth; wCanvas.height = window.innerHeight;
-  wParticles = [];
-  const cx = wCanvas.width / 2; const cy = wCanvas.height / 2;
-  const colors = ['#f5c842', '#ffd700', '#ffe066', '#fff', '#e84040', '#c9a020'];
-
-  for (let i = 0; i < 200; i++) {
-    const angle = Math.random() * Math.PI * 2; const speed = Math.random() * 6 + 2;
-    wParticles.push({
-      x: cx, y: cy, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 2,
-      size: Math.random() * 5 + 2, color: colors[Math.floor(Math.random() * colors.length)],
-      gravity: 0.04, opacity: 1, decay: Math.random() * 0.008 + 0.003,
-      rotation: Math.random() * 360, rotSpeed: (Math.random() - 0.5) * 8
-    });
-  }
-  if (!wAnimating) { wAnimating = true; animateWinnerParticles(); }
-}
-function animateWinnerParticles() {
-  wCtx.clearRect(0, 0, wCanvas.width, wCanvas.height);
-  let alive = false;
-  wParticles.forEach(p => {
-    if (p.opacity <= 0) return;
-    alive = true; p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.opacity -= p.decay; p.rotation += p.rotSpeed;
-    wCtx.save(); wCtx.translate(p.x, p.y); wCtx.rotate(p.rotation * Math.PI / 180);
-    wCtx.globalAlpha = Math.max(p.opacity, 0); wCtx.fillStyle = p.color;
-    wCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size); wCtx.restore();
-  });
-  if (alive) { requestAnimationFrame(animateWinnerParticles); } else { wAnimating = false; }
 }
 
 /* AUTH + REAL-TIME */
