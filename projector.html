@@ -6,184 +6,309 @@
 <title>Live Results — PechaKucha 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;900&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;900&family=IBM+Plex+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- GSAP for professional-grade animations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <style>
+/* ═══════════════════════════════════════════════════
+   CINEMATIC DESIGN SYSTEM
+   Built for 2x projectors in a 350-seat hall
+   Everything is oversized for readability at distance
+   ═══════════════════════════════════════════════════ */
 :root {
-  --ink: #0d0b08; --ink-2: #151210; --ink-3: #1c1916;
-  --paper: #f4ead9; --text: #f2e8d8; --text-dim: #b6ab95; --text-faint: #7d745f;
-  --seal: #a8402f; --seal-bright: #c9573f; --seal-glow: rgba(168,64,47,0.4);
-  --gold: #b6913f; --gold-bright: #d4af5f; --gold-glow: rgba(212,175,95,0.3);
-  --line: rgba(244,234,217,0.08); --line-strong: rgba(244,234,217,0.15);
-  --ease: cubic-bezier(.45,0,.2,1);
-}
-*,*::before,*::after { box-sizing: border-box; }
-body {
-  margin: 0; background: var(--ink); color: var(--text);
-  font-family: 'IBM Plex Sans', sans-serif;
-  -webkit-font-smoothing: antialiased; overflow: hidden;
-  height: 100vh; display: flex; flex-direction: column;
-}
-body::before {
-  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, var(--seal-glow), transparent 70%),
-    radial-gradient(ellipse 50% 40% at 90% 100%, var(--gold-glow), transparent 60%);
+  --bg: #08060a;
+  --surface: #0f0d12;
+  --surface-2: #161420;
+  --text: #f0ecf8;
+  --text-dim: #9d96b0;
+  --text-faint: #5c5672;
+  --gold: #f5c842; --gold-dim: #c9a020;
+  --silver: #b8c4d0; --silver-dim: #7a8696;
+  --bronze: #cd7f32; --bronze-dim: #8a5520;
+  --accent: #e84040; --accent-glow: rgba(232,64,64,0.4);
+  --bar-fill: linear-gradient(90deg, #6c3fdb, #e84040, #f5c842);
+  --bar-fill-leader: linear-gradient(90deg, #f5c842, #ffd700, #ffe066);
+  --ease: cubic-bezier(.25,.8,.25,1);
 }
 
-/* ───── Header ───── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  background: var(--bg); color: var(--text);
+  font-family: 'IBM Plex Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══════════════════════════════════════════════════
+   AMBIENT PARTICLE CANVAS (Background atmosphere)
+   ═══════════════════════════════════════════════════ */
+#particleCanvas {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+}
+
+/* Radial gradient overlays for depth */
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(ellipse 120% 60% at 50% -30%, rgba(108,63,219,0.15), transparent 70%),
+    radial-gradient(ellipse 80% 50% at 10% 110%, rgba(232,64,64,0.08), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 100%, rgba(245,200,66,0.06), transparent 50%);
+}
+
+/* ═══════════════════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════════════════ */
+.app {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column;
+  height: 100vh; padding: 0;
+}
+
+/* ═══════════════════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════════════════ */
 .header {
-  text-align: center; padding: 40px 24px 20px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 28px 50px;
+  border-bottom: 1px solid rgba(240,236,248,0.06);
+  flex-shrink: 0;
 }
-.header-badge {
-  display: inline-block; font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--seal-bright); margin-bottom: 16px;
+.header-left {
+  display: flex; align-items: center; gap: 20px;
 }
-.header-badge .dot {
-  display: inline-block; width: 8px; height: 8px; background: var(--seal-bright);
-  border-radius: 50%; margin-right: 8px; animation: pulse 1.5s ease-in-out infinite;
+.live-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--accent); padding: 8px 20px; border-radius: 6px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 14px;
+  font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: #fff; animation: livePulse 2s ease-in-out infinite;
 }
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.8); }
+.live-badge .dot {
+  width: 10px; height: 10px; background: #fff; border-radius: 50%;
+  animation: dotPulse 1.2s ease-in-out infinite;
 }
-.header h1 {
-  font-family: 'Fraunces', serif; font-size: clamp(2.5rem, 5vw, 4rem);
-  color: var(--paper); margin: 0; letter-spacing: -0.02em;
+@keyframes livePulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+  50% { box-shadow: 0 0 20px 6px var(--accent-glow); }
 }
-.header h1 .accent {
-  background: linear-gradient(135deg, var(--gold-bright), var(--seal-bright));
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.header-title {
+  font-family: 'Fraunces', serif; font-size: 1.8rem;
+  color: var(--text); font-weight: 600; letter-spacing: -0.01em;
+}
+.header-title .accent {
+  background: linear-gradient(135deg, var(--gold), var(--accent));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-.header-sub {
-  font-family: 'IBM Plex Mono', monospace; font-size: 14px;
-  color: var(--text-faint); margin-top: 8px;
+.header-right {
+  display: flex; align-items: center; gap: 40px;
+}
+.header-stat {
+  text-align: center;
+}
+.header-stat .num {
+  font-family: 'IBM Plex Mono', monospace; font-size: 2.8rem;
+  font-weight: 700; color: var(--text);
+  line-height: 1;
+}
+.header-stat .label {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-faint); margin-top: 4px;
 }
 
-/* ───── Auth Guard ───── */
+/* ═══════════════════════════════════════════════════
+   NEW VOTE FLASH
+   ═══════════════════════════════════════════════════ */
+.vote-flash {
+  position: fixed; top: 100px; left: 50%; transform: translateX(-50%);
+  z-index: 100;
+  background: rgba(245,200,66,0.12); backdrop-filter: blur(20px);
+  border: 1px solid rgba(245,200,66,0.25); border-radius: 12px;
+  padding: 14px 36px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 16px;
+  font-weight: 600; color: var(--gold);
+  letter-spacing: 0.04em;
+  opacity: 0; pointer-events: none;
+  transition: none;
+}
+
+/* ═══════════════════════════════════════════════════
+   AUTH GUARD
+   ═══════════════════════════════════════════════════ */
 .auth-guard {
   flex: 1; display: flex; align-items: center; justify-content: center;
 }
 .btn-admin {
-  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
-  color: var(--ink); border: none; padding: 16px 36px;
-  font-family: 'IBM Plex Mono', monospace; font-size: 14px;
-  font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
-  border-radius: 8px; cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+  color: var(--bg); border: none; padding: 18px 44px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 16px;
+  font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+  border-radius: 10px; cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.3s;
 }
 .btn-admin:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 30px var(--gold-glow);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(245,200,66,0.3);
 }
 
-/* ───── Results Board ───── */
-#resultsBoard { display: none; flex: 1; padding: 10px 60px 40px; overflow: hidden; }
-
-.bars-container {
-  position: relative; max-width: 1000px; margin: 0 auto;
-  height: calc(100vh - 260px);
+/* ═══════════════════════════════════════════════════
+   RESULTS BOARD
+   ═══════════════════════════════════════════════════ */
+#resultsBoard {
+  display: none; flex: 1;
+  padding: 30px 50px 20px;
+  overflow: hidden;
+}
+.leaderboard {
+  position: relative; max-width: 1200px;
+  margin: 0 auto; height: 100%;
 }
 
+/* ═══════════════════════════════════════════════════
+   BAR ROW (Each participant)
+   ═══════════════════════════════════════════════════ */
 .bar-row {
   position: absolute; left: 0; right: 0;
   display: flex; align-items: center; gap: 20px;
-  height: 60px;
-  transition: top 0.8s var(--ease);
+  height: 72px; padding: 0 8px;
+  border-radius: 12px;
+  transition: none; /* GSAP handles transitions */
 }
-.bar-row.leader .bar-fill {
-  background: linear-gradient(90deg, var(--gold), var(--gold-bright));
-  box-shadow: 0 0 30px var(--gold-glow);
-}
-.bar-row.leader .bar-name { color: var(--gold-bright); }
 
-.bar-rank {
-  width: 40px; text-align: center;
-  font-family: 'Fraunces', serif; font-size: 1.6rem; color: var(--text-faint);
-  flex-shrink: 0;
+/* Rank Badge */
+.rank-badge {
+  width: 48px; height: 48px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 900;
+  color: var(--bg);
+  background: var(--text-faint);
+  transition: background 0.6s, transform 0.4s;
 }
-.bar-row.leader .bar-rank { color: var(--gold-bright); font-size: 2rem; }
+.bar-row[data-rank="1"] .rank-badge { background: var(--gold); transform: scale(1.15); }
+.bar-row[data-rank="2"] .rank-badge { background: var(--silver); }
+.bar-row[data-rank="3"] .rank-badge { background: var(--bronze); }
 
-.bar-name {
+/* Participant Photo */
+.participant-photo {
+  width: 52px; height: 52px; flex-shrink: 0;
+  border-radius: 50%; object-fit: cover;
+  border: 2px solid rgba(240,236,248,0.1);
+  transition: border-color 0.4s;
+}
+.bar-row[data-rank="1"] .participant-photo { border-color: var(--gold); }
+
+/* Name */
+.participant-name {
   width: 200px; flex-shrink: 0;
-  font-family: 'Fraunces', serif; font-size: 1.3rem; color: var(--paper);
+  font-family: 'Fraunces', serif; font-size: 1.35rem;
+  color: var(--text); font-weight: 600;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  transition: color 0.4s;
 }
+.bar-row[data-rank="1"] .participant-name { color: var(--gold); }
+
+/* Track + Fill */
 .bar-track {
-  flex: 1; height: 40px; background: var(--ink-2);
-  border: 1px solid var(--line); border-radius: 6px;
-  overflow: hidden; position: relative;
+  flex: 1; height: 44px;
+  background: var(--surface);
+  border: 1px solid rgba(240,236,248,0.06);
+  border-radius: 8px; overflow: hidden;
+  position: relative;
 }
 .bar-fill {
-  height: 100%; background: linear-gradient(90deg, var(--seal), var(--seal-bright));
-  border-radius: 6px; width: 0%;
-  transition: width 0.8s var(--ease);
+  height: 100%; width: 0%;
+  background: var(--bar-fill);
+  border-radius: 8px;
+  position: relative;
+  transition: none; /* GSAP handles this */
 }
-.bar-count {
-  position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
-  font-family: 'IBM Plex Mono', monospace; font-size: 1.2rem;
-  color: var(--paper); font-weight: 600;
+.bar-row[data-rank="1"] .bar-fill {
+  background: var(--bar-fill-leader);
 }
-
-/* ───── Footer Stats ───── */
-.footer-stats {
-  flex-shrink: 0; padding: 20px 60px;
-  display: flex; justify-content: center; gap: 60px;
-  border-top: 1px solid var(--line);
+/* Shimmer overlay on leader bar */
+.bar-row[data-rank="1"] .bar-fill::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+  animation: shimmer 2.5s ease-in-out infinite;
 }
-.footer-stat {
-  text-align: center;
-}
-.footer-stat .num {
-  font-family: 'Fraunces', serif; font-size: 2.5rem; color: var(--paper);
-}
-.footer-stat .label {
-  font-family: 'IBM Plex Mono', monospace; font-size: 11px;
-  letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint);
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
-/* ───── Responsive ───── */
-@media (max-width: 768px) {
-  #resultsBoard { padding: 10px 20px 20px; }
-  .bar-name { width: 120px; font-size: 1rem; }
-  .bar-rank { width: 30px; font-size: 1.2rem; }
-  .footer-stats { gap: 30px; padding: 16px 20px; }
+/* Vote Count */
+.vote-count {
+  width: 100px; flex-shrink: 0; text-align: right;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 2.2rem; font-weight: 700;
+  color: var(--text);
+  transition: color 0.4s;
+}
+.bar-row[data-rank="1"] .vote-count { color: var(--gold); }
+
+/* Percentage */
+.vote-pct {
+  width: 70px; flex-shrink: 0; text-align: right;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1rem; color: var(--text-faint);
+}
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE (smaller screens / single projector)
+   ═══════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .header { padding: 20px 24px; }
+  #resultsBoard { padding: 20px 24px; }
+  .participant-name { width: 120px; font-size: 1rem; }
+  .vote-count { font-size: 1.6rem; width: 70px; }
+  .vote-pct { display: none; }
+  .header-stat .num { font-size: 2rem; }
+  .header-title { font-size: 1.3rem; }
 }
 </style>
 </head>
 <body>
 
-<!-- ───── Header ───── -->
-<div class="header">
-  <div class="header-badge"><span class="dot"></span> Live Results</div>
-  <h1>Pecha<span class="accent">Kucha</span> 2026</h1>
-  <p class="header-sub">NSBM Faculty of Computing · Real-Time Audience Vote</p>
-</div>
+<canvas id="particleCanvas"></canvas>
 
-<!-- ───── Auth Guard ───── -->
-<div class="auth-guard" id="authGuard">
-  <button class="btn-admin" id="loginBtn">Sign in as Admin</button>
-</div>
+<div class="app">
+  <!-- ───── Header ───── -->
+  <header class="header">
+    <div class="header-left">
+      <div class="live-badge"><span class="dot"></span> LIVE</div>
+      <div class="header-title">Pecha<span class="accent">Kucha</span> 2026</div>
+    </div>
+    <div class="header-right">
+      <div class="header-stat">
+        <div class="num" id="totalVotes">0</div>
+        <div class="label">Total Votes</div>
+      </div>
+      <div class="header-stat">
+        <div class="num" id="leadMargin">—</div>
+        <div class="label">Lead Margin</div>
+      </div>
+    </div>
+  </header>
 
-<!-- ───── Results Board ───── -->
-<div id="resultsBoard">
-  <div class="bars-container" id="barsContainer"></div>
-</div>
+  <!-- ───── Vote Flash ───── -->
+  <div class="vote-flash" id="voteFlash"></div>
 
-<!-- ───── Footer Stats ───── -->
-<div class="footer-stats" id="footerStats" style="display: none;">
-  <div class="footer-stat">
-    <div class="num" id="totalVotes">0</div>
-    <div class="label">Total Votes</div>
+  <!-- ───── Auth Guard ───── -->
+  <div class="auth-guard" id="authGuard">
+    <button class="btn-admin" id="loginBtn">Sign in as Admin</button>
   </div>
-  <div class="footer-stat">
-    <div class="num" id="leadVotes">0</div>
-    <div class="label">Leader Votes</div>
-  </div>
-  <div class="footer-stat">
-    <div class="num" id="participantCount">5</div>
-    <div class="label">Presenters</div>
+
+  <!-- ───── Results Board ───── -->
+  <div id="resultsBoard">
+    <div class="leaderboard" id="leaderboard"></div>
   </div>
 </div>
 
@@ -192,7 +317,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebas
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-/* ───── Firebase Config ───── */
+/* ═══════════════════════════════════════════════════
+   FIREBASE CONFIG
+   ═══════════════════════════════════════════════════ */
 const firebaseConfig = {
   apiKey: "AIzaSyA9Tdj5TUnaN67thSjkDIjUHB00zQTDXJ4",
   authDomain: "pechakucha-nsbm.firebaseapp.com",
@@ -207,100 +334,220 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-/* ───── Participants (must match pechakucha.html) ───── */
+/* ═══════════════════════════════════════════════════
+   PARTICIPANTS (Must match pechakucha.html)
+   ═══════════════════════════════════════════════════ */
 const participants = [
-  { id: "p1", name: "Kusal Nirmala" },
-  { id: "p2", name: "Amara Perera" },
-  { id: "p3", name: "Dineth Silva" },
-  { id: "p4", name: "Nethmi Fernando" },
-  { id: "p5", name: "Ravindu Jayasekara" }
+  { id: "p1", name: "Kusal Nirmala", image: "assets/portrait.jpg" },
+  { id: "p2", name: "Amara Perera", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop&crop=face" },
+  { id: "p3", name: "Dineth Silva", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" },
+  { id: "p4", name: "Nethmi Fernando", image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop&crop=face" },
+  { id: "p5", name: "Ravindu Jayasekara", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face" }
 ];
 
-const barsContainer = document.getElementById('barsContainer');
-const footerStats = document.getElementById('footerStats');
-const totalVotesEl = document.getElementById('totalVotes');
-const leadVotesEl = document.getElementById('leadVotes');
-const participantCountEl = document.getElementById('participantCount');
+/* ═══════════════════════════════════════════════════
+   AMBIENT PARTICLE SYSTEM
+   ═══════════════════════════════════════════════════ */
+const canvas = document.getElementById('particleCanvas');
+const pCtx = canvas.getContext('2d');
+let particles = [];
 
-participantCountEl.textContent = participants.length;
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
 
-/* ───── Build bar rows ───── */
-const ROW_HEIGHT = 75;
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 2.5 + 0.5;
+    this.speedX = (Math.random() - 0.5) * 0.3;
+    this.speedY = (Math.random() - 0.5) * 0.2 - 0.15;
+    this.opacity = Math.random() * 0.3 + 0.05;
+    this.hue = Math.random() > 0.7 ? 45 : (Math.random() > 0.5 ? 280 : 0);
+    this.sat = this.hue === 0 ? '70%' : '60%';
+    this.light = '70%';
+  }
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.y < -10 || this.x < -10 || this.x > canvas.width + 10) this.reset();
+    if (this.y < 0) this.y = canvas.height;
+  }
+  draw() {
+    pCtx.beginPath();
+    pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    pCtx.fillStyle = `hsla(${this.hue}, ${this.sat}, ${this.light}, ${this.opacity})`;
+    pCtx.fill();
+  }
+}
+
+for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+function animateParticles() {
+  pCtx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+/* ═══════════════════════════════════════════════════
+   BUILD LEADERBOARD ROWS
+   ═══════════════════════════════════════════════════ */
+const leaderboard = document.getElementById('leaderboard');
+const ROW_HEIGHT = 88;
+
 participants.forEach((p, i) => {
   const row = document.createElement('div');
   row.className = 'bar-row';
   row.id = `row-${p.id}`;
+  row.dataset.rank = i + 1;
   row.style.top = (i * ROW_HEIGHT) + 'px';
+  row.style.opacity = '0';
   row.innerHTML = `
-    <div class="bar-rank" id="rank-${p.id}">${i + 1}</div>
-    <div class="bar-name">${p.name}</div>
+    <div class="rank-badge" id="rank-${p.id}">${i + 1}</div>
+    <img class="participant-photo" src="${p.image}" alt="${p.name}">
+    <div class="participant-name">${p.name}</div>
     <div class="bar-track">
       <div class="bar-fill" id="fill-${p.id}"></div>
-      <div class="bar-count" id="count-${p.id}">0</div>
     </div>
+    <div class="vote-count" id="count-${p.id}">0</div>
+    <div class="vote-pct" id="pct-${p.id}">0%</div>
   `;
-  barsContainer.appendChild(row);
+  leaderboard.appendChild(row);
 });
 
-/* ───── Auth ───── */
+/* ═══════════════════════════════════════════════════
+   ANIMATED NUMBER COUNTER
+   ═══════════════════════════════════════════════════ */
+function animateCount(el, target) {
+  const current = parseInt(el.textContent) || 0;
+  if (current === target) return;
+  const obj = { val: current };
+  gsap.to(obj, {
+    val: target, duration: 0.8, ease: "power2.out",
+    onUpdate: () => { el.textContent = Math.round(obj.val); }
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   NEW VOTE FLASH NOTIFICATION
+   ═══════════════════════════════════════════════════ */
+const voteFlash = document.getElementById('voteFlash');
+let prevTotal = 0;
+
+function showVoteFlash(name) {
+  voteFlash.textContent = `⚡ New vote for ${name}`;
+  gsap.fromTo(voteFlash,
+    { opacity: 0, y: -20, scale: 0.9 },
+    { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.7)",
+      onComplete: () => {
+        gsap.to(voteFlash, { opacity: 0, y: -10, delay: 2, duration: 0.5 });
+      }
+    }
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   AUTH + REAL-TIME LISTENER
+   ═══════════════════════════════════════════════════ */
+const totalVotesEl = document.getElementById('totalVotes');
+const leadMarginEl = document.getElementById('leadMargin');
+
 document.getElementById('loginBtn').addEventListener('click', () => signInWithPopup(auth, provider));
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
     document.getElementById('authGuard').style.display = 'none';
     document.getElementById('resultsBoard').style.display = 'block';
-    footerStats.style.display = 'flex';
 
-    /* ───── Real-Time Listener ───── */
+    // Entrance animation for rows
+    participants.forEach((p, i) => {
+      gsap.to(`#row-${p.id}`, {
+        opacity: 1, delay: i * 0.12, duration: 0.6, ease: "power2.out"
+      });
+    });
+
+    let isFirstSnapshot = true;
+
+    /* ───── REAL-TIME FIRESTORE LISTENER ───── */
     onSnapshot(collection(db, "votes"), (snapshot) => {
-      let totalVotes = snapshot.size;
-      let counts = {};
+      const totalVotes = snapshot.size;
+      const counts = {};
+      const latestVotes = {};
       participants.forEach(p => counts[p.id] = 0);
 
       snapshot.forEach(doc => {
         const data = doc.data();
         if (counts[data.participantId] !== undefined) {
           counts[data.participantId]++;
+          latestVotes[data.participantId] = data.participantName;
         }
       });
 
-      totalVotesEl.textContent = totalVotes;
+      // Detect new vote (after first load)
+      if (!isFirstSnapshot && totalVotes > prevTotal) {
+        // Find who got the new vote
+        snapshot.docChanges().forEach(change => {
+          if (change.type === 'added') {
+            const name = change.doc.data().participantName;
+            if (name) showVoteFlash(name);
+          }
+        });
+      }
+      isFirstSnapshot = false;
+      prevTotal = totalVotes;
 
-      // Sort participants by vote count (descending)
+      // Sort by votes descending
       const sorted = [...participants].sort((a, b) => counts[b.id] - counts[a.id]);
+      const maxVotes = Math.max(...Object.values(counts), 1);
 
-      let maxVotes = Math.max(...Object.values(counts), 1);
-      leadVotesEl.textContent = maxVotes;
+      // Lead margin
+      if (sorted.length >= 2) {
+        const margin = counts[sorted[0].id] - counts[sorted[1].id];
+        leadMarginEl.textContent = margin > 0 ? `+${margin}` : '—';
+      }
 
-      // Animate bars to their new positions
+      // Animate total votes counter
+      animateCount(totalVotesEl, totalVotes);
+
+      // Update each bar
       sorted.forEach((p, i) => {
         const row = document.getElementById(`row-${p.id}`);
         const fill = document.getElementById(`fill-${p.id}`);
         const countEl = document.getElementById(`count-${p.id}`);
+        const pctEl = document.getElementById(`pct-${p.id}`);
         const rankEl = document.getElementById(`rank-${p.id}`);
 
-        // Move row to sorted position
-        row.style.top = (i * ROW_HEIGHT) + 'px';
+        // GSAP: Smoothly move row to new position
+        gsap.to(row, {
+          top: i * ROW_HEIGHT, duration: 0.9,
+          ease: "power3.inOut"
+        });
 
-        // Update rank number
+        // Update rank
+        row.dataset.rank = i + 1;
         rankEl.textContent = i + 1;
 
-        // Update fill width
-        let percentage = totalVotes === 0 ? 0 : (counts[p.id] / totalVotes) * 100;
-        fill.style.width = Math.max(percentage, counts[p.id] > 0 ? 3 : 0) + '%';
+        // GSAP: Animate bar fill
+        const pct = totalVotes === 0 ? 0 : (counts[p.id] / totalVotes) * 100;
+        gsap.to(fill, {
+          width: `${Math.max(pct, counts[p.id] > 0 ? 2 : 0)}%`,
+          duration: 0.8, ease: "power2.out"
+        });
 
-        // Update count
-        countEl.textContent = counts[p.id];
+        // Animate vote count number
+        animateCount(countEl, counts[p.id]);
 
-        // Leader styling
-        if (i === 0 && counts[p.id] > 0) {
-          row.classList.add('leader');
-        } else {
-          row.classList.remove('leader');
-        }
+        // Percentage
+        pctEl.textContent = totalVotes === 0 ? '0%' : Math.round(pct) + '%';
       });
     }, (error) => {
-      alert("Access Denied. Only admin accounts can view results.");
+      alert("Access Denied. Only admin can view live results.");
       console.error(error);
     });
   }
