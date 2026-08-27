@@ -6,33 +6,24 @@
 <title>Live Results — PechaKucha 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;900&family=IBM+Plex+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<!-- GSAP for professional-grade animations -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,400&family=IBM+Plex+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <style>
 /* ═══════════════════════════════════════════════════
-   CINEMATIC DESIGN SYSTEM
-   Built for 2x projectors in a 350-seat hall
-   Everything is oversized for readability at distance
+   CINEMATIC DESIGN SYSTEM — PROJECTOR BUILD
+   2x Projectors · 350 seats · Readable at 30m
    ═══════════════════════════════════════════════════ */
 :root {
-  --bg: #08060a;
-  --surface: #0f0d12;
-  --surface-2: #161420;
-  --text: #f0ecf8;
-  --text-dim: #9d96b0;
-  --text-faint: #5c5672;
+  --bg: #08060a; --surface: #0f0d12; --surface-2: #161420;
+  --text: #f0ecf8; --text-dim: #9d96b0; --text-faint: #5c5672;
   --gold: #f5c842; --gold-dim: #c9a020;
-  --silver: #b8c4d0; --silver-dim: #7a8696;
-  --bronze: #cd7f32; --bronze-dim: #8a5520;
+  --silver: #b8c4d0; --bronze: #cd7f32;
   --accent: #e84040; --accent-glow: rgba(232,64,64,0.4);
+  --amber: #f59e0b; --amber-glow: rgba(245,158,11,0.3);
   --bar-fill: linear-gradient(90deg, #6c3fdb, #e84040, #f5c842);
   --bar-fill-leader: linear-gradient(90deg, #f5c842, #ffd700, #ffe066);
-  --ease: cubic-bezier(.25,.8,.25,1);
 }
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body {
   width: 100%; height: 100%; overflow: hidden;
   background: var(--bg); color: var(--text);
@@ -40,14 +31,8 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ═══════════════════════════════════════════════════
-   AMBIENT PARTICLE CANVAS (Background atmosphere)
-   ═══════════════════════════════════════════════════ */
-#particleCanvas {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-}
-
-/* Radial gradient overlays for depth */
+/* ═══════════════ PARTICLE CANVAS ═══════════════ */
+#particleCanvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 body::before {
   content: ""; position: fixed; inset: 0; z-index: 1; pointer-events: none;
   background:
@@ -56,27 +41,15 @@ body::before {
     radial-gradient(ellipse 60% 40% at 90% 100%, rgba(245,200,66,0.06), transparent 50%);
 }
 
-/* ═══════════════════════════════════════════════════
-   LAYOUT
-   ═══════════════════════════════════════════════════ */
-.app {
-  position: relative; z-index: 2;
-  display: flex; flex-direction: column;
-  height: 100vh; padding: 0;
-}
+/* ═══════════════ LAYOUT ═══════════════ */
+.app { position: relative; z-index: 2; display: flex; flex-direction: column; height: 100vh; }
 
-/* ═══════════════════════════════════════════════════
-   HEADER
-   ═══════════════════════════════════════════════════ */
+/* ═══════════════ HEADER ═══════════════ */
 .header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 28px 50px;
-  border-bottom: 1px solid rgba(240,236,248,0.06);
-  flex-shrink: 0;
+  padding: 24px 50px; border-bottom: 1px solid rgba(240,236,248,0.06); flex-shrink: 0;
 }
-.header-left {
-  display: flex; align-items: center; gap: 20px;
-}
+.header-left { display: flex; align-items: center; gap: 20px; }
 .live-badge {
   display: inline-flex; align-items: center; gap: 10px;
   background: var(--accent); padding: 8px 20px; border-radius: 6px;
@@ -88,190 +61,239 @@ body::before {
   width: 10px; height: 10px; background: #fff; border-radius: 50%;
   animation: dotPulse 1.2s ease-in-out infinite;
 }
+.live-badge.closed { background: #444; animation: none; }
+.live-badge.closed .dot { animation: none; opacity: 0.4; }
 @keyframes livePulse {
-  0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+  0%,100% { box-shadow: 0 0 0 0 var(--accent-glow); }
   50% { box-shadow: 0 0 20px 6px var(--accent-glow); }
 }
-@keyframes dotPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
+@keyframes dotPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 .header-title {
   font-family: 'Fraunces', serif; font-size: 1.8rem;
-  color: var(--text); font-weight: 600; letter-spacing: -0.01em;
+  font-weight: 600; letter-spacing: -0.01em;
 }
 .header-title .accent {
   background: linear-gradient(135deg, var(--gold), var(--accent));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-.header-right {
-  display: flex; align-items: center; gap: 40px;
-}
-.header-stat {
-  text-align: center;
-}
+.header-right { display: flex; align-items: center; gap: 40px; }
+.header-stat { text-align: center; }
 .header-stat .num {
   font-family: 'IBM Plex Mono', monospace; font-size: 2.8rem;
-  font-weight: 700; color: var(--text);
-  line-height: 1;
+  font-weight: 700; line-height: 1;
 }
 .header-stat .label {
   font-family: 'IBM Plex Mono', monospace; font-size: 11px;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--text-faint); margin-top: 4px;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin-top: 4px;
 }
 
-/* ═══════════════════════════════════════════════════
-   NEW VOTE FLASH
-   ═══════════════════════════════════════════════════ */
+/* ═══════════════ VOTE FLASH ═══════════════ */
 .vote-flash {
-  position: fixed; top: 100px; left: 50%; transform: translateX(-50%);
-  z-index: 100;
+  position: fixed; top: 90px; left: 50%; transform: translateX(-50%); z-index: 100;
   background: rgba(245,200,66,0.12); backdrop-filter: blur(20px);
-  border: 1px solid rgba(245,200,66,0.25); border-radius: 12px;
-  padding: 14px 36px;
-  font-family: 'IBM Plex Mono', monospace; font-size: 16px;
-  font-weight: 600; color: var(--gold);
-  letter-spacing: 0.04em;
-  opacity: 0; pointer-events: none;
-  transition: none;
+  border: 1px solid rgba(245,200,66,0.25); border-radius: 12px; padding: 14px 36px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 600;
+  color: var(--gold); letter-spacing: 0.04em; opacity: 0; pointer-events: none;
 }
 
-/* ═══════════════════════════════════════════════════
-   AUTH GUARD
-   ═══════════════════════════════════════════════════ */
-.auth-guard {
-  flex: 1; display: flex; align-items: center; justify-content: center;
-}
+/* ═══════════════ AUTH GUARD ═══════════════ */
+.auth-guard { flex: 1; display: flex; align-items: center; justify-content: center; }
 .btn-admin {
   background: linear-gradient(135deg, var(--gold-dim), var(--gold));
   color: var(--bg); border: none; padding: 18px 44px;
   font-family: 'IBM Plex Mono', monospace; font-size: 16px;
   font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
-  border-radius: 10px; cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.3s;
+  border-radius: 10px; cursor: pointer; transition: transform 0.2s, box-shadow 0.3s;
 }
-.btn-admin:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 40px rgba(245,200,66,0.3);
+.btn-admin:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(245,200,66,0.3); }
+
+/* ═══════════════ MAIN CONTENT AREA ═══════════════ */
+#resultsBoard { display: none; flex: 1; padding: 24px 50px 20px; overflow: hidden; }
+.main-content { display: flex; gap: 40px; height: 100%; max-width: 1400px; margin: 0 auto; }
+.leaderboard-area { flex: 1; position: relative; }
+.leaderboard { position: relative; height: 100%; }
+
+/* ═══════════════ COUNTDOWN PANEL (Right side) ═══════════════ */
+.countdown-panel {
+  width: 260px; flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 20px;
+}
+.countdown-ring-wrap {
+  position: relative; width: 220px; height: 220px;
+}
+.countdown-svg {
+  width: 220px; height: 220px; transform: rotate(-90deg);
+}
+.countdown-track {
+  fill: none; stroke: rgba(240,236,248,0.06); stroke-width: 6;
+}
+.countdown-progress {
+  fill: none; stroke: var(--gold); stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke 0.5s;
+}
+.countdown-progress.amber { stroke: var(--amber); }
+.countdown-progress.red { stroke: var(--accent); }
+.countdown-progress.red-pulse {
+  stroke: var(--accent);
+  animation: ringPulse 0.6s ease-in-out infinite;
+}
+@keyframes ringPulse {
+  0%,100% { filter: drop-shadow(0 0 4px transparent); stroke-width: 6; }
+  50% { filter: drop-shadow(0 0 16px var(--accent-glow)); stroke-width: 8; }
+}
+.countdown-time {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-family: 'IBM Plex Mono', monospace; font-size: 3.5rem;
+  font-weight: 700; color: var(--text); letter-spacing: 0.02em;
+  transition: color 0.5s, font-size 0.3s;
+}
+.countdown-time.amber { color: var(--amber); }
+.countdown-time.red { color: var(--accent); }
+.countdown-time.final { font-size: 5rem; color: var(--accent); }
+.countdown-label {
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-faint);
+}
+.countdown-label.urgent { color: var(--accent); animation: labelBlink 0.8s ease-in-out infinite; }
+@keyframes labelBlink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* Countdown not started state */
+.countdown-waiting {
+  font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+  color: var(--text-faint); text-align: center; line-height: 1.6;
 }
 
-/* ═══════════════════════════════════════════════════
-   RESULTS BOARD
-   ═══════════════════════════════════════════════════ */
-#resultsBoard {
-  display: none; flex: 1;
-  padding: 30px 50px 20px;
-  overflow: hidden;
+/* ═══════════════ ADMIN CONTROLS ═══════════════ */
+.admin-controls {
+  position: fixed; bottom: 20px; right: 20px; z-index: 150;
+  display: flex; gap: 10px;
 }
-.leaderboard {
-  position: relative; max-width: 1200px;
-  margin: 0 auto; height: 100%;
+.btn-ctrl {
+  padding: 12px 24px; border-radius: 8px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+  font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+  cursor: pointer; border: none; transition: transform 0.2s, opacity 0.2s;
 }
+.btn-ctrl:hover { transform: translateY(-2px); }
+.btn-ctrl:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+.btn-start { background: var(--gold); color: var(--bg); }
+.btn-reset { background: var(--surface-2); color: var(--text-dim); border: 1px solid rgba(240,236,248,0.1); }
 
-/* ═══════════════════════════════════════════════════
-   BAR ROW (Each participant)
-   ═══════════════════════════════════════════════════ */
+/* ═══════════════ BAR ROW ═══════════════ */
 .bar-row {
   position: absolute; left: 0; right: 0;
-  display: flex; align-items: center; gap: 20px;
-  height: 72px; padding: 0 8px;
-  border-radius: 12px;
-  transition: none; /* GSAP handles transitions */
+  display: flex; align-items: center; gap: 16px;
+  height: 68px; padding: 0 8px; border-radius: 12px;
 }
-
-/* Rank Badge */
 .rank-badge {
-  width: 48px; height: 48px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 50%;
-  font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 900;
-  color: var(--bg);
-  background: var(--text-faint);
-  transition: background 0.6s, transform 0.4s;
+  width: 44px; height: 44px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; border-radius: 50%;
+  font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 900;
+  color: var(--bg); background: var(--text-faint); transition: background 0.6s, transform 0.4s;
 }
 .bar-row[data-rank="1"] .rank-badge { background: var(--gold); transform: scale(1.15); }
 .bar-row[data-rank="2"] .rank-badge { background: var(--silver); }
 .bar-row[data-rank="3"] .rank-badge { background: var(--bronze); }
-
-/* Participant Photo */
 .participant-photo {
-  width: 52px; height: 52px; flex-shrink: 0;
-  border-radius: 50%; object-fit: cover;
-  border: 2px solid rgba(240,236,248,0.1);
-  transition: border-color 0.4s;
+  width: 48px; height: 48px; flex-shrink: 0; border-radius: 50%; object-fit: cover;
+  border: 2px solid rgba(240,236,248,0.1); transition: border-color 0.4s;
 }
 .bar-row[data-rank="1"] .participant-photo { border-color: var(--gold); }
-
-/* Name */
 .participant-name {
-  width: 200px; flex-shrink: 0;
-  font-family: 'Fraunces', serif; font-size: 1.35rem;
-  color: var(--text); font-weight: 600;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  width: 180px; flex-shrink: 0; font-family: 'Fraunces', serif; font-size: 1.2rem;
+  font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   transition: color 0.4s;
 }
 .bar-row[data-rank="1"] .participant-name { color: var(--gold); }
-
-/* Track + Fill */
 .bar-track {
-  flex: 1; height: 44px;
-  background: var(--surface);
-  border: 1px solid rgba(240,236,248,0.06);
-  border-radius: 8px; overflow: hidden;
-  position: relative;
+  flex: 1; height: 40px; background: var(--surface);
+  border: 1px solid rgba(240,236,248,0.06); border-radius: 8px;
+  overflow: hidden; position: relative;
 }
 .bar-fill {
-  height: 100%; width: 0%;
-  background: var(--bar-fill);
-  border-radius: 8px;
-  position: relative;
-  transition: none; /* GSAP handles this */
+  height: 100%; width: 0%; background: var(--bar-fill); border-radius: 8px; position: relative;
 }
-.bar-row[data-rank="1"] .bar-fill {
-  background: var(--bar-fill-leader);
-}
-/* Shimmer overlay on leader bar */
+.bar-row[data-rank="1"] .bar-fill { background: var(--bar-fill-leader); }
 .bar-row[data-rank="1"] .bar-fill::after {
-  content: "";
-  position: absolute; inset: 0;
+  content: ""; position: absolute; inset: 0;
   background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
   animation: shimmer 2.5s ease-in-out infinite;
 }
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-/* Vote Count */
+@keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 .vote-count {
-  width: 100px; flex-shrink: 0; text-align: right;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 2.2rem; font-weight: 700;
-  color: var(--text);
+  width: 80px; flex-shrink: 0; text-align: right;
+  font-family: 'IBM Plex Mono', monospace; font-size: 2rem; font-weight: 700;
   transition: color 0.4s;
 }
 .bar-row[data-rank="1"] .vote-count { color: var(--gold); }
-
-/* Percentage */
 .vote-pct {
-  width: 70px; flex-shrink: 0; text-align: right;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 1rem; color: var(--text-faint);
+  width: 60px; flex-shrink: 0; text-align: right;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.95rem; color: var(--text-faint);
 }
 
-/* ═══════════════════════════════════════════════════
-   RESPONSIVE (smaller screens / single projector)
-   ═══════════════════════════════════════════════════ */
-@media (max-width: 900px) {
-  .header { padding: 20px 24px; }
-  #resultsBoard { padding: 20px 24px; }
+/* ═══════════════ WINNER OVERLAY ═══════════════ */
+.winner-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--bg); opacity: 0; pointer-events: none;
+}
+.winner-overlay.active { pointer-events: auto; }
+#winnerCanvas { position: absolute; inset: 0; z-index: 0; }
+.winner-content { position: relative; z-index: 1; text-align: center; }
+.winner-suspense {
+  font-family: 'Fraunces', serif; font-style: italic;
+  font-size: 2.2rem; color: var(--text-dim); opacity: 0;
+}
+.winner-photo-wrap {
+  width: 220px; height: 220px; margin: 30px auto 0;
+  border-radius: 50%; overflow: hidden;
+  border: 4px solid var(--gold);
+  box-shadow: 0 0 60px rgba(245,200,66,0.3), 0 0 120px rgba(245,200,66,0.1);
+  opacity: 0; transform: scale(0.3);
+}
+.winner-photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
+.winner-name {
+  font-family: 'Fraunces', serif; font-size: 4rem; font-weight: 900;
+  margin-top: 28px; opacity: 0;
+  background: linear-gradient(135deg, var(--gold), #fff, var(--gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.winner-stats {
+  display: flex; gap: 40px; justify-content: center; margin-top: 20px; opacity: 0;
+}
+.winner-stat { text-align: center; }
+.winner-stat .num {
+  font-family: 'IBM Plex Mono', monospace; font-size: 2.5rem;
+  font-weight: 700; color: var(--gold);
+}
+.winner-stat .label {
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); margin-top: 4px;
+}
+.winner-badge {
+  display: inline-block; margin-top: 24px; padding: 10px 30px;
+  background: rgba(245,200,66,0.12); border: 1px solid rgba(245,200,66,0.3);
+  border-radius: 100px; font-family: 'IBM Plex Mono', monospace; font-size: 14px;
+  font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gold); opacity: 0;
+}
+
+/* ═══════════════ RESPONSIVE ═══════════════ */
+@media (max-width: 1000px) {
+  .header { padding: 18px 24px; }
+  #resultsBoard { padding: 16px 24px; }
+  .countdown-panel { width: 200px; }
+  .countdown-ring-wrap { width: 180px; height: 180px; }
+  .countdown-svg { width: 180px; height: 180px; }
+  .countdown-time { font-size: 2.8rem; }
   .participant-name { width: 120px; font-size: 1rem; }
-  .vote-count { font-size: 1.6rem; width: 70px; }
+  .vote-count { font-size: 1.6rem; width: 60px; }
   .vote-pct { display: none; }
   .header-stat .num { font-size: 2rem; }
-  .header-title { font-size: 1.3rem; }
+  .winner-name { font-size: 2.8rem; }
+  .winner-photo-wrap { width: 160px; height: 160px; }
 }
 </style>
 </head>
@@ -280,10 +302,10 @@ body::before {
 <canvas id="particleCanvas"></canvas>
 
 <div class="app">
-  <!-- ───── Header ───── -->
+  <!-- ═══════════════ HEADER ═══════════════ -->
   <header class="header">
     <div class="header-left">
-      <div class="live-badge"><span class="dot"></span> LIVE</div>
+      <div class="live-badge" id="liveBadge"><span class="dot"></span> LIVE</div>
       <div class="header-title">Pecha<span class="accent">Kucha</span> 2026</div>
     </div>
     <div class="header-right">
@@ -298,28 +320,68 @@ body::before {
     </div>
   </header>
 
-  <!-- ───── Vote Flash ───── -->
+  <!-- ═══════════════ VOTE FLASH ═══════════════ -->
   <div class="vote-flash" id="voteFlash"></div>
 
-  <!-- ───── Auth Guard ───── -->
+  <!-- ═══════════════ AUTH ═══════════════ -->
   <div class="auth-guard" id="authGuard">
     <button class="btn-admin" id="loginBtn">Sign in as Admin</button>
   </div>
 
-  <!-- ───── Results Board ───── -->
+  <!-- ═══════════════ RESULTS BOARD ═══════════════ -->
   <div id="resultsBoard">
-    <div class="leaderboard" id="leaderboard"></div>
+    <div class="main-content">
+      <!-- Left: Leaderboard -->
+      <div class="leaderboard-area">
+        <div class="leaderboard" id="leaderboard"></div>
+      </div>
+
+      <!-- Right: Countdown Timer -->
+      <div class="countdown-panel" id="countdownPanel">
+        <div class="countdown-ring-wrap">
+          <svg class="countdown-svg" viewBox="0 0 220 220">
+            <circle class="countdown-track" cx="110" cy="110" r="100"/>
+            <circle class="countdown-progress" id="countdownRing" cx="110" cy="110" r="100"
+              stroke-dasharray="628.32" stroke-dashoffset="0"/>
+          </svg>
+          <div class="countdown-time" id="countdownTime">3:00</div>
+        </div>
+        <div class="countdown-label" id="countdownLabel">Voting Countdown</div>
+        <p class="countdown-waiting" id="countdownWaiting">Waiting for admin<br>to start countdown</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ ADMIN CONTROLS ═══════════════ -->
+  <div class="admin-controls" id="adminControls" style="display: none;">
+    <button class="btn-ctrl btn-start" id="btnStart">▶ Start 3:00 Countdown</button>
+    <button class="btn-ctrl btn-reset" id="btnReset" disabled>↻ Reset</button>
+  </div>
+</div>
+
+<!-- ═══════════════ WINNER OVERLAY ═══════════════ -->
+<div class="winner-overlay" id="winnerOverlay">
+  <canvas id="winnerCanvas"></canvas>
+  <div class="winner-content">
+    <div class="winner-suspense" id="winnerSuspense">And the winner is...</div>
+    <div class="winner-photo-wrap" id="winnerPhotoWrap">
+      <img id="winnerPhoto" src="" alt="">
+    </div>
+    <div class="winner-name" id="winnerName"></div>
+    <div class="winner-stats" id="winnerStats">
+      <div class="winner-stat"><div class="num" id="winnerVotes">0</div><div class="label">Votes</div></div>
+      <div class="winner-stat"><div class="num" id="winnerPct">0%</div><div class="label">Of Total</div></div>
+    </div>
+    <div class="winner-badge" id="winnerBadge">🏆 PechaKucha 2026 Champion</div>
   </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-/* ═══════════════════════════════════════════════════
-   FIREBASE CONFIG
-   ═══════════════════════════════════════════════════ */
+/* ═══════════════ FIREBASE ═══════════════ */
 const firebaseConfig = {
   apiKey: "AIzaSyA9Tdj5TUnaN67thSjkDIjUHB00zQTDXJ4",
   authDomain: "pechakucha-nsbm.firebaseapp.com",
@@ -328,15 +390,12 @@ const firebaseConfig = {
   messagingSenderId: "188251897901",
   appId: "1:188251897901:web:d579281f4689db24fcb8a4"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-/* ═══════════════════════════════════════════════════
-   PARTICIPANTS (Must match pechakucha.html)
-   ═══════════════════════════════════════════════════ */
+/* ═══════════════ PARTICIPANTS ═══════════════ */
 const participants = [
   { id: "p1", name: "Kusal Nirmala", image: "assets/portrait.jpg" },
   { id: "p2", name: "Amara Perera", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop&crop=face" },
@@ -345,116 +404,316 @@ const participants = [
   { id: "p5", name: "Ravindu Jayasekara", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face" }
 ];
 
-/* ═══════════════════════════════════════════════════
-   AMBIENT PARTICLE SYSTEM
-   ═══════════════════════════════════════════════════ */
-const canvas = document.getElementById('particleCanvas');
-const pCtx = canvas.getContext('2d');
+/* ═══════════════ AMBIENT PARTICLES ═══════════════ */
+const pCanvas = document.getElementById('particleCanvas');
+const pCtx = pCanvas.getContext('2d');
 let particles = [];
-
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
+function resizeCanvas() { pCanvas.width = window.innerWidth; pCanvas.height = window.innerHeight; }
+resizeCanvas(); window.addEventListener('resize', resizeCanvas);
 
 class Particle {
   constructor() { this.reset(); }
   reset() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
+    this.x = Math.random() * pCanvas.width;
+    this.y = Math.random() * pCanvas.height;
     this.size = Math.random() * 2.5 + 0.5;
     this.speedX = (Math.random() - 0.5) * 0.3;
     this.speedY = (Math.random() - 0.5) * 0.2 - 0.15;
     this.opacity = Math.random() * 0.3 + 0.05;
     this.hue = Math.random() > 0.7 ? 45 : (Math.random() > 0.5 ? 280 : 0);
-    this.sat = this.hue === 0 ? '70%' : '60%';
-    this.light = '70%';
   }
   update() {
-    this.x += this.speedX;
-    this.y += this.speedY;
-    if (this.y < -10 || this.x < -10 || this.x > canvas.width + 10) this.reset();
-    if (this.y < 0) this.y = canvas.height;
+    this.x += this.speedX; this.y += this.speedY;
+    if (this.y < -10 || this.x < -10 || this.x > pCanvas.width + 10) this.reset();
+    if (this.y < 0) this.y = pCanvas.height;
   }
   draw() {
     pCtx.beginPath();
     pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    pCtx.fillStyle = `hsla(${this.hue}, ${this.sat}, ${this.light}, ${this.opacity})`;
+    pCtx.fillStyle = `hsla(${this.hue}, 60%, 70%, ${this.opacity})`;
     pCtx.fill();
   }
 }
-
 for (let i = 0; i < 120; i++) particles.push(new Particle());
-
 function animateParticles() {
-  pCtx.clearRect(0, 0, canvas.width, canvas.height);
+  pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
   particles.forEach(p => { p.update(); p.draw(); });
   requestAnimationFrame(animateParticles);
 }
 animateParticles();
 
-/* ═══════════════════════════════════════════════════
-   BUILD LEADERBOARD ROWS
-   ═══════════════════════════════════════════════════ */
+/* ═══════════════ BUILD LEADERBOARD ═══════════════ */
 const leaderboard = document.getElementById('leaderboard');
-const ROW_HEIGHT = 88;
+const ROW_HEIGHT = 82;
 
 participants.forEach((p, i) => {
   const row = document.createElement('div');
-  row.className = 'bar-row';
-  row.id = `row-${p.id}`;
-  row.dataset.rank = i + 1;
-  row.style.top = (i * ROW_HEIGHT) + 'px';
-  row.style.opacity = '0';
+  row.className = 'bar-row'; row.id = `row-${p.id}`; row.dataset.rank = i + 1;
+  row.style.top = (i * ROW_HEIGHT) + 'px'; row.style.opacity = '0';
   row.innerHTML = `
     <div class="rank-badge" id="rank-${p.id}">${i + 1}</div>
     <img class="participant-photo" src="${p.image}" alt="${p.name}">
     <div class="participant-name">${p.name}</div>
-    <div class="bar-track">
-      <div class="bar-fill" id="fill-${p.id}"></div>
-    </div>
+    <div class="bar-track"><div class="bar-fill" id="fill-${p.id}"></div></div>
     <div class="vote-count" id="count-${p.id}">0</div>
     <div class="vote-pct" id="pct-${p.id}">0%</div>
   `;
   leaderboard.appendChild(row);
 });
 
-/* ═══════════════════════════════════════════════════
-   ANIMATED NUMBER COUNTER
-   ═══════════════════════════════════════════════════ */
+/* ═══════════════ HELPERS ═══════════════ */
 function animateCount(el, target) {
   const current = parseInt(el.textContent) || 0;
   if (current === target) return;
   const obj = { val: current };
-  gsap.to(obj, {
-    val: target, duration: 0.8, ease: "power2.out",
+  gsap.to(obj, { val: target, duration: 0.8, ease: "power2.out",
     onUpdate: () => { el.textContent = Math.round(obj.val); }
   });
 }
 
-/* ═══════════════════════════════════════════════════
-   NEW VOTE FLASH NOTIFICATION
-   ═══════════════════════════════════════════════════ */
 const voteFlash = document.getElementById('voteFlash');
-let prevTotal = 0;
-
 function showVoteFlash(name) {
   voteFlash.textContent = `⚡ New vote for ${name}`;
-  gsap.fromTo(voteFlash,
-    { opacity: 0, y: -20, scale: 0.9 },
+  gsap.fromTo(voteFlash, { opacity: 0, y: -20, scale: 0.9 },
     { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.7)",
-      onComplete: () => {
-        gsap.to(voteFlash, { opacity: 0, y: -10, delay: 2, duration: 0.5 });
-      }
-    }
-  );
+      onComplete: () => { gsap.to(voteFlash, { opacity: 0, y: -10, delay: 2, duration: 0.5 }); }
+    });
 }
 
-/* ═══════════════════════════════════════════════════
-   AUTH + REAL-TIME LISTENER
-   ═══════════════════════════════════════════════════ */
+/* ═══════════════ COUNTDOWN TIMER ═══════════════ */
+const COUNTDOWN_DURATION = 180; // 3 minutes in seconds
+const CIRCUMFERENCE = 2 * Math.PI * 100; // SVG circle r=100
+const countdownRing = document.getElementById('countdownRing');
+const countdownTime = document.getElementById('countdownTime');
+const countdownLabel = document.getElementById('countdownLabel');
+const countdownWaiting = document.getElementById('countdownWaiting');
+const btnStart = document.getElementById('btnStart');
+const btnReset = document.getElementById('btnReset');
+const liveBadge = document.getElementById('liveBadge');
+
+countdownRing.style.strokeDasharray = CIRCUMFERENCE;
+countdownRing.style.strokeDashoffset = '0';
+
+let countdownInterval = null;
+let remainingSeconds = COUNTDOWN_DURATION;
+let countdownActive = false;
+let votingLocked = false;
+let latestCounts = {};
+let latestTotalVotes = 0;
+
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${sec.toString().padStart(2, '0')}`;
+}
+
+function updateCountdownDisplay() {
+  countdownTime.textContent = formatTime(remainingSeconds);
+
+  // Ring progress
+  const fraction = remainingSeconds / COUNTDOWN_DURATION;
+  const offset = CIRCUMFERENCE * (1 - fraction);
+  countdownRing.style.strokeDashoffset = offset;
+
+  // Urgency phases
+  countdownRing.classList.remove('amber', 'red', 'red-pulse');
+  countdownTime.classList.remove('amber', 'red', 'final');
+  countdownLabel.classList.remove('urgent');
+
+  if (remainingSeconds <= 15) {
+    countdownRing.classList.add('red-pulse');
+    countdownTime.classList.add('red');
+    countdownLabel.textContent = 'HURRY UP!';
+    countdownLabel.classList.add('urgent');
+    if (remainingSeconds <= 5) countdownTime.classList.add('final');
+  } else if (remainingSeconds <= 60) {
+    countdownRing.classList.add('amber');
+    countdownTime.classList.add('amber');
+    countdownLabel.textContent = 'Time Running Out';
+  } else {
+    countdownLabel.textContent = 'Voting Countdown';
+  }
+}
+
+function startCountdown() {
+  if (countdownActive) return;
+  countdownActive = true;
+  countdownWaiting.style.display = 'none';
+  btnStart.disabled = true;
+  btnReset.disabled = true;
+
+  // Write to Firestore so the voting page knows voting is open
+  setDoc(doc(db, "config", "voting"), { open: true, startedAt: new Date() });
+
+  countdownInterval = setInterval(() => {
+    remainingSeconds--;
+    updateCountdownDisplay();
+
+    if (remainingSeconds <= 0) {
+      clearInterval(countdownInterval);
+      countdownActive = false;
+      votingLocked = true;
+      btnReset.disabled = false;
+
+      // Lock voting in Firestore
+      setDoc(doc(db, "config", "voting"), { open: false, closedAt: new Date() });
+
+      // Update live badge
+      liveBadge.innerHTML = '<span class="dot"></span> CLOSED';
+      liveBadge.classList.add('closed');
+      countdownLabel.textContent = 'VOTING CLOSED';
+      countdownLabel.classList.add('urgent');
+
+      // Trigger winner reveal after a brief pause
+      setTimeout(() => triggerWinnerReveal(), 1500);
+    }
+  }, 1000);
+}
+
+function resetCountdown() {
+  clearInterval(countdownInterval);
+  countdownActive = false;
+  votingLocked = false;
+  remainingSeconds = COUNTDOWN_DURATION;
+  updateCountdownDisplay();
+  countdownWaiting.style.display = 'block';
+  countdownLabel.textContent = 'Voting Countdown';
+  countdownLabel.classList.remove('urgent');
+  btnStart.disabled = false;
+  btnReset.disabled = true;
+  liveBadge.innerHTML = '<span class="dot"></span> LIVE';
+  liveBadge.classList.remove('closed');
+
+  // Re-open voting
+  setDoc(doc(db, "config", "voting"), { open: true, startedAt: new Date() });
+
+  // Hide winner overlay
+  const winnerOverlay = document.getElementById('winnerOverlay');
+  gsap.to(winnerOverlay, { opacity: 0, duration: 0.5, onComplete: () => {
+    winnerOverlay.classList.remove('active');
+  }});
+}
+
+btnStart.addEventListener('click', startCountdown);
+btnReset.addEventListener('click', resetCountdown);
+
+/* ═══════════════ WINNER REVEAL SEQUENCE ═══════════════ */
+function triggerWinnerReveal() {
+  // Find the winner
+  const sorted = [...participants].sort((a, b) => (latestCounts[b.id] || 0) - (latestCounts[a.id] || 0));
+  const winner = sorted[0];
+  const winnerVoteCount = latestCounts[winner.id] || 0;
+  const winnerPercentage = latestTotalVotes > 0 ? Math.round((winnerVoteCount / latestTotalVotes) * 100) : 0;
+
+  // Set winner data
+  document.getElementById('winnerPhoto').src = winner.image;
+  document.getElementById('winnerName').textContent = winner.name;
+  document.getElementById('winnerVotes').textContent = winnerVoteCount;
+  document.getElementById('winnerPct').textContent = winnerPercentage + '%';
+
+  const overlay = document.getElementById('winnerOverlay');
+  overlay.classList.add('active');
+
+  // Start winner particle explosion
+  startWinnerParticles();
+
+  // GSAP TIMELINE: The dramatic reveal sequence
+  const tl = gsap.timeline();
+
+  // Phase 1: Fade in black overlay
+  tl.to(overlay, { opacity: 1, duration: 1.2, ease: "power2.inOut" });
+
+  // Phase 2: "And the winner is..." text
+  tl.to('#winnerSuspense', { opacity: 1, duration: 0.8, ease: "power2.out" }, "+=0.5");
+
+  // Phase 3: Pause for suspense
+  tl.to({}, { duration: 2.5 });
+
+  // Phase 4: Fade out suspense text
+  tl.to('#winnerSuspense', { opacity: 0, duration: 0.4 });
+
+  // Phase 5: Photo reveal with scale spring
+  tl.to('#winnerPhotoWrap', {
+    opacity: 1, scale: 1, duration: 1,
+    ease: "elastic.out(1, 0.5)"
+  }, "+=0.3");
+
+  // Phase 6: Name reveal
+  tl.to('#winnerName', { opacity: 1, duration: 0.8, ease: "power2.out" }, "-=0.3");
+
+  // Phase 7: Stats reveal
+  tl.to('#winnerStats', { opacity: 1, duration: 0.6, ease: "power2.out" }, "-=0.2");
+
+  // Phase 8: Badge reveal
+  tl.to('#winnerBadge', { opacity: 1, duration: 0.6, ease: "power2.out" }, "-=0.1");
+}
+
+/* ═══════════════ WINNER PARTICLE EXPLOSION ═══════════════ */
+const wCanvas = document.getElementById('winnerCanvas');
+const wCtx = wCanvas.getContext('2d');
+let wParticles = [];
+let wAnimating = false;
+
+function startWinnerParticles() {
+  wCanvas.width = window.innerWidth;
+  wCanvas.height = window.innerHeight;
+  wParticles = [];
+  const cx = wCanvas.width / 2;
+  const cy = wCanvas.height / 2;
+  const colors = ['#f5c842', '#ffd700', '#ffe066', '#fff', '#e84040', '#c9a020'];
+
+  for (let i = 0; i < 200; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 6 + 2;
+    wParticles.push({
+      x: cx, y: cy,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - 2,
+      size: Math.random() * 5 + 2,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      gravity: 0.04,
+      opacity: 1,
+      decay: Math.random() * 0.008 + 0.003,
+      rotation: Math.random() * 360,
+      rotSpeed: (Math.random() - 0.5) * 8
+    });
+  }
+
+  if (!wAnimating) {
+    wAnimating = true;
+    animateWinnerParticles();
+  }
+}
+
+function animateWinnerParticles() {
+  wCtx.clearRect(0, 0, wCanvas.width, wCanvas.height);
+  let alive = false;
+  wParticles.forEach(p => {
+    if (p.opacity <= 0) return;
+    alive = true;
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += p.gravity;
+    p.opacity -= p.decay;
+    p.rotation += p.rotSpeed;
+
+    wCtx.save();
+    wCtx.translate(p.x, p.y);
+    wCtx.rotate(p.rotation * Math.PI / 180);
+    wCtx.globalAlpha = Math.max(p.opacity, 0);
+    wCtx.fillStyle = p.color;
+    wCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+    wCtx.restore();
+  });
+
+  if (alive) {
+    requestAnimationFrame(animateWinnerParticles);
+  } else {
+    wAnimating = false;
+  }
+}
+
+/* ═══════════════ AUTH + REAL-TIME ═══════════════ */
 const totalVotesEl = document.getElementById('totalVotes');
 const leadMarginEl = document.getElementById('leadMargin');
 
@@ -464,34 +723,31 @@ onAuthStateChanged(auth, (user) => {
   if (user) {
     document.getElementById('authGuard').style.display = 'none';
     document.getElementById('resultsBoard').style.display = 'block';
+    document.getElementById('adminControls').style.display = 'flex';
 
-    // Entrance animation for rows
+    // Entrance animation
     participants.forEach((p, i) => {
-      gsap.to(`#row-${p.id}`, {
-        opacity: 1, delay: i * 0.12, duration: 0.6, ease: "power2.out"
-      });
+      gsap.to(`#row-${p.id}`, { opacity: 1, delay: i * 0.12, duration: 0.6, ease: "power2.out" });
     });
 
     let isFirstSnapshot = true;
+    let prevTotal = 0;
 
-    /* ───── REAL-TIME FIRESTORE LISTENER ───── */
+    /* ───── REAL-TIME VOTES LISTENER ───── */
     onSnapshot(collection(db, "votes"), (snapshot) => {
       const totalVotes = snapshot.size;
+      latestTotalVotes = totalVotes;
       const counts = {};
-      const latestVotes = {};
       participants.forEach(p => counts[p.id] = 0);
 
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        if (counts[data.participantId] !== undefined) {
-          counts[data.participantId]++;
-          latestVotes[data.participantId] = data.participantName;
-        }
+      snapshot.forEach(d => {
+        const data = d.data();
+        if (counts[data.participantId] !== undefined) counts[data.participantId]++;
       });
+      latestCounts = { ...counts };
 
-      // Detect new vote (after first load)
+      // New vote flash
       if (!isFirstSnapshot && totalVotes > prevTotal) {
-        // Find who got the new vote
         snapshot.docChanges().forEach(change => {
           if (change.type === 'added') {
             const name = change.doc.data().participantName;
@@ -502,7 +758,7 @@ onAuthStateChanged(auth, (user) => {
       isFirstSnapshot = false;
       prevTotal = totalVotes;
 
-      // Sort by votes descending
+      // Sort
       const sorted = [...participants].sort((a, b) => counts[b.id] - counts[a.id]);
       const maxVotes = Math.max(...Object.values(counts), 1);
 
@@ -511,11 +767,9 @@ onAuthStateChanged(auth, (user) => {
         const margin = counts[sorted[0].id] - counts[sorted[1].id];
         leadMarginEl.textContent = margin > 0 ? `+${margin}` : '—';
       }
-
-      // Animate total votes counter
       animateCount(totalVotesEl, totalVotes);
 
-      // Update each bar
+      // Update bars
       sorted.forEach((p, i) => {
         const row = document.getElementById(`row-${p.id}`);
         const fill = document.getElementById(`fill-${p.id}`);
@@ -523,31 +777,17 @@ onAuthStateChanged(auth, (user) => {
         const pctEl = document.getElementById(`pct-${p.id}`);
         const rankEl = document.getElementById(`rank-${p.id}`);
 
-        // GSAP: Smoothly move row to new position
-        gsap.to(row, {
-          top: i * ROW_HEIGHT, duration: 0.9,
-          ease: "power3.inOut"
-        });
-
-        // Update rank
+        gsap.to(row, { top: i * ROW_HEIGHT, duration: 0.9, ease: "power3.inOut" });
         row.dataset.rank = i + 1;
         rankEl.textContent = i + 1;
 
-        // GSAP: Animate bar fill
         const pct = totalVotes === 0 ? 0 : (counts[p.id] / totalVotes) * 100;
-        gsap.to(fill, {
-          width: `${Math.max(pct, counts[p.id] > 0 ? 2 : 0)}%`,
-          duration: 0.8, ease: "power2.out"
-        });
-
-        // Animate vote count number
+        gsap.to(fill, { width: `${Math.max(pct, counts[p.id] > 0 ? 2 : 0)}%`, duration: 0.8, ease: "power2.out" });
         animateCount(countEl, counts[p.id]);
-
-        // Percentage
         pctEl.textContent = totalVotes === 0 ? '0%' : Math.round(pct) + '%';
       });
     }, (error) => {
-      alert("Access Denied. Only admin can view live results.");
+      alert("Access Denied. Admin only.");
       console.error(error);
     });
   }
