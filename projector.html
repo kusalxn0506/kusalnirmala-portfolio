@@ -33,23 +33,47 @@
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body {
   width: 100%; height: 100%; overflow: hidden;
+  background-color: #030105; /* Deep space black */
   color: var(--text);
   font-family: 'IBM Plex Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* ═══════════════ CINEMATIC BACKGROUND ═══════════════ */
-body {
-  background-color: #050308;
-  background-image: url('assets/bg.jpg'); /* User uploaded abstract background */
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+/* ═══════════════ CINEMATIC CODE BACKGROUND ═══════════════ */
+/* 100% CSS. Infinite Resolution. Zero Pixelation. */
+.cinematic-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+
+.cinema-orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(100px); opacity: 0.6; mix-blend-mode: screen;
+  animation: drift 25s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
-/* Darkening overlay so white text remains perfectly readable on a projector */
-body::after {
-  content: ""; position: fixed; inset: 0; z-index: 1; pointer-events: none;
-  background: rgba(5, 3, 10, 0.65);
+.orb-teal {
+  width: 80vw; height: 80vw;
+  background: radial-gradient(circle, rgba(26,163,255,0.45) 0%, transparent 60%);
+  top: -30%; left: -20%;
+}
+.orb-orange {
+  width: 70vw; height: 70vw;
+  background: radial-gradient(circle, rgba(255,100,50,0.35) 0%, transparent 60%);
+  bottom: -30%; right: -20%;
+  animation-delay: -7s;
+}
+.orb-copper {
+  width: 60vw; height: 60vw;
+  background: radial-gradient(circle, rgba(252,227,115,0.25) 0%, transparent 60%);
+  top: 20%; left: 30%;
+  animation-delay: -14s;
+}
+.cinema-noise {
+  position: absolute; inset: 0; opacity: 0.08; mix-blend-mode: overlay; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+@keyframes drift {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(8%, 12%) scale(1.1); }
+  100% { transform: translate(-5%, 8%) scale(0.9); }
 }
 
 /* Custom Scrollbar */
@@ -302,6 +326,14 @@ body::after {
 </style>
 </head>
 <body>
+
+<!-- CINEMATIC CODE BACKGROUND -->
+<div class="cinematic-bg">
+  <div class="cinema-orb orb-teal"></div>
+  <div class="cinema-orb orb-orange"></div>
+  <div class="cinema-orb orb-copper"></div>
+  <div class="cinema-noise"></div>
+</div>
 
 <div class="app">
   <header class="header">
