@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NSBM PechaKucha Voting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #17140f; --ink-2: #1f1b14; --paper: #f4ead9;
+    --text: #f2e8d8; --text-dim: #b6ab95;
+    --gold: #b6913f; --gold-bright: #d4af5f;
+    --seal: #a8402f; --line: rgba(244,234,217,0.12);
+  }
+  body {
+    margin: 0; background: var(--ink); color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+  h1 { font-family: 'Fraunces', serif; color: var(--paper); font-size: 2.5rem; text-align: center; margin-bottom: 10px; }
+  .subtitle { text-align: center; color: var(--text-dim); font-size: 1.1rem; margin-bottom: 40px; }
+  
+  .auth-section { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px; margin-bottom: 40px; }
+  
+  .btn {
+    background: var(--gold-bright); color: var(--ink); border: none; padding: 14px 28px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 14px; text-transform: uppercase;
+    font-weight: 600; letter-spacing: 0.05em; cursor: pointer; border-radius: 4px; transition: opacity 0.2s;
+  }
+  .btn:hover { opacity: 0.9; }
+  .btn:disabled { background: var(--line); color: var(--text-dim); cursor: not-allowed; }
+  
+  .btn-signout { background: transparent; color: var(--text-dim); border: 1px solid var(--line); margin-top: 20px; }
+  .btn-signout:hover { border-color: var(--seal); color: var(--seal); }
+
+  #votingSection { display: none; }
+  
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 24px; }
+  .card {
+    background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+    display: flex; flex-direction: column; transition: transform 0.2s, border-color 0.2s;
+  }
+  .card:hover { transform: translateY(-4px); border-color: var(--gold); }
+  .card img { width: 100%; height: 250px; object-fit: cover; background: #333; }
+  .card-info { padding: 20px; text-align: center; }
+  .card-name { font-family: 'Fraunces', serif; font-size: 1.25rem; color: var(--paper); margin: 0 0 5px 0; }
+  .card-num { font-family: 'IBM Plex Mono', monospace; color: var(--gold-bright); font-size: 0.9rem; margin-bottom: 15px; }
+  
+  .status-msg { text-align: center; margin-top: 20px; font-family: 'IBM Plex Mono', monospace; color: var(--gold-bright); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>PechaKucha 2026</h1>
+  <p class="subtitle">Official Audience Voting Portal</p>
+
+  <!-- Login Section -->
+  <div class="auth-section" id="authSection">
+    <p style="margin-bottom: 20px; font-size: 1.1rem;">You must be signed in to vote. One vote per student.</p>
+    <button class="btn" id="loginBtn">Sign in with Google</button>
+  </div>
+
+  <!-- Voting Section -->
+  <div id="votingSection">
+    <div style="text-align: center; margin-bottom: 30px;">
+      <p style="font-size: 1.2rem;">Welcome, <span id="userName" style="color: var(--gold-bright); font-weight: 600;"></span></p>
+      <p class="status-msg" id="statusMessage">Select a participant below to cast your vote.</p>
+    </div>
+
+    <!-- Participants Grid -->
+    <div class="grid" id="participantsGrid">
+      <!-- Cards will be injected by JavaScript -->
+    </div>
+    
+    <div style="text-align: center;">
+      <button class="btn btn-signout" id="logoutBtn">Sign Out</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDKs (Modular) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+  // ==========================================
+  // YOUR FIREBASE CONFIGURATION (INJECTED)
+  // ==========================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyA9Tdj5TUnaN67thSjkDIjUHB00zQTDXJ4",
+    authDomain: "pechakucha-nsbm.firebaseapp.com",
+    projectId: "pechakucha-nsbm",
+    storageBucket: "pechakucha-nsbm.firebasestorage.app",
+    messagingSenderId: "188251897901",
+    appId: "1:188251897901:web:d579281f4689db24fcb8a4"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
+
+  // ==========================================
+  // PARTICIPANT DATA 
+  // (You can change these names and image links later)
+  // ==========================================
+  const participants = [
+    { id: "p1", name: "Alice Fernando", number: "#001", image: "https://via.placeholder.com/400x400?text=Alice" },
+    { id: "p2", name: "Kamal Perera", number: "#002", image: "https://via.placeholder.com/400x400?text=Kamal" },
+    { id: "p3", name: "Sarah Silva", number: "#003", image: "https://via.placeholder.com/400x400?text=Sarah" },
+    { id: "p4", name: "Dinuka Raj", number: "#004", image: "https://via.placeholder.com/400x400?text=Dinuka" }
+  ];
+
+  // ==========================================
+  // UI & VOTING LOGIC
+  // ==========================================
+  const authSection = document.getElementById('authSection');
+  const votingSection = document.getElementById('votingSection');
+  const loginBtn = document.getElementById('loginBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const userNameEl = document.getElementById('userName');
+  const gridEl = document.getElementById('participantsGrid');
+  const statusMsg = document.getElementById('statusMessage');
+
+  // Render Participant Cards
+  function renderParticipants(hasVoted) {
+    gridEl.innerHTML = '';
+    participants.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <img src="${p.image}" alt="${p.name}">
+        <div class="card-info">
+          <p class="card-num">Participant ${p.number}</p>
+          <h3 class="card-name">${p.name}</h3>
+          <button class="btn" id="vote-btn-${p.id}" style="width: 100%; margin-top: 15px;" ${hasVoted ? 'disabled' : ''}>
+            ${hasVoted ? 'Voting Closed' : 'Vote for ' + p.name.split(' ')[0]}
+          </button>
+        </div>
+      `;
+      gridEl.appendChild(card);
+
+      // Add vote click event
+      const btn = document.getElementById(`vote-btn-${p.id}`);
+      btn.addEventListener('click', () => castVote(p));
+    });
+  }
+
+  // Handle Authentication State
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // User is logged in
+      authSection.style.display = 'none';
+      votingSection.style.display = 'block';
+      userNameEl.textContent = user.displayName;
+
+      // Check if they already voted
+      const voteDoc = await getDoc(doc(db, "votes", user.uid));
+      if (voteDoc.exists()) {
+        statusMsg.textContent = "You have already cast your vote. Thank you!";
+        statusMsg.style.color = "var(--seal)";
+        renderParticipants(true); // Disable buttons
+      } else {
+        statusMsg.textContent = "Select a participant below to cast your vote.";
+        renderParticipants(false); // Enable buttons
+      }
+    } else {
+      // User is logged out
+      authSection.style.display = 'flex';
+      votingSection.style.display = 'none';
+    }
+  });
+
+  // Login Button
+  loginBtn.addEventListener('click', () => {
+    signInWithPopup(auth, provider).catch(error => {
+      console.error("Login failed:", error);
+      alert("Failed to login. Please try again.");
+    });
+  });
+
+  // Logout Button
+  logoutBtn.addEventListener('click', () => signOut(auth));
+
+  // Cast Vote Logic
+  async function castVote(participant) {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const confirmVote = confirm(`Are you sure you want to vote for ${participant.name}? You cannot change this later.`);
+    if (!confirmVote) return;
+
+    try {
+      // Write the vote to Firestore using the user's UID as the document ID
+      await setDoc(doc(db, "votes", user.uid), {
+        participantId: participant.id,
+        participantName: participant.name,
+        userEmail: user.email,
+        timestamp: new Date()
+      });
+      
+      statusMsg.textContent = "Vote successfully cast! Thank you.";
+      statusMsg.style.color = "var(--gold-bright)";
+      renderParticipants(true); // Disable all buttons
+    } catch (error) {
+      console.error("Error casting vote:", error);
+      alert("Error casting vote. Make sure you updated the Firestore Security Rules!");
+    }
+  }
+</script>
+</body>
+</html>
