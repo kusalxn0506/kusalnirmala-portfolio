@@ -318,6 +318,7 @@ body::before {
       <h2 class="modal-name" id="modalName"></h2>
       <p class="modal-topic" id="modalTopic"></p>
       <p class="modal-bio" id="modalBio"></p>
+      <input type="text" id="modalStudentId" placeholder="Enter your Student ID (e.g. 10012345)" style="width: 100%; padding: 14px; margin-bottom: 16px; background: rgba(0,0,0,0.4); border: 1px solid var(--line-strong); border-radius: 8px; color: var(--gold); font-family: 'IBM Plex Mono', monospace; font-size: 14px; text-align: center; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--line-strong)'" autocomplete="off">
       <div class="modal-actions">
         <button class="btn-vote" id="modalVoteBtn">Confirm Vote</button>
         <button class="btn-close" id="modalCloseBtn">Close</button>
@@ -474,15 +475,27 @@ function renderParticipants() {
 async function castVote() {
   const user = auth.currentUser;
   if (!user || !selectedParticipant || votingClosed) return;
+  
+  const studentId = document.getElementById('modalStudentId').value.trim();
+  if (!studentId || studentId.length < 4) {
+    alert("Please enter a valid Student ID to confirm your vote.");
+    return;
+  }
+
   modalVoteBtn.disabled = true; modalVoteBtn.textContent = 'Casting...';
   try {
-    await setDoc(doc(db, "votes", user.uid), {
+    // We use studentId as the document key. If they try to vote again with a different 
+    // Google account but the same Student ID, it safely overwrites their single vote.
+    await setDoc(doc(db, "votes", studentId), {
       participantId: selectedParticipant.id,
       participantName: selectedParticipant.name,
       userEmail: user.email, userName: user.displayName,
+      studentId: studentId,
       timestamp: new Date()
     });
-    hasVoted = true; closeModal(); confettiBurst();
+    hasVoted = true; 
+    localStorage.setItem('pk_has_voted', 'true');
+    closeModal(); confettiBurst();
     statusMsg.textContent = '✓ Vote successfully cast! Thank you for participating.';
     statusMsg.classList.add('done');
     renderParticipants();
@@ -530,8 +543,7 @@ onAuthStateChanged(auth, async (user) => {
     userNameTop.textContent = user.displayName;
     userPhoto.src = user.photoURL || '';
 
-    const voteDoc = await getDoc(doc(db, "votes", user.uid));
-    if (voteDoc.exists()) {
+    if (localStorage.getItem('pk_has_voted') === 'true') {
       hasVoted = true;
       statusMsg.textContent = '✓ You have already cast your vote. Thank you!';
       statusMsg.classList.add('done');
