@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Results - PechaKucha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #17140f; --ink-2: #1f1b14; --paper: #f4ead9;
+    --text: #f2e8d8; --text-dim: #b6ab95;
+    --gold: #b6913f; --gold-bright: #d4af5f; --seal: #a8402f;
+  }
+  body { margin: 0; background: var(--ink); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; overflow: hidden; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
+  h1 { font-family: 'Fraunces', serif; color: var(--paper); font-size: 3.5rem; text-align: center; margin-bottom: 5px; }
+  .subtitle { text-align: center; color: var(--gold-bright); font-family: 'IBM Plex Mono', monospace; font-size: 1.2rem; text-transform: uppercase; margin-bottom: 60px; letter-spacing: 0.1em; }
+  
+  .auth-guard { display: flex; justify-content: center; margin-top: 100px; }
+  .btn { background: var(--gold-bright); color: var(--ink); border: none; padding: 14px 28px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; text-transform: uppercase; font-weight: 600; cursor: pointer; border-radius: 4px; }
+  
+  #resultsBoard { display: none; }
+  
+  .bar-container { display: flex; align-items: center; margin-bottom: 30px; }
+  .participant-name { width: 250px; font-family: 'Fraunces', serif; font-size: 1.8rem; color: var(--paper); }
+  .track { flex-grow: 1; height: 50px; background: var(--ink-2); border: 1px solid rgba(244,234,217,0.12); border-radius: 4px; overflow: hidden; position: relative; }
+  .fill { height: 100%; background: var(--seal); width: 0%; transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .vote-count { position: absolute; right: 20px; top: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 1.5rem; color: var(--paper); font-weight: bold; }
+  
+  .total-votes { text-align: center; margin-top: 60px; font-family: 'IBM Plex Mono', monospace; font-size: 1.2rem; color: var(--text-dim); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Live Voting Results</h1>
+  <p class="subtitle">NSBM PechaKucha 2026</p>
+
+  <div class="auth-guard" id="authGuard">
+    <button class="btn" id="loginBtn">Sign in as Admin</button>
+  </div>
+
+  <div id="resultsBoard">
+    <div id="charts"></div>
+    <div class="total-votes">Total Votes Cast: <span id="totalCount" style="color: var(--gold-bright); font-size: 1.5rem;">0</span></div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+  import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+  // ==========================================
+  // PASTE YOUR FIREBASE CONFIG HERE
+  // ==========================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyA9Tdj5TUnaN67thSjkDIjUHB00zQTDXJ4",
+    authDomain: "pechakucha-nsbm.firebaseapp.com",
+    projectId: "pechakucha-nsbm",
+    storageBucket: "pechakucha-nsbm.firebasestorage.app",
+    messagingSenderId: "188251897901",
+    appId: "1:188251897901:web:d579281f4689db24fcb8a4"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
+
+  // Make sure these match exactly what is in pechakucha.html
+  const participants = [
+    { id: "p1", name: "Alice Fernando" },
+    { id: "p2", name: "Kamal Perera" },
+    { id: "p3", name: "Sarah Silva" },
+    { id: "p4", name: "Dinuka Raj" }
+  ];
+
+  const authGuard = document.getElementById('authGuard');
+  const resultsBoard = document.getElementById('resultsBoard');
+  const chartsEl = document.getElementById('charts');
+  const totalCountEl = document.getElementById('totalCount');
+
+  // Build the empty chart bars
+  participants.forEach(p => {
+    chartsEl.innerHTML += `
+      <div class="bar-container">
+        <div class="participant-name">${p.name}</div>
+        <div class="track">
+          <div class="fill" id="fill-${p.id}"></div>
+          <div class="vote-count" id="count-${p.id}">0</div>
+        </div>
+      </div>
+    `;
+  });
+
+  document.getElementById('loginBtn').addEventListener('click', () => signInWithPopup(auth, provider));
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      authGuard.style.display = 'none';
+      resultsBoard.style.display = 'block';
+
+      // REAL-TIME LISTENER: This triggers instantly every time someone votes!
+      onSnapshot(collection(db, "votes"), (snapshot) => {
+        let totalVotes = snapshot.size;
+        let counts = { p1: 0, p2: 0, p3: 0, p4: 0 };
+        
+        // Count all the votes in the database
+        snapshot.forEach(doc => {
+          let data = doc.data();
+          if(counts[data.participantId] !== undefined) {
+            counts[data.participantId]++;
+          }
+        });
+
+        totalCountEl.textContent = totalVotes;
+
+        // Animate the bars
+        participants.forEach(p => {
+          let pVotes = counts[p.id] || 0;
+          let percentage = totalVotes === 0 ? 0 : (pVotes / totalVotes) * 100;
+          
+          document.getElementById(`count-${p.id}`).textContent = pVotes;
+          document.getElementById(`fill-${p.id}`).style.width = `${percentage}%`;
+        });
+      }, (error) => {
+        alert("Access Denied! You are not authorized to view the live results.");
+        console.error(error);
+      });
+    }
+  });
+</script>
+</body>
+</html>
