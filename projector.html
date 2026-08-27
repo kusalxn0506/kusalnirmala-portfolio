@@ -11,7 +11,6 @@
 <style>
 /* ═══════════════════════════════════════════════════
    CINEMATIC DESIGN SYSTEM — PROJECTOR BUILD
-   2x Projectors · 350 seats · Readable at 30m
    ═══════════════════════════════════════════════════ */
 :root {
   --bg: #08060a; --surface: #0f0d12; --surface-2: #161420;
@@ -30,6 +29,11 @@ html, body {
   font-family: 'IBM Plex Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+
+/* Custom Scrollbar for Mini-Scoreboard */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
 
 /* ═══════════════ PARTICLE CANVAS ═══════════════ */
 #particleCanvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
@@ -113,32 +117,19 @@ body::before {
 .leaderboard-area { flex: 1; position: relative; }
 .leaderboard { position: relative; height: 100%; }
 
-/* ═══════════════ COUNTDOWN PANEL (Right side) ═══════════════ */
+/* ═══════════════ COUNTDOWN PANEL ═══════════════ */
 .countdown-panel {
   width: 260px; flex-shrink: 0;
   display: flex; flex-direction: column; align-items: center;
   justify-content: center; gap: 20px;
 }
-.countdown-ring-wrap {
-  position: relative; width: 220px; height: 220px;
-}
-.countdown-svg {
-  width: 220px; height: 220px; transform: rotate(-90deg);
-}
-.countdown-track {
-  fill: none; stroke: rgba(240,236,248,0.06); stroke-width: 6;
-}
-.countdown-progress {
-  fill: none; stroke: var(--gold); stroke-width: 6;
-  stroke-linecap: round;
-  transition: stroke 0.5s;
-}
+.countdown-ring-wrap { position: relative; width: 220px; height: 220px; }
+.countdown-svg { width: 220px; height: 220px; transform: rotate(-90deg); }
+.countdown-track { fill: none; stroke: rgba(240,236,248,0.06); stroke-width: 6; }
+.countdown-progress { fill: none; stroke: var(--gold); stroke-width: 6; stroke-linecap: round; transition: stroke 0.5s; }
 .countdown-progress.amber { stroke: var(--amber); }
 .countdown-progress.red { stroke: var(--accent); }
-.countdown-progress.red-pulse {
-  stroke: var(--accent);
-  animation: ringPulse 0.6s ease-in-out infinite;
-}
+.countdown-progress.red-pulse { stroke: var(--accent); animation: ringPulse 0.6s ease-in-out infinite; }
 @keyframes ringPulse {
   0%,100% { filter: drop-shadow(0 0 4px transparent); stroke-width: 6; }
   50% { filter: drop-shadow(0 0 16px var(--accent-glow)); stroke-width: 8; }
@@ -158,21 +149,15 @@ body::before {
 }
 .countdown-label.urgent { color: var(--accent); animation: labelBlink 0.8s ease-in-out infinite; }
 @keyframes labelBlink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-/* Countdown not started state */
 .countdown-waiting {
   font-family: 'IBM Plex Mono', monospace; font-size: 13px;
   color: var(--text-faint); text-align: center; line-height: 1.6;
 }
 
 /* ═══════════════ ADMIN CONTROLS ═══════════════ */
-.admin-controls {
-  position: fixed; bottom: 20px; right: 20px; z-index: 150;
-  display: flex; gap: 10px;
-}
+.admin-controls { position: fixed; bottom: 20px; right: 20px; z-index: 150; display: flex; gap: 10px; }
 .btn-ctrl {
-  padding: 12px 24px; border-radius: 8px;
-  font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+  padding: 12px 24px; border-radius: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 13px;
   font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
   cursor: pointer; border: none; transition: transform 0.2s, opacity 0.2s;
 }
@@ -185,7 +170,17 @@ body::before {
 .bar-row {
   position: absolute; left: 0; right: 0;
   display: flex; align-items: center; gap: 16px;
-  height: 68px; padding: 0 8px; border-radius: 12px;
+  height: 68px; padding: 0 12px; border-radius: 12px;
+  border: 1px solid transparent;
+  transition: border-color 0.4s, background 0.4s, box-shadow 0.4s;
+  will-change: top, transform;
+}
+/* Pop-out effect for the #1 Rank */
+.bar-row.is-leader-row {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(245,200,66,0.25);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.4), 0 0 20px rgba(245,200,66,0.1);
+  z-index: 10;
 }
 .rank-badge {
   width: 44px; height: 44px; flex-shrink: 0;
@@ -237,7 +232,8 @@ body::before {
 .winner-overlay {
   position: fixed; inset: 0; z-index: 500;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  background: var(--bg); opacity: 0; pointer-events: none;
+  background: rgba(8,6,10,0.95); /* Slight transparency so particles and subtle bg shine through */
+  opacity: 0; pointer-events: none;
 }
 .winner-overlay.active { pointer-events: auto; }
 #winnerCanvas { position: absolute; inset: 0; z-index: 0; }
@@ -246,28 +242,27 @@ body::before {
   font-family: 'Fraunces', serif; font-style: italic;
   font-size: 2.2rem; color: var(--text-dim); opacity: 0;
 }
+
+/* Co-Winner Profiles */
+.winner-profiles {
+  display: flex; justify-content: center; gap: 60px;
+  margin-top: 30px; opacity: 0; flex-wrap: wrap;
+}
+.winner-profile { display: flex; flex-direction: column; align-items: center; }
 .winner-photo-wrap {
-  width: 220px; height: 220px; margin: 30px auto 0;
-  border-radius: 50%; overflow: hidden;
-  border: 4px solid var(--gold);
-  box-shadow: 0 0 60px rgba(245,200,66,0.3), 0 0 120px rgba(245,200,66,0.1);
-  opacity: 0; transform: scale(0.3);
+  width: 220px; height: 220px; margin: 0 auto; border-radius: 50%; overflow: hidden;
+  border: 4px solid var(--gold); box-shadow: 0 0 60px rgba(245,200,66,0.3), 0 0 120px rgba(245,200,66,0.1);
 }
 .winner-photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
 .winner-name {
-  font-family: 'Fraunces', serif; font-size: 4rem; font-weight: 900;
-  margin-top: 28px; opacity: 0;
+  font-family: 'Fraunces', serif; font-size: 3.5rem; font-weight: 900;
+  margin-top: 24px; line-height: 1.1;
   background: linear-gradient(135deg, var(--gold), #fff, var(--gold));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-.winner-stats {
-  display: flex; gap: 40px; justify-content: center; margin-top: 20px; opacity: 0;
-}
+.winner-stats { display: flex; gap: 40px; justify-content: center; margin-top: 30px; opacity: 0; }
 .winner-stat { text-align: center; }
-.winner-stat .num {
-  font-family: 'IBM Plex Mono', monospace; font-size: 2.5rem;
-  font-weight: 700; color: var(--gold);
-}
+.winner-stat .num { font-family: 'IBM Plex Mono', monospace; font-size: 2.5rem; font-weight: 700; color: var(--gold); }
 .winner-stat .label {
   font-family: 'IBM Plex Mono', monospace; font-size: 12px;
   letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); margin-top: 4px;
@@ -276,24 +271,56 @@ body::before {
   display: inline-block; margin-top: 24px; padding: 10px 30px;
   background: rgba(245,200,66,0.12); border: 1px solid rgba(245,200,66,0.3);
   border-radius: 100px; font-family: 'IBM Plex Mono', monospace; font-size: 14px;
-  font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--gold); opacity: 0;
+  font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); opacity: 0;
 }
+
+/* ═══════════════ FINAL STANDINGS CORNER BOARD ═══════════════ */
+.mini-scoreboard {
+  position: absolute; bottom: 40px; right: 50px; z-index: 2;
+  background: rgba(15,13,18,0.7); backdrop-filter: blur(12px);
+  border: 1px solid rgba(240,236,248,0.1); border-radius: 16px;
+  padding: 24px; width: 340px; opacity: 0;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  max-height: calc(100vh - 80px); overflow-y: auto;
+}
+.mini-header {
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim);
+  margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(240,236,248,0.06);
+}
+.mini-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.mini-row:last-child { margin-bottom: 0; }
+.mini-rank {
+  font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 700;
+  width: 28px; color: var(--text-faint);
+}
+.mini-row[data-rank="1"] .mini-rank { color: var(--gold); }
+.mini-row[data-rank="2"] .mini-rank { color: var(--silver); }
+.mini-row[data-rank="3"] .mini-rank { color: var(--bronze); }
+.mini-photo { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.mini-name {
+  flex: 1; font-family: 'IBM Plex Sans', sans-serif; font-size: 1rem; font-weight: 600;
+  color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.mini-row[data-rank="1"] .mini-name { color: var(--gold); }
+.mini-score { font-family: 'IBM Plex Mono', monospace; font-size: 1.1rem; font-weight: 700; color: var(--text); }
+.mini-row[data-rank="1"] .mini-score { color: var(--gold); }
 
 /* ═══════════════ RESPONSIVE ═══════════════ */
 @media (max-width: 1000px) {
   .header { padding: 18px 24px; }
   #resultsBoard { padding: 16px 24px; }
   .countdown-panel { width: 200px; }
-  .countdown-ring-wrap { width: 180px; height: 180px; }
-  .countdown-svg { width: 180px; height: 180px; }
+  .countdown-ring-wrap, .countdown-svg { width: 180px; height: 180px; }
   .countdown-time { font-size: 2.8rem; }
   .participant-name { width: 120px; font-size: 1rem; }
   .vote-count { font-size: 1.6rem; width: 60px; }
   .vote-pct { display: none; }
   .header-stat .num { font-size: 2rem; }
-  .winner-name { font-size: 2.8rem; }
-  .winner-photo-wrap { width: 160px; height: 160px; }
+  .winner-name { font-size: 2.4rem; }
+  .winner-photo-wrap { width: 150px; height: 150px; }
+  .winner-profiles { gap: 30px; }
+  .mini-scoreboard { right: 20px; bottom: 20px; width: 280px; padding: 16px; }
 }
 </style>
 </head>
@@ -302,47 +329,31 @@ body::before {
 <canvas id="particleCanvas"></canvas>
 
 <div class="app">
-  <!-- ═══════════════ HEADER ═══════════════ -->
   <header class="header">
     <div class="header-left">
       <div class="live-badge" id="liveBadge"><span class="dot"></span> LIVE</div>
       <div class="header-title">Pecha<span class="accent">Kucha</span> 2026</div>
     </div>
     <div class="header-right">
-      <div class="header-stat">
-        <div class="num" id="totalVotes">0</div>
-        <div class="label">Total Votes</div>
-      </div>
-      <div class="header-stat">
-        <div class="num" id="leadMargin">—</div>
-        <div class="label">Lead Margin</div>
-      </div>
+      <div class="header-stat"><div class="num" id="totalVotes">0</div><div class="label">Total Votes</div></div>
+      <div class="header-stat"><div class="num" id="leadMargin">—</div><div class="label">Lead Margin</div></div>
     </div>
   </header>
 
-  <!-- ═══════════════ VOTE FLASH ═══════════════ -->
   <div class="vote-flash" id="voteFlash"></div>
 
-  <!-- ═══════════════ AUTH ═══════════════ -->
   <div class="auth-guard" id="authGuard">
     <button class="btn-admin" id="loginBtn">Sign in as Admin</button>
   </div>
 
-  <!-- ═══════════════ RESULTS BOARD ═══════════════ -->
   <div id="resultsBoard">
     <div class="main-content">
-      <!-- Left: Leaderboard -->
-      <div class="leaderboard-area">
-        <div class="leaderboard" id="leaderboard"></div>
-      </div>
-
-      <!-- Right: Countdown Timer -->
+      <div class="leaderboard-area"><div class="leaderboard" id="leaderboard"></div></div>
       <div class="countdown-panel" id="countdownPanel">
         <div class="countdown-ring-wrap">
           <svg class="countdown-svg" viewBox="0 0 220 220">
             <circle class="countdown-track" cx="110" cy="110" r="100"/>
-            <circle class="countdown-progress" id="countdownRing" cx="110" cy="110" r="100"
-              stroke-dasharray="628.32" stroke-dashoffset="0"/>
+            <circle class="countdown-progress" id="countdownRing" cx="110" cy="110" r="100" stroke-dasharray="628.32" stroke-dashoffset="0"/>
           </svg>
           <div class="countdown-time" id="countdownTime">3:00</div>
         </div>
@@ -352,27 +363,28 @@ body::before {
     </div>
   </div>
 
-  <!-- ═══════════════ ADMIN CONTROLS ═══════════════ -->
   <div class="admin-controls" id="adminControls" style="display: none;">
     <button class="btn-ctrl btn-start" id="btnStart">▶ Start 3:00 Countdown</button>
     <button class="btn-ctrl btn-reset" id="btnReset" disabled>↻ Reset</button>
   </div>
 </div>
 
-<!-- ═══════════════ WINNER OVERLAY ═══════════════ -->
+<!-- WINNER OVERLAY -->
 <div class="winner-overlay" id="winnerOverlay">
   <canvas id="winnerCanvas"></canvas>
   <div class="winner-content">
     <div class="winner-suspense" id="winnerSuspense">And the winner is...</div>
-    <div class="winner-photo-wrap" id="winnerPhotoWrap">
-      <img id="winnerPhoto" src="" alt="">
-    </div>
-    <div class="winner-name" id="winnerName"></div>
+    <div class="winner-profiles" id="winnerProfiles"></div>
     <div class="winner-stats" id="winnerStats">
-      <div class="winner-stat"><div class="num" id="winnerVotes">0</div><div class="label">Votes</div></div>
+      <div class="winner-stat"><div class="num" id="winnerVotes">0</div><div class="label">Votes Each</div></div>
       <div class="winner-stat"><div class="num" id="winnerPct">0%</div><div class="label">Of Total</div></div>
     </div>
     <div class="winner-badge" id="winnerBadge">🏆 PechaKucha 2026 Champion</div>
+  </div>
+  
+  <!-- Final Standings Corner Board -->
+  <div class="mini-scoreboard" id="miniScoreboard">
+    <!-- Injected dynamically -->
   </div>
 </div>
 
@@ -381,7 +393,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebas
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-/* ═══════════════ FIREBASE ═══════════════ */
+/* FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyA9Tdj5TUnaN67thSjkDIjUHB00zQTDXJ4",
   authDomain: "pechakucha-nsbm.firebaseapp.com",
@@ -395,7 +407,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-/* ═══════════════ PARTICIPANTS ═══════════════ */
+/* PARTICIPANTS */
 const participants = [
   { id: "p1", name: "Kusal Nirmala", image: "assets/portrait.jpg" },
   { id: "p2", name: "Amara Perera", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop&crop=face" },
@@ -404,23 +416,19 @@ const participants = [
   { id: "p5", name: "Ravindu Jayasekara", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face" }
 ];
 
-/* ═══════════════ AMBIENT PARTICLES ═══════════════ */
+/* AMBIENT PARTICLES */
 const pCanvas = document.getElementById('particleCanvas');
 const pCtx = pCanvas.getContext('2d');
 let particles = [];
 function resizeCanvas() { pCanvas.width = window.innerWidth; pCanvas.height = window.innerHeight; }
 resizeCanvas(); window.addEventListener('resize', resizeCanvas);
-
 class Particle {
   constructor() { this.reset(); }
   reset() {
-    this.x = Math.random() * pCanvas.width;
-    this.y = Math.random() * pCanvas.height;
+    this.x = Math.random() * pCanvas.width; this.y = Math.random() * pCanvas.height;
     this.size = Math.random() * 2.5 + 0.5;
-    this.speedX = (Math.random() - 0.5) * 0.3;
-    this.speedY = (Math.random() - 0.5) * 0.2 - 0.15;
-    this.opacity = Math.random() * 0.3 + 0.05;
-    this.hue = Math.random() > 0.7 ? 45 : (Math.random() > 0.5 ? 280 : 0);
+    this.speedX = (Math.random() - 0.5) * 0.3; this.speedY = (Math.random() - 0.5) * 0.2 - 0.15;
+    this.opacity = Math.random() * 0.3 + 0.05; this.hue = Math.random() > 0.7 ? 45 : (Math.random() > 0.5 ? 280 : 0);
   }
   update() {
     this.x += this.speedX; this.y += this.speedY;
@@ -428,10 +436,8 @@ class Particle {
     if (this.y < 0) this.y = pCanvas.height;
   }
   draw() {
-    pCtx.beginPath();
-    pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    pCtx.fillStyle = `hsla(${this.hue}, 60%, 70%, ${this.opacity})`;
-    pCtx.fill();
+    pCtx.beginPath(); pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    pCtx.fillStyle = `hsla(${this.hue}, 60%, 70%, ${this.opacity})`; pCtx.fill();
   }
 }
 for (let i = 0; i < 120; i++) particles.push(new Particle());
@@ -442,9 +448,9 @@ function animateParticles() {
 }
 animateParticles();
 
-/* ═══════════════ BUILD LEADERBOARD ═══════════════ */
+/* BUILD LEADERBOARD */
 const leaderboard = document.getElementById('leaderboard');
-const ROW_HEIGHT = 82;
+const ROW_HEIGHT = 86; // Increased slightly to accommodate scaling
 
 participants.forEach((p, i) => {
   const row = document.createElement('div');
@@ -461,14 +467,12 @@ participants.forEach((p, i) => {
   leaderboard.appendChild(row);
 });
 
-/* ═══════════════ HELPERS ═══════════════ */
+/* HELPERS */
 function animateCount(el, target) {
   const current = parseInt(el.textContent) || 0;
   if (current === target) return;
   const obj = { val: current };
-  gsap.to(obj, { val: target, duration: 0.8, ease: "power2.out",
-    onUpdate: () => { el.textContent = Math.round(obj.val); }
-  });
+  gsap.to(obj, { val: target, duration: 0.8, ease: "power2.out", onUpdate: () => { el.textContent = Math.round(obj.val); } });
 }
 
 const voteFlash = document.getElementById('voteFlash');
@@ -480,9 +484,9 @@ function showVoteFlash(name) {
     });
 }
 
-/* ═══════════════ COUNTDOWN TIMER ═══════════════ */
-const COUNTDOWN_DURATION = 180; // 3 minutes in seconds
-const CIRCUMFERENCE = 2 * Math.PI * 100; // SVG circle r=100
+/* COUNTDOWN TIMER */
+const COUNTDOWN_DURATION = 180;
+const CIRCUMFERENCE = 2 * Math.PI * 100;
 const countdownRing = document.getElementById('countdownRing');
 const countdownTime = document.getElementById('countdownTime');
 const countdownLabel = document.getElementById('countdownLabel');
@@ -502,33 +506,23 @@ let latestCounts = {};
 let latestTotalVotes = 0;
 
 function formatTime(s) {
-  const m = Math.floor(s / 60);
-  const sec = s % 60;
-  return `${m}:${sec.toString().padStart(2, '0')}`;
+  const m = Math.floor(s / 60); const sec = s % 60; return `${m}:${sec.toString().padStart(2, '0')}`;
 }
 
 function updateCountdownDisplay() {
   countdownTime.textContent = formatTime(remainingSeconds);
-
-  // Ring progress
   const fraction = remainingSeconds / COUNTDOWN_DURATION;
-  const offset = CIRCUMFERENCE * (1 - fraction);
-  countdownRing.style.strokeDashoffset = offset;
-
-  // Urgency phases
+  countdownRing.style.strokeDashoffset = CIRCUMFERENCE * (1 - fraction);
   countdownRing.classList.remove('amber', 'red', 'red-pulse');
   countdownTime.classList.remove('amber', 'red', 'final');
   countdownLabel.classList.remove('urgent');
 
   if (remainingSeconds <= 15) {
-    countdownRing.classList.add('red-pulse');
-    countdownTime.classList.add('red');
-    countdownLabel.textContent = 'HURRY UP!';
-    countdownLabel.classList.add('urgent');
+    countdownRing.classList.add('red-pulse'); countdownTime.classList.add('red');
+    countdownLabel.textContent = 'HURRY UP!'; countdownLabel.classList.add('urgent');
     if (remainingSeconds <= 5) countdownTime.classList.add('final');
   } else if (remainingSeconds <= 60) {
-    countdownRing.classList.add('amber');
-    countdownTime.classList.add('amber');
+    countdownRing.classList.add('amber'); countdownTime.classList.add('amber');
     countdownLabel.textContent = 'Time Running Out';
   } else {
     countdownLabel.textContent = 'Voting Countdown';
@@ -537,142 +531,137 @@ function updateCountdownDisplay() {
 
 function startCountdown() {
   if (countdownActive) return;
-  countdownActive = true;
-  countdownWaiting.style.display = 'none';
-  btnStart.disabled = true;
-  btnReset.disabled = true;
+  countdownActive = true; countdownWaiting.style.display = 'none';
+  btnStart.disabled = true; btnReset.disabled = true;
 
-  // Write to Firestore so the voting page knows voting is open
   setDoc(doc(db, "config", "voting"), { open: true, startedAt: new Date() });
 
   countdownInterval = setInterval(() => {
-    remainingSeconds--;
-    updateCountdownDisplay();
-
+    remainingSeconds--; updateCountdownDisplay();
     if (remainingSeconds <= 0) {
-      clearInterval(countdownInterval);
-      countdownActive = false;
-      votingLocked = true;
-      btnReset.disabled = false;
-
-      // Lock voting in Firestore
+      clearInterval(countdownInterval); countdownActive = false; votingLocked = true; btnReset.disabled = false;
       setDoc(doc(db, "config", "voting"), { open: false, closedAt: new Date() });
-
-      // Update live badge
-      liveBadge.innerHTML = '<span class="dot"></span> CLOSED';
-      liveBadge.classList.add('closed');
-      countdownLabel.textContent = 'VOTING CLOSED';
-      countdownLabel.classList.add('urgent');
-
-      // Trigger winner reveal after a brief pause
+      liveBadge.innerHTML = '<span class="dot"></span> CLOSED'; liveBadge.classList.add('closed');
+      countdownLabel.textContent = 'VOTING CLOSED'; countdownLabel.classList.add('urgent');
       setTimeout(() => triggerWinnerReveal(), 1500);
     }
   }, 1000);
 }
 
 function resetCountdown() {
-  clearInterval(countdownInterval);
-  countdownActive = false;
-  votingLocked = false;
-  remainingSeconds = COUNTDOWN_DURATION;
-  updateCountdownDisplay();
-  countdownWaiting.style.display = 'block';
-  countdownLabel.textContent = 'Voting Countdown';
-  countdownLabel.classList.remove('urgent');
-  btnStart.disabled = false;
-  btnReset.disabled = true;
-  liveBadge.innerHTML = '<span class="dot"></span> LIVE';
-  liveBadge.classList.remove('closed');
+  clearInterval(countdownInterval); countdownActive = false; votingLocked = false; remainingSeconds = COUNTDOWN_DURATION;
+  updateCountdownDisplay(); countdownWaiting.style.display = 'block';
+  countdownLabel.textContent = 'Voting Countdown'; countdownLabel.classList.remove('urgent');
+  btnStart.disabled = false; btnReset.disabled = true;
+  liveBadge.innerHTML = '<span class="dot"></span> LIVE'; liveBadge.classList.remove('closed');
 
-  // Re-open voting
   setDoc(doc(db, "config", "voting"), { open: true, startedAt: new Date() });
 
-  // Hide winner overlay
-  const winnerOverlay = document.getElementById('winnerOverlay');
-  gsap.to(winnerOverlay, { opacity: 0, duration: 0.5, onComplete: () => {
-    winnerOverlay.classList.remove('active');
+  gsap.to('#winnerOverlay', { opacity: 0, duration: 0.5, onComplete: () => {
+    document.getElementById('winnerOverlay').classList.remove('active');
   }});
 }
 
 btnStart.addEventListener('click', startCountdown);
 btnReset.addEventListener('click', resetCountdown);
 
-/* ═══════════════ WINNER REVEAL SEQUENCE ═══════════════ */
+/* WINNER REVEAL SEQUENCE */
 function triggerWinnerReveal() {
-  // Find the winner
   const sorted = [...participants].sort((a, b) => (latestCounts[b.id] || 0) - (latestCounts[a.id] || 0));
-  const winner = sorted[0];
-  const winnerVoteCount = latestCounts[winner.id] || 0;
-  const winnerPercentage = latestTotalVotes > 0 ? Math.round((winnerVoteCount / latestTotalVotes) * 100) : 0;
-
-  // Set winner data
-  document.getElementById('winnerPhoto').src = winner.image;
-  document.getElementById('winnerName').textContent = winner.name;
-  document.getElementById('winnerVotes').textContent = winnerVoteCount;
-  document.getElementById('winnerPct').textContent = winnerPercentage + '%';
+  const topVotes = latestCounts[sorted[0].id] || 0;
+  const winners = sorted.filter(p => (latestCounts[p.id] || 0) === topVotes);
+  const winnerPercentage = latestTotalVotes > 0 ? Math.round((topVotes / latestTotalVotes) * 100) : 0;
 
   const overlay = document.getElementById('winnerOverlay');
-  overlay.classList.add('active');
+  const suspenseText = document.getElementById('winnerSuspense');
+  const profilesContainer = document.getElementById('winnerProfiles');
+  const badgeText = document.getElementById('winnerBadge');
+  const miniScoreboard = document.getElementById('miniScoreboard');
 
-  // Start winner particle explosion
+  if (winners.length > 1) {
+    suspenseText.textContent = "And the winners are...";
+    badgeText.innerHTML = `🏆 PechaKucha 2026 Co-Champions (${winners.length})`;
+  } else {
+    suspenseText.textContent = "And the winner is...";
+    badgeText.innerHTML = "🏆 PechaKucha 2026 Champion";
+  }
+
+  // Populate Center Winners
+  profilesContainer.innerHTML = winners.map(w => `
+    <div class="winner-profile">
+      <div class="winner-photo-wrap"><img src="${w.image}" alt="${w.name}"></div>
+      <div class="winner-name">${w.name}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('winnerVotes').textContent = topVotes;
+  document.getElementById('winnerPct').textContent = winnerPercentage + '%';
+
+  // Populate Corner Mini-Scoreboard
+  const miniHTML = sorted.map((p, i) => `
+    <div class="mini-row" data-rank="${i+1}">
+      <div class="mini-rank">#${i+1}</div>
+      <img class="mini-photo" src="${p.image}">
+      <div class="mini-name">${p.name}</div>
+      <div class="mini-score">${latestCounts[p.id] || 0}</div>
+    </div>
+  `).join('');
+  
+  miniScoreboard.innerHTML = `
+    <div class="mini-header">Final Standings</div>
+    ${miniHTML}
+  `;
+
+  overlay.classList.add('active');
   startWinnerParticles();
 
-  // GSAP TIMELINE: The dramatic reveal sequence
+  // GSAP TIMELINE
   const tl = gsap.timeline();
   tl.to(overlay, { opacity: 1, duration: 1.2, ease: "power2.inOut" });
-  tl.to('#winnerSuspense', { opacity: 1, duration: 0.8, ease: "power2.out" }, "+=0.5");
-  tl.to({}, { duration: 2.5 });
-  tl.to('#winnerSuspense', { opacity: 0, duration: 0.4 });
-  tl.to('#winnerPhotoWrap', { opacity: 1, scale: 1, duration: 1, ease: "elastic.out(1, 0.5)" }, "+=0.3");
-  tl.to('#winnerName', { opacity: 1, duration: 0.8, ease: "power2.out" }, "-=0.3");
+  tl.to(suspenseText, { opacity: 1, duration: 0.8, ease: "power2.out" }, "+=0.5");
+  tl.to({}, { duration: 2.5 }); 
+  tl.to(suspenseText, { opacity: 0, duration: 0.4 });
+  
+  tl.set(profilesContainer, { opacity: 1 });
+  tl.fromTo('.winner-photo-wrap', { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 1, ease: "elastic.out(1, 0.5)", stagger: 0.2 }, "+=0.3");
+  tl.fromTo('.winner-name', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out", stagger: 0.2 }, "-=0.6");
+  
   tl.to('#winnerStats', { opacity: 1, duration: 0.6, ease: "power2.out" }, "-=0.2");
-  tl.to('#winnerBadge', { opacity: 1, duration: 0.6, ease: "power2.out" }, "-=0.1");
+  tl.to(badgeText, { opacity: 1, duration: 0.6, ease: "power2.out" }, "-=0.1");
+
+  // Slide in the corner scoreboard
+  tl.fromTo(miniScoreboard, { x: 50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8, ease: "power2.out" }, "-=0.2");
 }
 
-/* ═══════════════ WINNER PARTICLE EXPLOSION ═══════════════ */
+/* WINNER PARTICLE EXPLOSION */
 const wCanvas = document.getElementById('winnerCanvas');
 const wCtx = wCanvas.getContext('2d');
 let wParticles = [];
 let wAnimating = false;
 
 function startWinnerParticles() {
-  wCanvas.width = window.innerWidth;
-  wCanvas.height = window.innerHeight;
+  wCanvas.width = window.innerWidth; wCanvas.height = window.innerHeight;
   wParticles = [];
-  const cx = wCanvas.width / 2;
-  const cy = wCanvas.height / 2;
+  const cx = wCanvas.width / 2; const cy = wCanvas.height / 2;
   const colors = ['#f5c842', '#ffd700', '#ffe066', '#fff', '#e84040', '#c9a020'];
 
   for (let i = 0; i < 200; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const speed = Math.random() * 6 + 2;
+    const angle = Math.random() * Math.PI * 2; const speed = Math.random() * 6 + 2;
     wParticles.push({
-      x: cx, y: cy,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed - 2,
-      size: Math.random() * 5 + 2,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      gravity: 0.04,
-      opacity: 1,
-      decay: Math.random() * 0.008 + 0.003,
-      rotation: Math.random() * 360,
-      rotSpeed: (Math.random() - 0.5) * 8
+      x: cx, y: cy, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 2,
+      size: Math.random() * 5 + 2, color: colors[Math.floor(Math.random() * colors.length)],
+      gravity: 0.04, opacity: 1, decay: Math.random() * 0.008 + 0.003,
+      rotation: Math.random() * 360, rotSpeed: (Math.random() - 0.5) * 8
     });
   }
-
-  if (!wAnimating) {
-    wAnimating = true;
-    animateWinnerParticles();
-  }
+  if (!wAnimating) { wAnimating = true; animateWinnerParticles(); }
 }
-
 function animateWinnerParticles() {
   wCtx.clearRect(0, 0, wCanvas.width, wCanvas.height);
   let alive = false;
   wParticles.forEach(p => {
     if (p.opacity <= 0) return;
-    alive = true;
-    p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.opacity -= p.decay; p.rotation += p.rotSpeed;
+    alive = true; p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.opacity -= p.decay; p.rotation += p.rotSpeed;
     wCtx.save(); wCtx.translate(p.x, p.y); wCtx.rotate(p.rotation * Math.PI / 180);
     wCtx.globalAlpha = Math.max(p.opacity, 0); wCtx.fillStyle = p.color;
     wCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size); wCtx.restore();
@@ -680,7 +669,7 @@ function animateWinnerParticles() {
   if (alive) { requestAnimationFrame(animateWinnerParticles); } else { wAnimating = false; }
 }
 
-/* ═══════════════ AUTH + REAL-TIME ═══════════════ */
+/* AUTH + REAL-TIME */
 const totalVotesEl = document.getElementById('totalVotes');
 const leadMarginEl = document.getElementById('leadMargin');
 
@@ -699,7 +688,6 @@ onAuthStateChanged(auth, (user) => {
     let isFirstSnapshot = true;
     let prevTotal = 0;
 
-    /* ───── REAL-TIME VOTES LISTENER ───── */
     onSnapshot(collection(db, "votes"), (snapshot) => {
       const totalVotes = snapshot.size;
       latestTotalVotes = totalVotes;
@@ -723,32 +711,14 @@ onAuthStateChanged(auth, (user) => {
       isFirstSnapshot = false;
       prevTotal = totalVotes;
 
-      // Sort
       const sorted = [...participants].sort((a, b) => counts[b.id] - counts[a.id]);
-      
-      // ===== CALCULATE TRUE TIE RANKS =====
-      let currentRank = 1;
-      let previousVotes = -1;
-      const trueRanks = {};
 
-      sorted.forEach((p, index) => {
-        const pVotes = counts[p.id];
-        // Only increase the rank number if they have fewer votes than the person above them
-        if (pVotes !== previousVotes) {
-          currentRank = index + 1; 
-        }
-        trueRanks[p.id] = currentRank;
-        previousVotes = pVotes;
-      });
-
-      // Lead margin (Only show if Rank 1 and Rank 2 exist and aren't tied)
       if (sorted.length >= 2) {
         const margin = counts[sorted[0].id] - counts[sorted[1].id];
         leadMarginEl.textContent = margin > 0 ? `+${margin}` : '—';
       }
       animateCount(totalVotesEl, totalVotes);
 
-      // Update bars with True Rank
       sorted.forEach((p, i) => {
         const row = document.getElementById(`row-${p.id}`);
         const fill = document.getElementById(`fill-${p.id}`);
@@ -756,14 +726,26 @@ onAuthStateChanged(auth, (user) => {
         const pctEl = document.getElementById(`pct-${p.id}`);
         const rankEl = document.getElementById(`rank-${p.id}`);
         
-        const actualRank = trueRanks[p.id];
+        const isLeader = (i === 0);
 
-        // Move row based on array index (so ties stay grouped)
-        gsap.to(row, { top: i * ROW_HEIGHT, duration: 0.9, ease: "power3.inOut" });
-        
-        // Assign visual rank and badge based on true mathematically tied rank
-        row.dataset.rank = actualRank;
-        rankEl.textContent = actualRank;
+        // GSAP handles the positional sliding AND the pop-out scaling/shifting
+        gsap.to(row, { 
+          top: i * ROW_HEIGHT, 
+          scale: isLeader ? 1.04 : 1,
+          x: isLeader ? 12 : 0,
+          duration: 0.9, 
+          ease: "power3.inOut" 
+        });
+
+        // CSS class handles the glowing borders, shadows, and z-index
+        if (isLeader) {
+          row.classList.add('is-leader-row');
+        } else {
+          row.classList.remove('is-leader-row');
+        }
+
+        row.dataset.rank = i + 1;
+        rankEl.textContent = i + 1;
 
         const pct = totalVotes === 0 ? 0 : (counts[p.id] / totalVotes) * 100;
         gsap.to(fill, { width: `${Math.max(pct, counts[p.id] > 0 ? 2 : 0)}%`, duration: 0.8, ease: "power2.out" });
@@ -771,8 +753,7 @@ onAuthStateChanged(auth, (user) => {
         pctEl.textContent = totalVotes === 0 ? '0%' : Math.round(pct) + '%';
       });
     }, (error) => {
-      alert("Access Denied. Admin only.");
-      console.error(error);
+      alert("Access Denied. Admin only."); console.error(error);
     });
   }
 });
