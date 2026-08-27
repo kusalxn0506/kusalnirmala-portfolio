@@ -3,135 +3,308 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Live Results - PechaKucha</title>
+<title>Live Results — PechaKucha 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;900&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #17140f; --ink-2: #1f1b14; --paper: #f4ead9;
-    --text: #f2e8d8; --text-dim: #b6ab95;
-    --gold: #b6913f; --gold-bright: #d4af5f; --seal: #a8402f;
-  }
-  body { margin: 0; background: var(--ink); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; overflow: hidden; }
-  .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
-  h1 { font-family: 'Fraunces', serif; color: var(--paper); font-size: 3.5rem; text-align: center; margin-bottom: 5px; }
-  .subtitle { text-align: center; color: var(--gold-bright); font-family: 'IBM Plex Mono', monospace; font-size: 1.2rem; text-transform: uppercase; margin-bottom: 60px; letter-spacing: 0.1em; }
-  
-  .auth-guard { display: flex; justify-content: center; margin-top: 100px; }
-  .btn { background: var(--gold-bright); color: var(--ink); border: none; padding: 14px 28px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; text-transform: uppercase; font-weight: 600; cursor: pointer; border-radius: 4px; }
-  
-  #resultsBoard { display: none; }
-  
-  .bar-container { display: flex; align-items: center; margin-bottom: 30px; }
-  .participant-name { width: 250px; font-family: 'Fraunces', serif; font-size: 1.8rem; color: var(--paper); }
-  .track { flex-grow: 1; height: 50px; background: var(--ink-2); border: 1px solid rgba(244,234,217,0.12); border-radius: 4px; overflow: hidden; position: relative; }
-  .fill { height: 100%; background: var(--seal); width: 0%; transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
-  .vote-count { position: absolute; right: 20px; top: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 1.5rem; color: var(--paper); font-weight: bold; }
-  
-  .total-votes { text-align: center; margin-top: 60px; font-family: 'IBM Plex Mono', monospace; font-size: 1.2rem; color: var(--text-dim); }
+:root {
+  --ink: #0d0b08; --ink-2: #151210; --ink-3: #1c1916;
+  --paper: #f4ead9; --text: #f2e8d8; --text-dim: #b6ab95; --text-faint: #7d745f;
+  --seal: #a8402f; --seal-bright: #c9573f; --seal-glow: rgba(168,64,47,0.4);
+  --gold: #b6913f; --gold-bright: #d4af5f; --gold-glow: rgba(212,175,95,0.3);
+  --line: rgba(244,234,217,0.08); --line-strong: rgba(244,234,217,0.15);
+  --ease: cubic-bezier(.45,0,.2,1);
+}
+*,*::before,*::after { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--ink); color: var(--text);
+  font-family: 'IBM Plex Sans', sans-serif;
+  -webkit-font-smoothing: antialiased; overflow: hidden;
+  height: 100vh; display: flex; flex-direction: column;
+}
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, var(--seal-glow), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 90% 100%, var(--gold-glow), transparent 60%);
+}
+
+/* ───── Header ───── */
+.header {
+  text-align: center; padding: 40px 24px 20px; flex-shrink: 0;
+}
+.header-badge {
+  display: inline-block; font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--seal-bright); margin-bottom: 16px;
+}
+.header-badge .dot {
+  display: inline-block; width: 8px; height: 8px; background: var(--seal-bright);
+  border-radius: 50%; margin-right: 8px; animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+.header h1 {
+  font-family: 'Fraunces', serif; font-size: clamp(2.5rem, 5vw, 4rem);
+  color: var(--paper); margin: 0; letter-spacing: -0.02em;
+}
+.header h1 .accent {
+  background: linear-gradient(135deg, var(--gold-bright), var(--seal-bright));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.header-sub {
+  font-family: 'IBM Plex Mono', monospace; font-size: 14px;
+  color: var(--text-faint); margin-top: 8px;
+}
+
+/* ───── Auth Guard ───── */
+.auth-guard {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+}
+.btn-admin {
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  color: var(--ink); border: none; padding: 16px 36px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 14px;
+  font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+  border-radius: 8px; cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-admin:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px var(--gold-glow);
+}
+
+/* ───── Results Board ───── */
+#resultsBoard { display: none; flex: 1; padding: 10px 60px 40px; overflow: hidden; }
+
+.bars-container {
+  position: relative; max-width: 1000px; margin: 0 auto;
+  height: calc(100vh - 260px);
+}
+
+.bar-row {
+  position: absolute; left: 0; right: 0;
+  display: flex; align-items: center; gap: 20px;
+  height: 60px;
+  transition: top 0.8s var(--ease);
+}
+.bar-row.leader .bar-fill {
+  background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+  box-shadow: 0 0 30px var(--gold-glow);
+}
+.bar-row.leader .bar-name { color: var(--gold-bright); }
+
+.bar-rank {
+  width: 40px; text-align: center;
+  font-family: 'Fraunces', serif; font-size: 1.6rem; color: var(--text-faint);
+  flex-shrink: 0;
+}
+.bar-row.leader .bar-rank { color: var(--gold-bright); font-size: 2rem; }
+
+.bar-name {
+  width: 200px; flex-shrink: 0;
+  font-family: 'Fraunces', serif; font-size: 1.3rem; color: var(--paper);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.bar-track {
+  flex: 1; height: 40px; background: var(--ink-2);
+  border: 1px solid var(--line); border-radius: 6px;
+  overflow: hidden; position: relative;
+}
+.bar-fill {
+  height: 100%; background: linear-gradient(90deg, var(--seal), var(--seal-bright));
+  border-radius: 6px; width: 0%;
+  transition: width 0.8s var(--ease);
+}
+.bar-count {
+  position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+  font-family: 'IBM Plex Mono', monospace; font-size: 1.2rem;
+  color: var(--paper); font-weight: 600;
+}
+
+/* ───── Footer Stats ───── */
+.footer-stats {
+  flex-shrink: 0; padding: 20px 60px;
+  display: flex; justify-content: center; gap: 60px;
+  border-top: 1px solid var(--line);
+}
+.footer-stat {
+  text-align: center;
+}
+.footer-stat .num {
+  font-family: 'Fraunces', serif; font-size: 2.5rem; color: var(--paper);
+}
+.footer-stat .label {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint);
+}
+
+/* ───── Responsive ───── */
+@media (max-width: 768px) {
+  #resultsBoard { padding: 10px 20px 20px; }
+  .bar-name { width: 120px; font-size: 1rem; }
+  .bar-rank { width: 30px; font-size: 1.2rem; }
+  .footer-stats { gap: 30px; padding: 16px 20px; }
+}
 </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>Live Voting Results</h1>
-  <p class="subtitle">NSBM PechaKucha 2026</p>
+<!-- ───── Header ───── -->
+<div class="header">
+  <div class="header-badge"><span class="dot"></span> Live Results</div>
+  <h1>Pecha<span class="accent">Kucha</span> 2026</h1>
+  <p class="header-sub">NSBM Faculty of Computing · Real-Time Audience Vote</p>
+</div>
 
-  <div class="auth-guard" id="authGuard">
-    <button class="btn" id="loginBtn">Sign in as Admin</button>
+<!-- ───── Auth Guard ───── -->
+<div class="auth-guard" id="authGuard">
+  <button class="btn-admin" id="loginBtn">Sign in as Admin</button>
+</div>
+
+<!-- ───── Results Board ───── -->
+<div id="resultsBoard">
+  <div class="bars-container" id="barsContainer"></div>
+</div>
+
+<!-- ───── Footer Stats ───── -->
+<div class="footer-stats" id="footerStats" style="display: none;">
+  <div class="footer-stat">
+    <div class="num" id="totalVotes">0</div>
+    <div class="label">Total Votes</div>
   </div>
-
-  <div id="resultsBoard">
-    <div id="charts"></div>
-    <div class="total-votes">Total Votes Cast: <span id="totalCount" style="color: var(--gold-bright); font-size: 1.5rem;">0</span></div>
+  <div class="footer-stat">
+    <div class="num" id="leadVotes">0</div>
+    <div class="label">Leader Votes</div>
+  </div>
+  <div class="footer-stat">
+    <div class="num" id="participantCount">5</div>
+    <div class="label">Presenters</div>
   </div>
 </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-  import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-  // ==========================================
-  // PASTE YOUR FIREBASE CONFIG HERE
-  // ==========================================
-  const firebaseConfig = {
-    apiKey: "AIzaSyA9Tdj5TUnaN67thSjkDIjUHB00zQTDXJ4",
-    authDomain: "pechakucha-nsbm.firebaseapp.com",
-    projectId: "pechakucha-nsbm",
-    storageBucket: "pechakucha-nsbm.firebasestorage.app",
-    messagingSenderId: "188251897901",
-    appId: "1:188251897901:web:d579281f4689db24fcb8a4"
-  };
+/* ───── Firebase Config ───── */
+const firebaseConfig = {
+  apiKey: "AIzaSyA9Tdj5TUnaN67thSjkDIjUHB00zQTDXJ4",
+  authDomain: "pechakucha-nsbm.firebaseapp.com",
+  projectId: "pechakucha-nsbm",
+  storageBucket: "pechakucha-nsbm.firebasestorage.app",
+  messagingSenderId: "188251897901",
+  appId: "1:188251897901:web:d579281f4689db24fcb8a4"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const provider = new GoogleAuthProvider();
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
 
-  // Make sure these match exactly what is in pechakucha.html
-  const participants = [
-    { id: "p1", name: "Alice Fernando" },
-    { id: "p2", name: "Kamal Perera" },
-    { id: "p3", name: "Sarah Silva" },
-    { id: "p4", name: "Dinuka Raj" }
-  ];
+/* ───── Participants (must match pechakucha.html) ───── */
+const participants = [
+  { id: "p1", name: "Kusal Nirmala" },
+  { id: "p2", name: "Amara Perera" },
+  { id: "p3", name: "Dineth Silva" },
+  { id: "p4", name: "Nethmi Fernando" },
+  { id: "p5", name: "Ravindu Jayasekara" }
+];
 
-  const authGuard = document.getElementById('authGuard');
-  const resultsBoard = document.getElementById('resultsBoard');
-  const chartsEl = document.getElementById('charts');
-  const totalCountEl = document.getElementById('totalCount');
+const barsContainer = document.getElementById('barsContainer');
+const footerStats = document.getElementById('footerStats');
+const totalVotesEl = document.getElementById('totalVotes');
+const leadVotesEl = document.getElementById('leadVotes');
+const participantCountEl = document.getElementById('participantCount');
 
-  // Build the empty chart bars
-  participants.forEach(p => {
-    chartsEl.innerHTML += `
-      <div class="bar-container">
-        <div class="participant-name">${p.name}</div>
-        <div class="track">
-          <div class="fill" id="fill-${p.id}"></div>
-          <div class="vote-count" id="count-${p.id}">0</div>
-        </div>
-      </div>
-    `;
-  });
+participantCountEl.textContent = participants.length;
 
-  document.getElementById('loginBtn').addEventListener('click', () => signInWithPopup(auth, provider));
+/* ───── Build bar rows ───── */
+const ROW_HEIGHT = 75;
+participants.forEach((p, i) => {
+  const row = document.createElement('div');
+  row.className = 'bar-row';
+  row.id = `row-${p.id}`;
+  row.style.top = (i * ROW_HEIGHT) + 'px';
+  row.innerHTML = `
+    <div class="bar-rank" id="rank-${p.id}">${i + 1}</div>
+    <div class="bar-name">${p.name}</div>
+    <div class="bar-track">
+      <div class="bar-fill" id="fill-${p.id}"></div>
+      <div class="bar-count" id="count-${p.id}">0</div>
+    </div>
+  `;
+  barsContainer.appendChild(row);
+});
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      authGuard.style.display = 'none';
-      resultsBoard.style.display = 'block';
+/* ───── Auth ───── */
+document.getElementById('loginBtn').addEventListener('click', () => signInWithPopup(auth, provider));
 
-      // REAL-TIME LISTENER: This triggers instantly every time someone votes!
-      onSnapshot(collection(db, "votes"), (snapshot) => {
-        let totalVotes = snapshot.size;
-        let counts = { p1: 0, p2: 0, p3: 0, p4: 0 };
-        
-        // Count all the votes in the database
-        snapshot.forEach(doc => {
-          let data = doc.data();
-          if(counts[data.participantId] !== undefined) {
-            counts[data.participantId]++;
-          }
-        });
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    document.getElementById('authGuard').style.display = 'none';
+    document.getElementById('resultsBoard').style.display = 'block';
+    footerStats.style.display = 'flex';
 
-        totalCountEl.textContent = totalVotes;
+    /* ───── Real-Time Listener ───── */
+    onSnapshot(collection(db, "votes"), (snapshot) => {
+      let totalVotes = snapshot.size;
+      let counts = {};
+      participants.forEach(p => counts[p.id] = 0);
 
-        // Animate the bars
-        participants.forEach(p => {
-          let pVotes = counts[p.id] || 0;
-          let percentage = totalVotes === 0 ? 0 : (pVotes / totalVotes) * 100;
-          
-          document.getElementById(`count-${p.id}`).textContent = pVotes;
-          document.getElementById(`fill-${p.id}`).style.width = `${percentage}%`;
-        });
-      }, (error) => {
-        alert("Access Denied! You are not authorized to view the live results.");
-        console.error(error);
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        if (counts[data.participantId] !== undefined) {
+          counts[data.participantId]++;
+        }
       });
-    }
-  });
+
+      totalVotesEl.textContent = totalVotes;
+
+      // Sort participants by vote count (descending)
+      const sorted = [...participants].sort((a, b) => counts[b.id] - counts[a.id]);
+
+      let maxVotes = Math.max(...Object.values(counts), 1);
+      leadVotesEl.textContent = maxVotes;
+
+      // Animate bars to their new positions
+      sorted.forEach((p, i) => {
+        const row = document.getElementById(`row-${p.id}`);
+        const fill = document.getElementById(`fill-${p.id}`);
+        const countEl = document.getElementById(`count-${p.id}`);
+        const rankEl = document.getElementById(`rank-${p.id}`);
+
+        // Move row to sorted position
+        row.style.top = (i * ROW_HEIGHT) + 'px';
+
+        // Update rank number
+        rankEl.textContent = i + 1;
+
+        // Update fill width
+        let percentage = totalVotes === 0 ? 0 : (counts[p.id] / totalVotes) * 100;
+        fill.style.width = Math.max(percentage, counts[p.id] > 0 ? 3 : 0) + '%';
+
+        // Update count
+        countEl.textContent = counts[p.id];
+
+        // Leader styling
+        if (i === 0 && counts[p.id] > 0) {
+          row.classList.add('leader');
+        } else {
+          row.classList.remove('leader');
+        }
+      });
+    }, (error) => {
+      alert("Access Denied. Only admin accounts can view results.");
+      console.error(error);
+    });
+  }
+});
 </script>
 </body>
 </html>
