@@ -10,9 +10,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,400&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════════
-   DESIGN SYSTEM
-   ═══════════════════════════════════════════════════ */
 :root {
   --ink: #0d0b08; --ink-2: #151210; --ink-3: #1c1916;
   --paper: #f4ead9; --text: #f2e8d8; --text-dim: #b6ab95; --text-faint: #7d745f;
@@ -28,17 +25,13 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0; background: var(--ink); color: var(--text);
   font-family: 'IBM Plex Sans', sans-serif; font-size: 16px; line-height: 1.7;
-  -webkit-font-smoothing: antialiased; overflow-x: hidden;
-  min-height: 100vh;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden; min-height: 100vh;
 }
 h1,h2,h3 { font-family: 'Fraunces', serif; color: var(--paper); margin: 0; }
 a { color: var(--gold-bright); text-decoration: none; }
 button { cursor: pointer; border: none; font-family: inherit; }
 ::selection { background: var(--seal); color: var(--paper); }
 
-/* ═══════════════════════════════════════════════════
-   BACKGROUND PATTERN
-   ═══════════════════════════════════════════════════ */
 body::before {
   content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
   background:
@@ -46,9 +39,7 @@ body::before {
     radial-gradient(ellipse 60% 50% at 80% 110%, var(--gold-glow), transparent 60%);
 }
 
-/* ═══════════════════════════════════════════════════
-   TOP BAR
-   ═══════════════════════════════════════════════════ */
+/* ═══════════════ TOP BAR ═══════════════ */
 .topbar {
   position: sticky; top: 0; z-index: 50;
   display: flex; align-items: center; justify-content: space-between;
@@ -62,8 +53,7 @@ body::before {
 }
 .topbar-brand strong { color: var(--gold-bright); font-weight: 500; }
 .topbar-user {
-  display: flex; align-items: center; gap: 12px;
-  font-size: 13px; color: var(--text-dim);
+  display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text-dim);
 }
 .topbar-user img {
   width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--line-strong);
@@ -76,42 +66,28 @@ body::before {
 }
 .btn-signout:hover { border-color: var(--seal); color: var(--seal-bright); }
 
-/* ═══════════════════════════════════════════════════
-   HERO
-   ═══════════════════════════════════════════════════ */
-.hero {
-  text-align: center; padding: 80px 24px 50px; position: relative;
-}
+/* ═══════════════ HERO ═══════════════ */
+.hero { text-align: center; padding: 80px 24px 50px; position: relative; }
 .hero-badge {
   display: inline-block; font-family: 'IBM Plex Mono', monospace;
   font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--gold-bright); background: rgba(182,145,63,0.1);
-  border: 1px solid rgba(182,145,63,0.2); padding: 8px 18px; border-radius: 100px;
-  margin-bottom: 28px;
+  border: 1px solid rgba(182,145,63,0.2); padding: 8px 18px; border-radius: 100px; margin-bottom: 28px;
 }
 .hero h1 {
-  font-size: clamp(2.5rem, 7vw, 4.5rem); font-weight: 600;
-  letter-spacing: -0.02em; line-height: 1.05;
+  font-size: clamp(2.5rem, 7vw, 4.5rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.05;
 }
 .hero h1 .accent {
   background: linear-gradient(135deg, var(--gold-bright), var(--seal-bright));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 .hero-sub {
   margin-top: 20px; font-size: 1.15rem; color: var(--text-dim);
   max-width: 52ch; margin-left: auto; margin-right: auto;
 }
-.hero-stats {
-  display: flex; justify-content: center; gap: 40px; margin-top: 40px;
-  flex-wrap: wrap;
-}
-.hero-stat {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-}
-.hero-stat .num {
-  font-family: 'Fraunces', serif; font-size: 2rem; color: var(--paper); font-weight: 600;
-}
+.hero-stats { display: flex; justify-content: center; gap: 40px; margin-top: 40px; flex-wrap: wrap; }
+.hero-stat { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.hero-stat .num { font-family: 'Fraunces', serif; font-size: 2rem; color: var(--paper); font-weight: 600; }
 .hero-stat .label {
   font-family: 'IBM Plex Mono', monospace; font-size: 10.5px;
   letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint);
@@ -121,13 +97,8 @@ body::before {
   background: linear-gradient(90deg, transparent, var(--gold), transparent);
 }
 
-/* ═══════════════════════════════════════════════════
-   AUTH SECTION (SIGN IN)
-   ═══════════════════════════════════════════════════ */
-.auth-section {
-  display: flex; flex-direction: column; align-items: center;
-  padding: 60px 24px 80px;
-}
+/* ═══════════════ AUTH ═══════════════ */
+.auth-section { display: flex; flex-direction: column; align-items: center; padding: 60px 24px 80px; }
 .auth-card {
   background: var(--glass); backdrop-filter: blur(20px);
   border: 1px solid var(--glass-border); border-radius: 16px;
@@ -145,13 +116,10 @@ body::before {
 .btn-google:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
 .btn-google svg { width: 20px; height: 20px; }
 .auth-note {
-  margin-top: 20px; font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px; color: var(--text-faint);
+  margin-top: 20px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-faint);
 }
 
-/* ═══════════════════════════════════════════════════
-   VOTING SECTION
-   ═══════════════════════════════════════════════════ */
+/* ═══════════════ VOTING SECTION ═══════════════ */
 #votingSection { display: none; }
 .vote-prompt {
   text-align: center; padding: 10px 24px 40px;
@@ -160,43 +128,41 @@ body::before {
 .vote-prompt .status { color: var(--gold-bright); font-size: 15px; }
 .vote-prompt .status.done { color: var(--seal-bright); }
 
-/* ═══════════════════════════════════════════════════
-   PARTICIPANT GRID
-   ═══════════════════════════════════════════════════ */
-.grid-wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px 80px; }
-.grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
+/* ═══════════════ VOTING CLOSED BANNER ═══════════════ */
+.closed-banner {
+  text-align: center; padding: 40px 24px;
+  background: rgba(168,64,47,0.08); border: 1px solid rgba(168,64,47,0.2);
+  border-radius: 12px; margin: 0 20px 30px; display: none;
 }
+.closed-banner h2 {
+  font-size: 1.8rem; color: var(--seal-bright); margin-bottom: 8px;
+}
+.closed-banner p { color: var(--text-dim); font-size: 15px; }
+.closed-banner .lock-icon { font-size: 3rem; margin-bottom: 16px; display: block; }
 
-/* ═══════════════════════════════════════════════════
-   PARTICIPANT CARD (3D Tilt)
-   ═══════════════════════════════════════════════════ */
+/* ═══════════════ GRID ═══════════════ */
+.grid-wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px 80px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+
+/* ═══════════════ CARD ═══════════════ */
 .card {
   position: relative; border-radius: 12px; overflow: hidden;
   background: var(--ink-2); border: 1px solid var(--line);
   transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
   transform-style: preserve-3d; will-change: transform;
-  /* Stagger entrance animation */
   opacity: 0; transform: translateY(40px);
   animation: cardEnter 0.6s var(--ease-spring) forwards;
 }
 .card:hover { border-color: var(--gold); box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px var(--gold-glow); }
-
-@keyframes cardEnter {
-  to { opacity: 1; transform: translateY(0); }
-}
-
+.card.locked { opacity: 0.5; pointer-events: none; }
+@keyframes cardEnter { to { opacity: 1; transform: translateY(0); } }
 .card-img-wrap {
-  position: relative; width: 100%; aspect-ratio: 3/4; overflow: hidden;
-  background: #1a1713;
+  position: relative; width: 100%; aspect-ratio: 3/4; overflow: hidden; background: #1a1713;
 }
 .card-img-wrap img {
-  width: 100%; height: 100%; object-fit: cover;
-  transition: transform 0.4s var(--ease);
+  width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s var(--ease);
 }
 .card:hover .card-img-wrap img { transform: scale(1.05); }
-
 .card-number {
   position: absolute; top: 12px; left: 12px; z-index: 2;
   font-family: 'IBM Plex Mono', monospace; font-size: 11px;
@@ -205,72 +171,46 @@ body::before {
   color: var(--gold-bright); padding: 5px 10px; border-radius: 4px;
   border: 1px solid rgba(182,145,63,0.2);
 }
-
-.card-body {
-  padding: 18px 16px 20px; text-align: center;
-}
-.card-name {
-  font-family: 'Fraunces', serif; font-size: 1.1rem; color: var(--paper);
-  margin-bottom: 4px;
-}
+.card-body { padding: 18px 16px 20px; text-align: center; }
+.card-name { font-family: 'Fraunces', serif; font-size: 1.1rem; color: var(--paper); margin-bottom: 4px; }
 .card-topic {
-  font-size: 12px; color: var(--text-faint);
-  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; color: var(--text-faint); font-family: 'IBM Plex Mono', monospace;
   margin-bottom: 16px; line-height: 1.5;
 }
 .btn-vote {
   width: 100%; padding: 12px; border-radius: 6px;
   font-family: 'IBM Plex Mono', monospace; font-size: 12px;
   letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600;
-  background: linear-gradient(135deg, var(--seal), var(--seal-bright));
-  color: var(--paper);
+  background: linear-gradient(135deg, var(--seal), var(--seal-bright)); color: var(--paper);
   transition: transform 0.2s var(--ease), box-shadow 0.2s;
 }
-.btn-vote:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px var(--seal-glow);
-}
-.btn-vote:disabled {
-  background: var(--ink-3); color: var(--text-faint);
-  cursor: not-allowed; border: 1px solid var(--line);
-}
+.btn-vote:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px var(--seal-glow); }
+.btn-vote:disabled { background: var(--ink-3); color: var(--text-faint); cursor: not-allowed; border: 1px solid var(--line); }
 
-/* ═══════════════════════════════════════════════════
-   BIO MODAL (Glassmorphic)
-   ═══════════════════════════════════════════════════ */
+/* ═══════════════ BIO MODAL ═══════════════ */
 .modal-overlay {
   position: fixed; inset: 0; z-index: 200;
   background: rgba(0,0,0,0.65); backdrop-filter: blur(8px);
-  display: flex; align-items: center; justify-content: center;
-  padding: 24px; opacity: 0; pointer-events: none;
-  transition: opacity 0.35s var(--ease);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+  opacity: 0; pointer-events: none; transition: opacity 0.35s var(--ease);
 }
 .modal-overlay.open { opacity: 1; pointer-events: auto; }
 .modal {
   background: var(--glass); backdrop-filter: blur(30px);
   border: 1px solid var(--glass-border); border-radius: 20px;
   max-width: 440px; width: 100%; overflow: hidden;
-  transform: translateY(30px) scale(0.95);
-  transition: transform 0.4s var(--ease-spring);
+  transform: translateY(30px) scale(0.95); transition: transform 0.4s var(--ease-spring);
   box-shadow: 0 40px 100px rgba(0,0,0,0.6);
 }
 .modal-overlay.open .modal { transform: translateY(0) scale(1); }
-.modal-img {
-  width: 100%; height: 280px; object-fit: cover;
-}
+.modal-img { width: 100%; height: 280px; object-fit: cover; }
 .modal-body { padding: 28px 24px 24px; }
 .modal-number {
   font-family: 'IBM Plex Mono', monospace; font-size: 11px;
   color: var(--gold-bright); letter-spacing: 0.1em; text-transform: uppercase;
 }
-.modal-name {
-  font-family: 'Fraunces', serif; font-size: 1.6rem; color: var(--paper);
-  margin: 8px 0 6px;
-}
-.modal-topic {
-  font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text-faint);
-  margin-bottom: 14px;
-}
+.modal-name { font-family: 'Fraunces', serif; font-size: 1.6rem; color: var(--paper); margin: 8px 0 6px; }
+.modal-topic { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text-faint); margin-bottom: 14px; }
 .modal-bio { font-size: 14px; color: var(--text-dim); line-height: 1.7; margin-bottom: 24px; }
 .modal-actions { display: flex; gap: 12px; }
 .modal-actions .btn-vote { flex: 1; }
@@ -278,14 +218,11 @@ body::before {
   padding: 12px 20px; background: var(--ink-3); color: var(--text-dim);
   border: 1px solid var(--line-strong); border-radius: 6px;
   font-family: 'IBM Plex Mono', monospace; font-size: 12px;
-  text-transform: uppercase; letter-spacing: 0.06em;
-  transition: border-color 0.2s, color 0.2s;
+  text-transform: uppercase; letter-spacing: 0.06em; transition: border-color 0.2s, color 0.2s;
 }
 .btn-close:hover { border-color: var(--paper); color: var(--paper); }
 
-/* ═══════════════════════════════════════════════════
-   CONFETTI
-   ═══════════════════════════════════════════════════ */
+/* ═══════════════ CONFETTI ═══════════════ */
 .confetti-piece {
   position: fixed; z-index: 300; pointer-events: none;
   width: 10px; height: 10px; border-radius: 2px;
@@ -296,19 +233,14 @@ body::before {
   100% { transform: translateY(100vh) rotate(720deg) scale(0.3); opacity: 0; }
 }
 
-/* ═══════════════════════════════════════════════════
-   FOOTER
-   ═══════════════════════════════════════════════════ */
+/* ═══════════════ FOOTER ═══════════════ */
 .footer {
   border-top: 1px solid var(--line); padding: 24px;
-  text-align: center; font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px; color: var(--text-faint);
+  text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text-faint);
 }
 .footer a { color: var(--gold-bright); }
 
-/* ═══════════════════════════════════════════════════
-   RESPONSIVE
-   ═══════════════════════════════════════════════════ */
+/* ═══════════════ RESPONSIVE ═══════════════ */
 @media (max-width: 600px) {
   .hero h1 { font-size: 2.2rem; }
   .hero-stats { gap: 24px; }
@@ -319,9 +251,7 @@ body::before {
   .modal-img { height: 220px; }
   .topbar { padding: 12px 16px; }
 }
-@media (max-width: 380px) {
-  .grid { grid-template-columns: 1fr; }
-}
+@media (max-width: 380px) { .grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -349,7 +279,7 @@ body::before {
   <div class="hero-divider"></div>
 </section>
 
-<!-- ═══════════════ AUTH (SIGN IN) ═══════════════ -->
+<!-- ═══════════════ AUTH ═══════════════ -->
 <section class="auth-section" id="authSection">
   <div class="auth-card">
     <h2>Cast Your Vote</h2>
@@ -361,6 +291,13 @@ body::before {
     <p class="auth-note">One vote per account · Votes are final &amp; cannot be changed</p>
   </div>
 </section>
+
+<!-- ═══════════════ VOTING CLOSED BANNER ═══════════════ -->
+<div class="closed-banner" id="closedBanner">
+  <span class="lock-icon">🔒</span>
+  <h2>Voting Has Ended</h2>
+  <p>The voting window has closed. Thank you for participating!</p>
+</div>
 
 <!-- ═══════════════ VOTING SECTION ═══════════════ -->
 <section id="votingSection">
@@ -394,13 +331,10 @@ body::before {
   Built by <a href="index.html">Kusal Nirmala</a> · Powered by Firebase
 </footer>
 
-<!-- ═══════════════════════════════════════════════════
-     FIREBASE + APP LOGIC
-     ═══════════════════════════════════════════════════ -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
 /* ───── Firebase Config ───── */
 const firebaseConfig = {
@@ -417,41 +351,26 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-/* ───── Participant Data (5 test participants) ───── */
+/* ───── Participants ───── */
 const participants = [
-  {
-    id: "p1", name: "Kusal Nirmala", number: "#001",
-    topic: "AI in Martial Arts",
+  { id: "p1", name: "Kusal Nirmala", number: "#001", topic: "AI in Martial Arts",
     bio: "BSc (Hons) AI undergraduate applying computer vision to karate biomechanics. Creator of KaratePose-AI and Team Hades lead.",
-    image: "assets/portrait.jpg"
-  },
-  {
-    id: "p2", name: "Amara Perera", number: "#002",
-    topic: "Sustainable Computing",
+    image: "assets/portrait.jpg" },
+  { id: "p2", name: "Amara Perera", number: "#002", topic: "Sustainable Computing",
     bio: "Software Engineering student passionate about green computing and energy-efficient algorithm design for cloud platforms.",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=500&fit=crop&crop=face"
-  },
-  {
-    id: "p3", name: "Dineth Silva", number: "#003",
-    topic: "Blockchain for Education",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=500&fit=crop&crop=face" },
+  { id: "p3", name: "Dineth Silva", number: "#003", topic: "Blockchain for Education",
     bio: "Exploring decentralized credentialing systems to make academic certificates tamper-proof and globally verifiable.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face"
-  },
-  {
-    id: "p4", name: "Nethmi Fernando", number: "#004",
-    topic: "UX in Healthcare Apps",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face" },
+  { id: "p4", name: "Nethmi Fernando", number: "#004", topic: "UX in Healthcare Apps",
     bio: "Researching how thoughtful UX design can reduce medication errors in hospital information systems across Sri Lanka.",
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=500&fit=crop&crop=face"
-  },
-  {
-    id: "p5", name: "Ravindu Jayasekara", number: "#005",
-    topic: "IoT Smart Agriculture",
+    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=500&fit=crop&crop=face" },
+  { id: "p5", name: "Ravindu Jayasekara", number: "#005", topic: "IoT Smart Agriculture",
     bio: "Building low-cost sensor networks using LoRa and ESP32 to monitor soil conditions for smallholder tea farmers.",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=500&fit=crop&crop=face"
-  }
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=500&fit=crop&crop=face" }
 ];
 
-/* ───── DOM References ───── */
+/* ───── DOM ───── */
 const authSection = document.getElementById('authSection');
 const votingSection = document.getElementById('votingSection');
 const loginBtn = document.getElementById('loginBtn');
@@ -461,9 +380,7 @@ const userNameTop = document.getElementById('userNameTop');
 const userPhoto = document.getElementById('userPhoto');
 const gridEl = document.getElementById('participantsGrid');
 const statusMsg = document.getElementById('statusMessage');
-const statParticipants = document.getElementById('statParticipants');
-
-// Modal
+const closedBanner = document.getElementById('closedBanner');
 const modalOverlay = document.getElementById('modalOverlay');
 const modalImg = document.getElementById('modalImg');
 const modalNumber = document.getElementById('modalNumber');
@@ -473,12 +390,13 @@ const modalBio = document.getElementById('modalBio');
 const modalVoteBtn = document.getElementById('modalVoteBtn');
 const modalCloseBtn = document.getElementById('modalCloseBtn');
 
-statParticipants.textContent = participants.length;
+document.getElementById('statParticipants').textContent = participants.length;
 
 let selectedParticipant = null;
 let hasVoted = false;
+let votingClosed = false;
 
-/* ───── Confetti Burst ───── */
+/* ───── Confetti ───── */
 function confettiBurst() {
   const colors = ['#d4af5f','#c9573f','#b6913f','#f4ead9','#a8402f','#f2e8d8'];
   for (let i = 0; i < 80; i++) {
@@ -496,7 +414,7 @@ function confettiBurst() {
   }
 }
 
-/* ───── 3D Tilt Effect ───── */
+/* ───── 3D Tilt ───── */
 function initTilt(card) {
   if (window.matchMedia('(pointer: fine)').matches) {
     card.addEventListener('mousemove', (e) => {
@@ -509,32 +427,28 @@ function initTilt(card) {
   }
 }
 
-/* ───── Open Modal ───── */
+/* ───── Modal ───── */
 function openModal(p) {
   selectedParticipant = p;
-  modalImg.src = p.image;
-  modalImg.alt = p.name;
+  modalImg.src = p.image; modalImg.alt = p.name;
   modalNumber.textContent = `Participant ${p.number}`;
-  modalName.textContent = p.name;
-  modalTopic.textContent = p.topic;
+  modalName.textContent = p.name; modalTopic.textContent = p.topic;
   modalBio.textContent = p.bio;
-  modalVoteBtn.disabled = hasVoted;
-  modalVoteBtn.textContent = hasVoted ? 'You Already Voted' : `Vote for ${p.name.split(' ')[0]}`;
+  const disabled = hasVoted || votingClosed;
+  modalVoteBtn.disabled = disabled;
+  modalVoteBtn.textContent = votingClosed ? '🔒 Voting Closed' : (hasVoted ? 'You Already Voted' : `Vote for ${p.name.split(' ')[0]}`);
   modalOverlay.classList.add('open');
 }
-function closeModal() {
-  modalOverlay.classList.remove('open');
-  selectedParticipant = null;
-}
+function closeModal() { modalOverlay.classList.remove('open'); selectedParticipant = null; }
 modalCloseBtn.addEventListener('click', closeModal);
 modalOverlay.addEventListener('click', (e) => { if(e.target === modalOverlay) closeModal(); });
 
-/* ───── Render Participant Cards ───── */
+/* ───── Render Cards ───── */
 function renderParticipants() {
   gridEl.innerHTML = '';
   participants.forEach((p, i) => {
     const card = document.createElement('div');
-    card.className = 'card';
+    card.className = 'card' + ((hasVoted || votingClosed) ? ' locked' : '');
     card.style.animationDelay = (i * 0.08) + 's';
     card.innerHTML = `
       <div class="card-img-wrap">
@@ -544,54 +458,70 @@ function renderParticipants() {
       <div class="card-body">
         <h3 class="card-name">${p.name}</h3>
         <p class="card-topic">${p.topic}</p>
-        <button class="btn-vote" ${hasVoted ? 'disabled' : ''}>${hasVoted ? 'Voted' : 'View & Vote'}</button>
+        <button class="btn-vote" ${(hasVoted || votingClosed) ? 'disabled' : ''}>
+          ${votingClosed ? '🔒 Closed' : (hasVoted ? 'Voted' : 'View & Vote')}
+        </button>
       </div>
     `;
     gridEl.appendChild(card);
-    initTilt(card);
-
-    // Card button opens modal
-    card.querySelector('.btn-vote').addEventListener('click', (e) => {
-      e.stopPropagation();
-      openModal(p);
-    });
-    card.addEventListener('click', () => openModal(p));
+    if (!hasVoted && !votingClosed) initTilt(card);
+    card.querySelector('.btn-vote').addEventListener('click', (e) => { e.stopPropagation(); openModal(p); });
+    card.addEventListener('click', () => { if (!hasVoted && !votingClosed) openModal(p); });
   });
 }
 
 /* ───── Cast Vote ───── */
 async function castVote() {
   const user = auth.currentUser;
-  if (!user || !selectedParticipant) return;
-
-  modalVoteBtn.disabled = true;
-  modalVoteBtn.textContent = 'Casting...';
-
+  if (!user || !selectedParticipant || votingClosed) return;
+  modalVoteBtn.disabled = true; modalVoteBtn.textContent = 'Casting...';
   try {
     await setDoc(doc(db, "votes", user.uid), {
       participantId: selectedParticipant.id,
       participantName: selectedParticipant.name,
-      userEmail: user.email,
-      userName: user.displayName,
+      userEmail: user.email, userName: user.displayName,
       timestamp: new Date()
     });
-
-    hasVoted = true;
-    closeModal();
-    confettiBurst();
+    hasVoted = true; closeModal(); confettiBurst();
     statusMsg.textContent = '✓ Vote successfully cast! Thank you for participating.';
     statusMsg.classList.add('done');
     renderParticipants();
   } catch (error) {
     console.error("Error casting vote:", error);
-    modalVoteBtn.textContent = 'Error — Try Again';
-    modalVoteBtn.disabled = false;
-    alert("Error casting vote. Make sure the Firestore Security Rules are updated!");
+    modalVoteBtn.textContent = 'Error — Try Again'; modalVoteBtn.disabled = false;
   }
 }
 modalVoteBtn.addEventListener('click', castVote);
 
-/* ───── Auth State ───── */
+/* ───── Listen for Voting Closed signal from admin ───── */
+function listenForVotingStatus() {
+  onSnapshot(doc(db, "config", "voting"), (snapshot) => {
+    if (snapshot.exists()) {
+      const data = snapshot.data();
+      if (data.open === false && !votingClosed) {
+        votingClosed = true;
+        closedBanner.style.display = 'block';
+        statusMsg.textContent = '🔒 Voting has ended. Thank you for participating!';
+        statusMsg.classList.add('done');
+        closeModal();
+        renderParticipants();
+      } else if (data.open === true) {
+        votingClosed = false;
+        closedBanner.style.display = 'none';
+        if (!hasVoted) {
+          statusMsg.textContent = 'Tap a presenter card to view their bio, then cast your vote.';
+          statusMsg.classList.remove('done');
+        }
+        renderParticipants();
+      }
+    }
+  }, (error) => {
+    // Config document might not exist yet, that's OK
+    console.log("Config listener:", error.message);
+  });
+}
+
+/* ───── Auth ───── */
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     authSection.style.display = 'none';
@@ -600,7 +530,6 @@ onAuthStateChanged(auth, async (user) => {
     userNameTop.textContent = user.displayName;
     userPhoto.src = user.photoURL || '';
 
-    // Check if already voted
     const voteDoc = await getDoc(doc(db, "votes", user.uid));
     if (voteDoc.exists()) {
       hasVoted = true;
@@ -612,6 +541,7 @@ onAuthStateChanged(auth, async (user) => {
       statusMsg.classList.remove('done');
     }
     renderParticipants();
+    listenForVotingStatus();
   } else {
     authSection.style.display = 'flex';
     votingSection.style.display = 'none';
@@ -626,7 +556,6 @@ loginBtn.addEventListener('click', () => {
     alert("Failed to login. Please try again.");
   });
 });
-
 logoutBtn.addEventListener('click', () => signOut(auth));
 </script>
 </body>
