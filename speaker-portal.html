@@ -183,7 +183,6 @@ body {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA9Tdj5TUnaN67thSjkDIjUHB00zQTDXJ4",
@@ -197,7 +196,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
 const provider = new GoogleAuthProvider();
 
 // DOM Elements
@@ -209,6 +207,8 @@ const imageInput = document.getElementById('imageInput');
 const imagePreview = document.getElementById('imagePreview');
 const uploadPlaceholder = document.getElementById('uploadPlaceholder');
 const submitBtn = document.getElementById('submitBtn');
+
+let compressedImageBase64 = null;
 
 // Auth Listeners
 onAuthStateChanged(auth, async (user) => {
@@ -239,7 +239,7 @@ onAuthStateChanged(auth, async (user) => {
 document.getElementById('loginBtn').addEventListener('click', () => signInWithPopup(auth, provider));
 document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
-// Image Handling (Preview only, no compression)
+// Image Handling & Canvas Compression
 uploadArea.addEventListener('click', () => imageInput.click());
 
 imageInput.addEventListener('change', (e) => {
@@ -249,9 +249,29 @@ imageInput.addEventListener('change', (e) => {
   const reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onload = (event) => {
-    imagePreview.src = event.target.result;
-    imagePreview.style.display = 'block';
-    uploadPlaceholder.style.display = 'none';
+    const img = new Image();
+    img.src = event.target.result;
+    img.onload = () => {
+      // Compress to max 1000x1000 via Canvas for high quality on projectors
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const maxSize = 1000;
+      let width = img.width; 
+      let height = img.height;
+      
+      if (width > height) { if (width > maxSize) { height *= maxSize / width; width = maxSize; } } 
+      else { if (height > maxSize) { width *= maxSize / height; height = maxSize; } }
+      
+      canvas.width = width; canvas.height = height;
+      ctx.drawImage(img, 0, 0, width, height);
+      
+      compressedImageBase64 = canvas.toDataURL('image/jpeg', 0.9);
+      
+      // Update UI
+      imagePreview.src = compressedImageBase64;
+      imagePreview.style.display = 'block';
+      uploadPlaceholder.style.display = 'none';
+    };
   };
 });
 
@@ -260,29 +280,18 @@ submitBtn.addEventListener('click', async () => {
   const name = document.getElementById('speakerName').value.trim();
   const bio = document.getElementById('speakerBio').value.trim();
   const user = auth.currentUser;
-  const file = imageInput.files[0];
 
   if (!name || !bio) return alert("Please fill out your name and short bio.");
-  if (!file) return alert("Please upload a profile picture.");
+  if (!compressedImageBase64) return alert("Please upload a profile picture.");
   
   submitBtn.disabled = true;
-  submitBtn.textContent = 'Uploading high-res image...';
+  submitBtn.textContent = 'Saving high-res profile...';
 
   try {
-    // 1. Upload raw image to Firebase Storage
-    const fileExt = file.name.split('.').pop();
-    const storageRef = ref(storage, `speakers/${user.uid}.${fileExt}`);
-    await uploadBytes(storageRef, file);
-    
-    // 2. Get the public download URL
-    const photoURL = await getDownloadURL(storageRef);
-
-    // 3. Save to Firestore
-    submitBtn.textContent = 'Saving profile...';
     await setDoc(doc(db, "submissions", user.uid), {
       name: name,
       bio: bio,
-      image: photoURL,
+      image: compressedImageBase64,
       email: user.email,
       timestamp: new Date()
     });
