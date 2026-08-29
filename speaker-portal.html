@@ -252,10 +252,10 @@ imageInput.addEventListener('change', (e) => {
     const img = new Image();
     img.src = event.target.result;
     img.onload = () => {
-      // Compress to max 400x400 via Canvas
+      // Compress to max 1000x1000 via Canvas for high quality on projectors
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      const maxSize = 400;
+      const maxSize = 1000;
       let width = img.width; 
       let height = img.height;
       
@@ -265,7 +265,7 @@ imageInput.addEventListener('change', (e) => {
       canvas.width = width; canvas.height = height;
       ctx.drawImage(img, 0, 0, width, height);
       
-      compressedImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
+      compressedImageBase64 = canvas.toDataURL('image/jpeg', 0.9);
       
       // Update UI
       imagePreview.src = compressedImageBase64;
