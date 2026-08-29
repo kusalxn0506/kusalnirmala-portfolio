@@ -251,12 +251,18 @@ onAuthStateChanged(auth, async (user) => {
     topbarUser.style.display = 'flex';
     authSection.style.display = 'none';
     
-    // Check if already submitted
-    const existingDoc = await getDoc(doc(db, "submissions", user.uid));
-    if (existingDoc.exists()) {
-      formSection.style.display = 'none';
-      successSection.style.display = 'block';
-    } else {
+    // Check if already submitted (wrapped in try/catch to handle strict security rules)
+    try {
+      const existingDoc = await getDoc(doc(db, "submissions", user.uid));
+      if (existingDoc.exists()) {
+        formSection.style.display = 'none';
+        successSection.style.display = 'block';
+      } else {
+        formSection.style.display = 'block';
+        successSection.style.display = 'none';
+      }
+    } catch (err) {
+      console.warn("Could not check existing submission (likely rules restriction). Defaulting to form.", err);
       formSection.style.display = 'block';
       successSection.style.display = 'none';
     }
