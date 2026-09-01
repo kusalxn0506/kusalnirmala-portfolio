@@ -494,7 +494,7 @@ async function castVote() {
       timestamp: new Date()
     });
     hasVoted = true; 
-    localStorage.setItem('pk_has_voted', 'true');
+    localStorage.setItem('pk_has_voted_official', 'true');
     closeModal(); confettiBurst();
     statusMsg.textContent = '✓ Vote successfully cast! Thank you for participating.';
     statusMsg.classList.add('done');
@@ -543,7 +543,7 @@ onAuthStateChanged(auth, async (user) => {
     userNameTop.textContent = user.displayName;
     userPhoto.src = user.photoURL || '';
 
-    if (localStorage.getItem('pk_has_voted') === 'true') {
+    if (localStorage.getItem('pk_has_voted_official') === 'true') {
       hasVoted = true;
       statusMsg.textContent = '✓ You have already cast your vote. Thank you!';
       statusMsg.classList.add('done');
