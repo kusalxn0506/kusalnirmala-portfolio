@@ -588,7 +588,7 @@ function triggerWinnerReveal() {
   document.getElementById('winnerVotes').textContent = topVotes;
   document.getElementById('winnerPct').textContent = winnerPercentage + '%';
 
-  const miniHTML = sorted.map((p, i) => `
+  const miniHTML = sorted.slice(0, 5).map((p, i) => `
     <div class="mini-row" data-rank="${i+1}">
       <div class="mini-rank">#${i+1}</div>
       <img class="mini-photo" src="${p.image}">
