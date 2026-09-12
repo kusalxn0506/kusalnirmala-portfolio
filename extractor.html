@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Extractor — 3 Min Talk</title>
+<style>
+  body { font-family: -apple-system, sans-serif; background: #0d0b08; color: #f2e8d8; padding: 40px; }
+  .card { background: #151210; padding: 30px; border-radius: 12px; border: 1px solid #333; max-width: 800px; margin: 0 auto; }
+  h1 { color: #d4af5f; }
+  button { background: #c9573f; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+  button:hover { background: #a8402f; }
+  pre { background: #000; padding: 20px; border-radius: 8px; overflow-x: auto; color: #00ff00; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>Data Extractor</h1>
+  <p>Log in as Admin to pull the 12+ submissions from Firebase and generate your final JavaScript array.</p>
+  
+  <div id="authSection">
+    <button id="loginBtn">Sign in with Google (Admin Only)</button>
+  </div>
+  
+  <div id="dataSection" style="display: none;">
+    <p>Success! Found <strong id="count">0</strong> submissions.</p>
+    <p><em>Copy the code below and paste it over the `participants` array in pechakucha.html and projector.html</em></p>
+    <p>Note: Since the form didn't have a specific "Topic" field, the topic is left as "TBD". You can quickly type in their 15 topics manually before deploying.</p>
+    
+    <pre id="outputCode">Loading data...</pre>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA9Tdj5TUnaN67thSjkDIjUHB00zQTDXJ4",
+  authDomain: "pechakucha-nsbm.firebaseapp.com",
+  projectId: "pechakucha-nsbm"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+document.getElementById('loginBtn').addEventListener('click', () => signInWithPopup(auth, provider));
+
+onAuthStateChanged(auth, async (user) => {
+  if (user && user.email === "kusal.xn@gmail.com") {
+    document.getElementById('authSection').style.display = 'none';
+    document.getElementById('dataSection').style.display = 'block';
+    
+    try {
+      const querySnapshot = await getDocs(collection(db, "submissions"));
+      
+      let submissions = [];
+      querySnapshot.forEach((doc) => {
+        submissions.push(doc.data());
+      });
+      
+      // Sort alphabetically by name
+      submissions.sort((a, b) => a.name.localeCompare(b.name));
+      
+      document.getElementById('count').textContent = submissions.length;
+      
+      let code = "const participants = [\n";
+      
+      submissions.forEach((sub, index) => {
+        const id = `p${index + 1}`;
+        const number = `#${String(index + 1).padStart(3, '0')}`;
+        // Clean up formatting
+        const cleanBio = sub.bio.replace(/"/g, "'").replace(/\n/g, " ");
+        
+        code += `  {\n`;
+        code += `    id: "${id}",\n`;
+        code += `    name: "${sub.name}",\n`;
+        code += `    number: "${number}",\n`;
+        code += `    topic: "TBD", // <-- Type their topic here\n`;
+        code += `    bio: "${cleanBio}",\n`;
+        code += `    image: "${sub.image}"\n`;
+        code += `  }${index < submissions.length - 1 ? ',' : ''}\n`;
+      });
+      
+      code += "];";
+      
+      document.getElementById('outputCode').textContent = code;
+      
+    } catch (error) {
+      console.error(error);
+      document.getElementById('outputCode').textContent = "Error fetching data: " + error.message;
+    }
+  } else if (user) {
+    alert("Access Denied. Only kusal.xn@gmail.com can extract data.");
+  }
+});
+</script>
+</body>
+</html>
