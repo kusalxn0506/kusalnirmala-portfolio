@@ -197,6 +197,57 @@
         </div>
       </div>
 
+      <!-- PechaKucha Live Voting -->
+      <div class="project-card" style="cursor:pointer;" onclick="window.location='pechakucha-case-study.html'">
+        <span class="status" style="color:var(--gold-bright); border-color:var(--gold);">Completed · 200+ Live Votes</span>
+        <h3>PechaKucha Live Voting System</h3>
+        <p>A real-time audience voting system for university PechaKucha 20×20 presentations — handling 200+ concurrent votes with zero downtime using Firebase Firestore, featuring animated leaderboards and a cinematic winner reveal.</p>
+
+        <div class="project-diagram">
+          <svg viewBox="0 0 380 150" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Architecture diagram showing Voter Phones connecting to Firebase Firestore, which syncs in real-time to the Admin Projector">
+            <defs>
+              <marker id="arrowGoldPK" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#b6913f"/>
+              </marker>
+              <marker id="arrowTealPK" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#00aaaa"/>
+              </marker>
+            </defs>
+
+            <!-- Voter Phones -->
+            <rect x="10" y="45" width="90" height="60" rx="3" stroke="#b6ab95" stroke-width="1" stroke-dasharray="2 2"/>
+            <rect x="25" y="35" width="30" height="45" rx="3" fill="rgba(255,255,255,0.05)" stroke="#f2e8d8" stroke-width="1.5"/>
+            <rect x="55" y="65" width="30" height="45" rx="3" fill="rgba(255,255,255,0.05)" stroke="#f2e8d8" stroke-width="1.5"/>
+            <text x="55" y="120" font-family="'IBM Plex Mono', monospace" font-size="9" font-weight="600" fill="#f2e8d8" text-anchor="middle">200+ Voters</text>
+            
+            <!-- Connection to Firebase -->
+            <path d="M 100 75 L 140 75" stroke="#b6913f" stroke-width="1.5" fill="none" marker-end="url(#arrowGoldPK)"/>
+            <text x="120" y="68" font-family="'IBM Plex Mono', monospace" font-size="7" fill="#b6ab95" text-anchor="middle">Web App</text>
+
+            <!-- Firebase Firestore -->
+            <rect x="145" y="45" width="90" height="60" rx="6" stroke="#b6913f" fill="rgba(182,145,63,0.1)" stroke-width="1.5"/>
+            <path d="M 175 60 Q 190 45 205 60 T 190 90 Z" fill="#b6913f" opacity="0.8"/>
+            <text x="190" y="120" font-family="'IBM Plex Mono', monospace" font-size="9.5" font-weight="600" fill="#d4af5f" text-anchor="middle">Firebase Firestore</text>
+
+            <!-- Connection to Projector -->
+            <path d="M 235 75 L 275 75" stroke="#00aaaa" stroke-width="1.5" fill="none" marker-end="url(#arrowTealPK)"/>
+            <text x="255" y="68" font-family="'IBM Plex Mono', monospace" font-size="7" fill="#00aaaa" text-anchor="middle">Real-time Sync</text>
+
+            <!-- Admin Projector -->
+            <rect x="280" y="35" width="90" height="55" rx="3" stroke="#00aaaa" fill="rgba(0,170,170,0.05)" stroke-width="1.5"/>
+            <text x="325" y="62" font-family="'IBM Plex Mono', monospace" font-size="10" font-weight="600" fill="#00cccc" text-anchor="middle">Projector UI</text>
+            <text x="325" y="105" font-family="'IBM Plex Mono', monospace" font-size="9" fill="#00aaaa" text-anchor="middle">GSAP Animations</text>
+          </svg>
+        </div>
+
+        <div class="chip-list">
+          <span class="chip">Firebase</span>
+          <span class="chip">JavaScript</span>
+          <span class="chip">GSAP</span>
+          <span class="chip">Real-time</span>
+        </div>
+      </div>
+
       <!-- Enterprise Distributed Inventory -->
       <div class="project-card">
         <span class="status">In Development</span>
