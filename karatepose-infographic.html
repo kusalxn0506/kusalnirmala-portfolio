@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KaratePose-AI — Research Program Infographic | Kusal Nirmala</title>
+    <meta name="description" content="Interactive research program infographic & EKF simulator for KaratePose-AI: Kinematic Refinement of Human Pose Estimation via a Physics-Informed Filter Engine by Kusal Nirmala.">
+    <link rel="icon" href="assets/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+    <meta property="og:type" content="article">
+    <meta name="theme-color" content="#0d0d0c">
+    <meta property="og:title" content="KaratePose-AI — Research Program Infographic | Kusal Nirmala">
+    <meta property="og:description" content="Interactive research program infographic & live EKF waveform simulator for elite martial arts pose estimation analytics.">
+    <meta property="og:image" content="https://kusalnirmala.dev/assets/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://kusalnirmala.dev/assets/og-image.png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Editorial Serif, Geometric Sans, Technical Mono, and Noto Serif JP -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+JP:wght@600;700;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                        kanji: ['"Noto Serif JP"', 'serif']
+                    },
+                    colors: {
+                        crimson: {
+                            50: '#fef2f2',
+                            100: '#fee2e2',
+                            400: '#f87171',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                            900: '#7f1d1d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --grid-color: rgba(255, 255, 255, 0.035);
+        }
+        html:not(.dark) {
+            --grid-color: rgba(23, 22, 20, 0.05);
+        }
+
+        body {
+            background-image: 
+                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+
+        .hanko-stamp {
+            border: 2px solid #dc2626;
+            color: #dc2626;
+            box-shadow: inset 0 0 0 1px rgba(220, 38, 38, 0.25);
+            text-shadow: 0 0 1px rgba(220, 38, 38, 0.3);
+        }
+
+        [contenteditable="true"] {
+            outline: 1px dashed rgba(220, 38, 38, 0.65);
+            outline-offset: 3px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        [contenteditable="true"]:focus {
+            background-color: rgba(220, 38, 38, 0.08);
+            outline: 2px solid #dc2626;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #141413;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333230;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #dc2626;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+            }
+            .infographic-container {
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#0d0d0c] dark:bg-[#0d0d0c] text-stone-900 dark:text-stone-100 font-sans antialiased selection:bg-crimson-600 selection:text-white transition-colors duration-300 min-h-screen pb-16">
+
+    <!-- Top Floating Utility Bar -->
+    <header class="no-print sticky top-0 z-50 backdrop-blur-md bg-white/85 dark:bg-[#0d0d0c]/85 border-b border-stone-200 dark:border-stone-800/80 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+            <!-- Brand Identity -->
+            <div class="flex items-center gap-3">
+                <div class="hanko-stamp w-8 h-8 rounded flex items-center justify-center font-kanji font-bold text-lg select-none">
+                    型
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-mono text-xs uppercase tracking-widest font-semibold text-stone-900 dark:text-stone-100">KUSAL NIRMALA</span>
+                        <span class="text-stone-400 dark:text-stone-600">·</span>
+                        <span class="font-mono text-[11px] text-crimson-600 dark:text-crimson-400 font-semibold">KARATEPOSE-AI (PHASE 1 FROZEN ✅ · PHASE 2 EKF BUILD)</span>
+                    </div>
+                    <p class="font-mono text-[10px] tracking-widest text-stone-500 dark:text-stone-400 uppercase">FORM · PATTERN · DISCIPLINE · 10-MODULE PYTHON PIPELINE</p>
+                </div>
+            </div>
+
+            <!-- Interactive Controls -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a href="index.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono border border-stone-300 dark:border-stone-700 hover:border-stone-400 dark:hover:border-stone-600 bg-stone-100 dark:bg-stone-900 text-stone-700 dark:text-stone-300 transition" title="Back to Portfolio Home">
+                    <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                    <span class="hidden md:inline">Portfolio</span>
+                </a>
+
+                <a href="karatepose-ai.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono border border-stone-300 dark:border-stone-700 hover:border-crimson-500 dark:hover:border-crimson-500 bg-stone-100 dark:bg-stone-900 text-stone-700 dark:text-stone-300 transition" title="Read Full Academic Proposal">
+                    <i data-lucide="file-text" class="w-3.5 h-3.5 text-crimson-500"></i>
+                    <span class="hidden sm:inline">Proposal</span>
+                </a>
+
+                <button id="editToggleBtn" onclick="toggleEditableMode()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono border border-stone-300 dark:border-stone-700 hover:border-crimson-500 dark:hover:border-crimson-500 bg-stone-100 dark:bg-stone-900 text-stone-700 dark:text-stone-300 transition">
+                    <i data-lucide="pen-line" class="w-3.5 h-3.5 text-crimson-500"></i>
+                    <span id="editBtnLabel">Edit Text: OFF</span>
+                </button>
+
+                <button onclick="toggleTheme()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono border border-stone-300 dark:border-stone-700 hover:border-stone-400 dark:hover:border-stone-600 bg-stone-100 dark:bg-stone-900 text-stone-700 dark:text-stone-300 transition">
+                    <i data-lucide="sun-moon" class="w-3.5 h-3.5 text-amber-500"></i>
+                    <span id="themeLabel" class="hidden sm:inline">Theme: Obsidian</span>
+                </button>
+
+                <button onclick="window.print()" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium bg-crimson-600 hover:bg-crimson-500 text-white shadow-sm shadow-crimson-900/30 transition">
+                    <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+                    <span>Export Poster / PDF</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Status Toast -->
+    <div id="toastBanner" class="no-print fixed bottom-5 right-5 z-50 hidden transform transition-all duration-300 bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 px-4 py-2.5 rounded-xl shadow-xl border border-stone-700 dark:border-stone-300 font-mono text-xs flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-crimson-500 animate-ping"></span>
+        <span id="toastMessage">Inline editing enabled. Click any text to customize.</span>
+    </div>
+
+    <!-- MAIN INFOGRAPHIC POSTER CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8">
+        <div class="infographic-container bg-[#faf8f5] dark:bg-[#141413] border border-stone-300 dark:border-stone-800 rounded-2xl shadow-2xl overflow-hidden transition-colors duration-300">
+
+            <!-- TOP TELEMETRY RIBBON -->
+            <div class="bg-stone-200/75 dark:bg-[#1b1a19] border-b border-stone-300 dark:border-stone-800 px-6 py-2.5 flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] text-stone-600 dark:text-stone-400">
+                <div class="flex items-center gap-3">
+                    <span class="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        PHASE 1 PIPELINE FROZEN (MODULES 01–06, 08) · 07_EKF_FILTER BUILT
+                    </span>
+                    <span class="hidden md:inline">|</span>
+                    <span class="hidden md:inline">YEAR 1 BSc AI RESEARCH TRACK (YEAR 2 STARTS OCT 2027)</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span>COHORT: N=3 ELITE (180 PAIRED TRIALS · 60/240 FPS)</span>
+                    <a href="karatepose-ai.html" class="underline decoration-crimson-500/60 hover:text-crimson-500 transition">
+                        Full Academic Proposal →
+                    </a>
+                </div>
+            </div>
+
+            <!-- SECTION 1: HERO BANNER & FULL RESEARCH THESIS -->
+            <section class="relative p-6 sm:p-10 lg:p-12 border-b border-stone-300 dark:border-stone-800 overflow-hidden">
+                <!-- Background Decorative Watermark Kanji -->
+                <div class="pointer-events-none select-none absolute -right-4 -top-8 font-kanji text-[190px] sm:text-[260px] font-black text-stone-900/[0.03] dark:text-white/[0.025] leading-none">
+                    型
+                </div>
+
+                <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <!-- Left 8 Cols: Title, Full Academic Thesis & Key Numbers -->
+                    <div class="lg:col-span-8 space-y-5">
+                        <div class="inline-flex flex-wrap items-center gap-2">
+                            <span class="px-2.5 py-1 rounded bg-crimson-600/15 border border-crimson-600/30 text-crimson-600 dark:text-crimson-400 font-mono text-xs font-semibold tracking-wider uppercase editable">
+                                Year 1 BSc (Hons) AI Research Program (Year 2: Oct 2027)
+                            </span>
+                            <span class="px-2.5 py-1 rounded bg-stone-200 dark:bg-stone-800/90 text-stone-700 dark:text-stone-300 font-mono text-xs editable">
+                                University of Plymouth · NSBM Green University
+                            </span>
+                            <span class="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-mono text-xs editable">
+                                Phase 1 Frozen ✅ · Phase 2 Active Build
+                            </span>
+                        </div>
+
+                        <div>
+                            <p class="font-mono text-xs uppercase tracking-[0.22em] text-stone-500 dark:text-stone-400 mb-2 editable">
+                                KARATEPOSE-AI · FORM · PATTERN · DISCIPLINE
+                            </p>
+                            <h1 class="font-serif text-4xl sm:text-5xl lg:text-[54px] tracking-tight text-stone-900 dark:text-white leading-[1.06] editable">
+                                Kinematic Refinement of Coordinate-Based Human Pose Estimation via a <span class="text-crimson-600 dark:text-crimson-500 italic">Physics-Informed Filter Engine</span> for Elite Martial Arts Analytics
+                            </h1>
+                        </div>
+
+                        <p class="text-stone-600 dark:text-stone-300 text-sm sm:text-base leading-relaxed editable">
+                            Lightweight edge-deployable pose estimators (<strong>MediaPipe BlazePose v0.10.35</strong> &amp; <strong>YOLOv8x-Pose</strong>) suffer severe confidence collapse and spatial jitter when confronted with concurrent <strong>ballistic velocities (&gt;8 m/s)</strong> and <strong>rigid heavyweight garment occlusion (14oz / 400 g/m² Shotokan Karate Gi)</strong>. Built during Year 1 of the BSc AI degree, <strong>KaratePose-AI</strong> pairs a controlled dual-garment benchmark across an elite cohort (<strong>N=3, 180 paired trials</strong>) with a 10-module Python architecture featuring a <strong>Continuous White-Noise Jerk Extended Kalman Filter (`07_ekf_filter.py`)</strong>, Joseph-form covariance stabilization, and 14-segment <strong>de Leva (1996)</strong> Center of Gravity synthesis (`09_cog_tracker.py`).
+                        </p>
+
+                        <!-- Quick KPI Highlight Strip -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                            <div class="p-3 rounded-xl bg-white dark:bg-[#1a1918] border border-stone-300 dark:border-stone-800">
+                                <span class="font-mono text-[10px] text-stone-500 dark:text-stone-400 uppercase block">EMPIRICAL CORPUS</span>
+                                <span class="font-serif text-2xl sm:text-3xl text-stone-900 dark:text-white font-semibold editable">180 Trials</span>
+                                <span class="font-mono text-[10px] text-crimson-600 dark:text-crimson-400 block">N=3 Elite · Set A vs Set B</span>
+                            </div>
+                            <div class="p-3 rounded-xl bg-white dark:bg-[#1a1918] border border-stone-300 dark:border-stone-800">
+                                <span class="font-mono text-[10px] text-stone-500 dark:text-stone-400 uppercase block">PIPELINE MODULES</span>
+                                <span class="font-serif text-2xl sm:text-3xl text-stone-900 dark:text-white font-semibold editable">10 Modules</span>
+                                <span class="font-mono text-[10px] text-emerald-500 block">01–08 Built · 09–10 Spec'd</span>
+                            </div>
+                            <div class="p-3 rounded-xl bg-white dark:bg-[#1a1918] border border-stone-300 dark:border-stone-800">
+                                <span class="font-mono text-[10px] text-stone-500 dark:text-stone-400 uppercase block">PROCESS NOISE Q</span>
+                                <span class="font-serif text-2xl sm:text-3xl text-stone-900 dark:text-white font-semibold editable">Δt⁵/20 Jerk</span>
+                                <span class="font-mono text-[10px] text-amber-500 block">Joseph-Form P Update</span>
+                            </div>
+                            <div class="p-3 rounded-xl bg-white dark:bg-[#1a1918] border border-stone-300 dark:border-stone-800">
+                                <span class="font-mono text-[10px] text-stone-500 dark:text-stone-400 uppercase block">DYNAMIC R_t GATE</span>
+                                <span class="font-serif text-2xl sm:text-3xl text-stone-900 dark:text-white font-semibold editable">γ = 5.0</span>
+                                <span class="font-mono text-[10px] text-sky-400 block">σ₀=0.01 · T_thresh=0.50</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right 4 Cols: Principal Investigator & Cohort Summary Dossier -->
+                    <div class="lg:col-span-4 bg-white dark:bg-[#1b1a19] border border-stone-300 dark:border-stone-800 rounded-xl p-5 shadow-md space-y-4">
+                        <div class="flex items-start justify-between border-b border-stone-200 dark:border-stone-800 pb-3.5">
+                            <div>
+                                <span class="font-mono text-[10px] uppercase tracking-widest text-crimson-600 dark:text-crimson-400 font-semibold block">Principal Investigator (P01)</span>
+                                <h3 class="font-serif text-2xl text-stone-900 dark:text-white mt-0.5 editable">Kusal Nirmala</h3>
+                                <p class="font-mono text-xs text-stone-500 dark:text-stone-400 editable">1st Dan Shotokan · Year 1 BSc AI (Year 2: Oct 2027)</p>
+                            </div>
+                            <div class="hanko-stamp w-11 h-11 rounded flex flex-col items-center justify-center font-kanji leading-none select-none shrink-0">
+                                <span class="text-lg font-black">型</span>
+                                <span class="text-[8px] font-mono tracking-tighter">KATA</span>
+                            </div>
+                        </div>
+
+                        <!-- Elite Cohort Stratification Box -->
+                        <div class="space-y-2">
+                            <span class="font-mono text-[10px] uppercase tracking-widest text-stone-500 dark:text-stone-400 block font-semibold">
+                                Stratified Elite Cohort (N=3 · 60 Trials/Athlete)
+                            </span>
+                            <div class="p-2.5 rounded-lg bg-stone-100 dark:bg-[#141413] border border-stone-200 dark:border-stone-800 text-xs space-y-1.5">
+                                <div class="flex items-center justify-between font-mono">
+                                    <span class="text-crimson-600 dark:text-crimson-400 font-bold">P01 · 1st Dan Black Belt</span>
+                                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-stone-200 dark:bg-stone-800">Investigator</span>
+                                </div>
+                                <p class="text-[11px] text-stone-600 dark:text-stone-400 editable">Primary investigator-participant; pipeline engineering &amp; validation.</p>
+                            </div>
+
+                            <div class="p-2.5 rounded-lg bg-stone-100 dark:bg-[#141413] border border-amber-500/40 text-xs space-y-1.5">
+                                <div class="flex items-center justify-between font-mono">
+                                    <span class="text-amber-600 dark:text-amber-400 font-bold">P02 · Asian Championship Winner</span>
+                                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-500">Max Velocity</span>
+                                </div>
+                                <p class="text-[11px] text-stone-600 dark:text-stone-400 editable">Continental &amp; National Champion; extreme ballistic speed (&gt;8 m/s) &amp; maximal Gi stress.</p>
+                            </div>
+
+                            <div class="p-2.5 rounded-lg bg-stone-100 dark:bg-[#141413] border border-emerald-500/40 text-xs space-y-1.5">
+                                <div class="flex items-center justify-between font-mono">
+                                    <span class="text-emerald-600 dark:text-emerald-400 font-bold">P03 · 4th Dan Senior Master</span>
+                                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-500">Gold Reference</span>
+                                </div>
+                                <p class="text-[11px] text-stone-600 dark:text-stone-400 editable">20+ years instruction; biomechanically "textbook" kata-tempo reference form.</p>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-t border-stone-200 dark:border-stone-800 flex items-center justify-between text-[11px] font-mono text-stone-500 dark:text-stone-400">
+                            <span>ASUS ROG RTX 3060 · MacBook M4</span>
+                            <span class="text-emerald-600 dark:text-emerald-400 font-semibold">PHASE 2 READY</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: THE RESEARCH GAP & DUAL-GARMENT EXPERIMENTAL DESIGN -->
+            <section class="p-6 sm:p-10 border-b border-stone-300 dark:border-stone-800 bg-stone-100/60 dark:bg-[#111110]">
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-2">
+                    <div>
+                        <span class="font-mono text-xs uppercase tracking-widest text-crimson-600 dark:text-crimson-400 font-semibold">01 // LITERATURE GAP &amp; EXPERIMENTAL ISOLATION</span>
+                        <h3 class="font-serif text-3xl sm:text-4xl text-stone-900 dark:text-white mt-1 editable">Why 14oz Rigid Canvas Breaks Lightweight Pose Estimators</h3>
+                    </div>
+                    <p class="font-mono text-xs text-stone-500 dark:text-stone-400">ISOLATING GARMENT STIFFNESS AS THE SOLE INDEPENDENT VARIABLE</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                    <!-- Left 5 Cols: Set A vs Set B Experimental Comparison Cards -->
+                    <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Set A Card -->
+                        <div class="bg-white dark:bg-[#191918] border border-emerald-500/50 rounded-xl p-5 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-bold uppercase">SET A · CONTROL</span>
+                                    <i data-lucide="crosshair" class="w-4 h-4 text-emerald-500"></i>
+                                </div>
+                                <h4 class="font-serif text-2xl text-stone-900 dark:text-white mb-2 editable">Compression + 6 Fluorescent Markers</h4>
+                                <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable">
+                                    Matte black form-fitting compression gear with <strong>25mm high-contrast adhesive markers</strong> affixed to 6 bony landmarks (`MARKER_JOINTS_MP` / `YOLO`):
+                                </p>
+                                <ul class="mt-3 space-y-1 font-mono text-[11px] text-stone-700 dark:text-stone-300">
+                                    <li>1. Ankle (27, 28 / YOLO 15, 16)</li>
+                                    <li>2. Knee (25, 26 / YOLO 13, 14)</li>
+                                    <li>3. Hip (23, 24 / YOLO 11, 12)</li>
+                                    <li>4. Shoulder (11, 12 / YOLO 5, 6)</li>
+                                    <li>5. Elbow (13, 14 / YOLO 7, 8)</li>
+                                    <li>6. Wrist (15, 16 / YOLO 9, 10)</li>
+                                </ul>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-stone-200 dark:border-stone-800 font-mono text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
+                                ROLE: PROXY GROUND TRUTH BASELINE
+                            </div>
+                        </div>
+
+                        <!-- Set B Card -->
+                        <div class="bg-white dark:bg-[#191918] border-2 border-crimson-600/70 rounded-xl p-5 flex flex-col justify-between shadow-lg shadow-crimson-950/10">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-crimson-600/15 text-crimson-600 dark:text-crimson-400 font-bold uppercase">SET B · EXPERIMENTAL</span>
+                                    <i data-lucide="shield-alert" class="w-4 h-4 text-crimson-500"></i>
+                                </div>
+                                <h4 class="font-serif text-2xl text-stone-900 dark:text-white mb-2 editable">14oz Heavyweight Canvas Karate Gi</h4>
+                                <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable">
+                                    Pristine <strong>14oz (≈400 g/m²) 100% cotton canvas</strong> Gi with WKF-standard obi knot (markers &amp; compression removed to prevent contour bleed).
+                                </p>
+                                <div class="mt-3 p-2.5 rounded-lg bg-crimson-500/10 border border-crimson-500/20 font-mono text-[11px] text-crimson-600 dark:text-crimson-300 space-y-1">
+                                    <div class="font-bold">FAILURE MECHANISM:</div>
+                                    <p class="text-[10px] leading-normal">When c_t drops from 1.0 → 0.0, R_t scales from σ₀² to 148.4× σ₀² (γ=5.0), triggering Newtonian momentum projection below T_thresh=0.50.</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-stone-200 dark:border-stone-800 font-mono text-[10px] text-crimson-600 dark:text-crimson-400 font-semibold">
+                                ROLE: RIGID OCCLUSION PERTURBATION
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right 7 Cols: State-of-the-Art Literature Taxonomy Table -->
+                    <div class="lg:col-span-7 bg-white dark:bg-[#191918] border border-stone-300 dark:border-stone-800 rounded-xl p-5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="font-mono text-xs uppercase tracking-wider text-stone-500 dark:text-stone-400 font-semibold">State-of-the-Art Literature Taxonomy (Section 4.6)</span>
+                                <span class="font-mono text-[11px] text-crimson-600 dark:text-crimson-400">MediaPipe Tasks API (15-pt subset) vs YOLOv8x-Pose (13-pt subset)</span>
+                            </div>
+
+                            <div class="overflow-x-auto border border-stone-200 dark:border-stone-800 rounded-lg">
+                                <table class="w-full text-left border-collapse text-xs">
+                                    <thead>
+                                        <tr class="bg-stone-100 dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800 font-mono text-[10px] text-stone-500 dark:text-stone-400 uppercase">
+                                            <th class="py-2.5 px-3">Study / Framework</th>
+                                            <th class="py-2.5 px-3">Domain</th>
+                                            <th class="py-2.5 px-3">Kinetic Velocity</th>
+                                            <th class="py-2.5 px-3">Garment Isolated</th>
+                                            <th class="py-2.5 px-3">Fabric Stiffness</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-stone-200 dark:divide-stone-800 font-mono text-[11px]">
+                                        <tr>
+                                            <td class="py-2.5 px-3 text-stone-800 dark:text-stone-200">Echeverria &amp; Santos (2021)</td>
+                                            <td class="py-2.5 px-3 text-stone-500">Karate Kumite</td>
+                                            <td class="py-2.5 px-3 text-amber-500">High</td>
+                                            <td class="py-2.5 px-3 text-stone-500">No</td>
+                                            <td class="py-2.5 px-3 text-stone-500">Uncontrolled</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2.5 px-3 text-stone-800 dark:text-stone-200">Lu (2022) — AiShifu</td>
+                                            <td class="py-2.5 px-3 text-stone-500">Static Karate</td>
+                                            <td class="py-2.5 px-3 text-stone-500">Low</td>
+                                            <td class="py-2.5 px-3 text-stone-500">No</td>
+                                            <td class="py-2.5 px-3 text-stone-500">Uncontrolled</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2.5 px-3 text-stone-800 dark:text-stone-200">Yamaguchi et al. (2022)</td>
+                                            <td class="py-2.5 px-3 text-stone-500">General Motion</td>
+                                            <td class="py-2.5 px-3 text-stone-500">Low / Med</td>
+                                            <td class="py-2.5 px-3 text-emerald-500">Yes (LEDs)</td>
+                                            <td class="py-2.5 px-3 text-stone-400">Loose (Low Stiffness)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2.5 px-3 text-stone-800 dark:text-stone-200">LIP Framework (CVPR 2024)</td>
+                                            <td class="py-2.5 px-3 text-stone-500">General Motion</td>
+                                            <td class="py-2.5 px-3 text-stone-500">Medium</td>
+                                            <td class="py-2.5 px-3 text-emerald-500">Yes (IMU)</td>
+                                            <td class="py-2.5 px-3 text-stone-400">Loose (Low Stiffness)</td>
+                                        </tr>
+                                        <tr class="bg-crimson-600/10 dark:bg-crimson-950/30 font-semibold">
+                                            <td class="py-2.5 px-3 text-crimson-600 dark:text-crimson-400">KaratePose-AI (2026)</td>
+                                            <td class="py-2.5 px-3 text-stone-900 dark:text-white">Shotokan Kihon</td>
+                                            <td class="py-2.5 px-3 text-crimson-600 dark:text-crimson-400">Ballistic (&gt;8 m/s)</td>
+                                            <td class="py-2.5 px-3 text-emerald-500">Yes (Paired)</td>
+                                            <td class="py-2.5 px-3 text-crimson-600 dark:text-crimson-400">Rigid 14oz Canvas</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <p class="mt-3 text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable">
+                            <strong>Key Insight:</strong> Standard Butterworth or continuous Kalman filters smooth away genuine ballistic acceleration spikes (<em>Kime</em>) and introduce phase lag. <strong>KaratePose-AI (`07_ekf_filter.py`)</strong> solves this via a continuous white-noise jerk process noise matrix $Q$ and an event-triggered confidence gate that switches to Newtonian momentum projection when $c_t &lt; 0.50$.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: INTERACTIVE JOINT-TRACKING & EKF WAVEFORM SIMULATOR -->
+            <section class="p-6 sm:p-10 border-b border-stone-300 dark:border-stone-800">
+                <div class="flex flex-col xl:flex-row xl:items-end justify-between mb-6 gap-4">
+                    <div>
+                        <span class="font-mono text-xs uppercase tracking-widest text-crimson-600 dark:text-crimson-400 font-semibold">02 // INTERACTIVE KINEMATIC &amp; EKF SIMULATOR</span>
+                        <h3 class="font-serif text-3xl sm:text-4xl text-stone-900 dark:text-white mt-1 editable">
+                            4-Phase 60 BPM Protocol: <span class="italic font-normal text-stone-600 dark:text-stone-300">Set A vs. Set B (14oz Gi Jitter) vs. Event-Triggered EKF</span>
+                        </h3>
+                    </div>
+
+                    <!-- Technique & Garment Stream Controls -->
+                    <div class="no-print flex flex-wrap items-center gap-2">
+                        <!-- 3 Target Techniques from Proposal -->
+                        <div class="flex flex-wrap items-center gap-1 bg-stone-200/80 dark:bg-stone-900 p-1.5 rounded-xl border border-stone-300 dark:border-stone-800">
+                            <button onclick="setTechnique('oizuki')" id="tech-oizuki" class="tech-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-crimson-600 text-white font-semibold shadow-sm transition">
+                                01 Oi-Zuki (Lunge Punch)
+                            </button>
+                            <button onclick="setTechnique('gedan')" id="tech-gedan" class="tech-btn px-3 py-1.5 rounded-lg font-mono text-xs text-stone-600 dark:text-stone-300 hover:bg-stone-300/50 dark:hover:bg-stone-800 transition">
+                                02 Gedan-Barai (Block)
+                            </button>
+                            <button onclick="setTechnique('stance')" id="tech-stance" class="tech-btn px-3 py-1.5 rounded-lg font-mono text-xs text-stone-600 dark:text-stone-300 hover:bg-stone-300/50 dark:hover:bg-stone-800 transition">
+                                03 Zenkutsu → Kiba-Dachi
+                            </button>
+                        </div>
+
+                        <!-- Pause / Play Loop -->
+                        <button onclick="togglePlay()" id="playPauseBtn" class="px-3 py-2 rounded-xl font-mono text-xs border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-stone-800 dark:text-stone-200 hover:border-crimson-500 transition flex items-center gap-1.5">
+                            <span id="playPauseLabel">⏸ Pause 8s Cycle</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Visualizer Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                    <!-- Left 8 Cols: Skeletal Canvas + Live 4-Phase Waveform Oscilloscope -->
+                    <div class="lg:col-span-8 bg-[#0b0b0a] border border-stone-800 rounded-xl overflow-hidden flex flex-col justify-between">
+                        <!-- Top HUD Bar -->
+                        <div class="p-3.5 flex flex-wrap items-center justify-between gap-2 border-b border-stone-800/80 bg-black/50 backdrop-blur-sm">
+                            <div class="flex items-center gap-2 font-mono text-xs text-stone-300">
+                                <span id="statusDot" class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                                <span id="hudTechniqueLabel">TECHNIQUE 01: OI-ZUKI (STEPPING LUNGE PUNCH IN ZENKUTSU-DACHI)</span>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-3 font-mono text-[11px]">
+                                <label class="flex items-center gap-1.5 text-amber-400 cursor-pointer select-none">
+                                    <input type="checkbox" id="toggleRawGi" checked onchange="drawPoseFrame()" class="accent-amber-500 rounded">
+                                    <span>Set B Raw Gi Jitter (J_t)</span>
+                                </label>
+                                <label class="flex items-center gap-1.5 text-emerald-400 cursor-pointer select-none">
+                                    <input type="checkbox" id="toggleEKF" checked onchange="drawPoseFrame()" class="accent-emerald-500 rounded">
+                                    <span>07_ekf_filter Trajectory</span>
+                                </label>
+                                <label class="flex items-center gap-1.5 text-sky-400 cursor-pointer select-none">
+                                    <input type="checkbox" id="toggleDeLeva" checked onchange="drawPoseFrame()" class="accent-sky-500 rounded">
+                                    <span>09_cog_tracker (de Leva)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Main Skeletal Canvas -->
+                        <div class="relative w-full">
+                            <canvas id="karateCanvas" class="w-full h-[330px] sm:h-[360px] block"></canvas>
+                        </div>
+
+                        <!-- Bottom Oscilloscope: 8-Second Metronome Protocol & Velocity / Confidence Gate -->
+                        <div class="border-t border-stone-800/90 bg-[#080807] p-3.5 space-y-2">
+                            <div class="flex flex-wrap items-center justify-between text-[10px] font-mono text-stone-400">
+                                <span>60 BPM METRONOME PROTOCOL: [0s] YOI → [3s] INITIATION → [4s] PEAK KIME → [5s] HOLD → [8s] RECOVERY</span>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-amber-400">--- Set B Raw Jitter</span>
+                                    <span class="text-stone-500">--- Std. Kalman (SKF)</span>
+                                    <span class="text-emerald-400">━━ Event-Triggered EKF</span>
+                                </div>
+                            </div>
+                            <canvas id="waveformCanvas" class="w-full h-[92px] block"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Right 4 Cols: Live EKF State Gate & de Leva Segmental Telemetry -->
+                    <div class="lg:col-span-4 bg-white dark:bg-[#191918] border border-stone-300 dark:border-stone-800 rounded-xl p-5 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex items-center justify-between border-b border-stone-200 dark:border-stone-800 pb-3">
+                                <div>
+                                    <span class="font-mono text-[10px] uppercase tracking-widest text-crimson-600 dark:text-crimson-400 font-semibold">Module 07 Live Telemetry</span>
+                                    <h4 class="font-serif text-2xl text-stone-900 dark:text-white">Confidence-Gated EKF</h4>
+                                </div>
+                                <span id="ekfGateBadge" class="font-mono text-[11px] px-2.5 py-1 rounded font-semibold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                                    MEASUREMENT UPDATE
+                                </span>
+                            </div>
+
+                            <!-- Live Protocol Phase & Confidence Readouts -->
+                            <div class="mt-4 space-y-3.5 font-mono text-xs">
+                                <div class="p-2.5 rounded-lg bg-stone-100 dark:bg-[#121211] border border-stone-200 dark:border-stone-800 flex items-center justify-between">
+                                    <span class="text-stone-500 dark:text-stone-400">METRONOME PHASE:</span>
+                                    <span id="valPhaseName" class="font-bold text-crimson-600 dark:text-crimson-400">[4.0s] PEAK KIME</span>
+                                </div>
+
+                                <!-- Detection Confidence c_t vs T_thresh -->
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-stone-500 dark:text-stone-400">DETECTION CONFIDENCE (c_t):</span>
+                                        <span id="valConf" class="font-semibold text-emerald-500">0.92 (≥ T_thresh 0.50)</span>
+                                    </div>
+                                    <div class="w-full h-2 bg-stone-200 dark:bg-stone-800 rounded-full overflow-hidden relative">
+                                        <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-crimson-500 z-10" title="T_thresh = 0.50"></div>
+                                        <div id="barConf" class="h-full bg-emerald-500 rounded-full transition-all duration-75" style="width: 92%"></div>
+                                    </div>
+                                    <span class="text-[10px] text-stone-400">Below c_t = 0.50 → `event_triggered = True` (K_norm = 0)</span>
+                                </div>
+
+                                <!-- Dynamic Measurement Covariance R_t -->
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-stone-500 dark:text-stone-400">R_t SCALE exp(5.0·(1−c_t)):</span>
+                                        <span id="valRScale" class="font-semibold text-stone-900 dark:text-white">1.49× σ₀²</span>
+                                    </div>
+                                    <div class="w-full h-1.5 bg-stone-200 dark:bg-stone-800 rounded-full overflow-hidden">
+                                        <div id="barRScale" class="h-full bg-amber-500 rounded-full transition-all duration-75" style="width: 24%"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Spatial Jitter Comparison -->
+                                <div class="grid grid-cols-2 gap-2 pt-1">
+                                    <div class="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                                        <span class="text-[10px] text-amber-600 dark:text-amber-400 block">SET B RAW JITTER (J_t)</span>
+                                        <span id="valRawJitter" class="text-sm font-bold text-stone-900 dark:text-white">6.84 cm</span>
+                                    </div>
+                                    <div class="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                                        <span class="text-[10px] text-emerald-600 dark:text-emerald-400 block">EKF REFINED ERROR</span>
+                                        <span id="valEkfError" class="text-sm font-bold text-stone-900 dark:text-white">1.42 cm</span>
+                                    </div>
+                                </div>
+
+                                <!-- de Leva Center of Gravity & Stance Depth -->
+                                <div class="pt-1 border-t border-stone-200 dark:border-stone-800 space-y-1.5">
+                                    <div class="flex justify-between">
+                                        <span class="text-stone-500 dark:text-stone-400">de Leva CoG (X_CoG, Y_CoG):</span>
+                                        <span id="valCoG" class="text-sky-600 dark:text-sky-400 font-semibold">(+0.42m, 0.89m)</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-stone-500 dark:text-stone-400">STANCE DEPTH (D_stance):</span>
+                                        <span id="valStanceDepth" class="text-stone-900 dark:text-white font-semibold">1.08 m (S_px Calibrated)</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-stone-500 dark:text-stone-400">JOSEPH COVARIANCE UPDATE:</span>
+                                        <span class="text-emerald-600 dark:text-emerald-400 font-semibold">(I−KH)P(I−KH)ᵀ + KRKᵀ</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mathematical State Formulation Box -->
+                        <div class="p-3 rounded-lg bg-stone-100 dark:bg-[#121211] border border-stone-200 dark:border-stone-800 font-mono text-[10px] space-y-1">
+                            <div class="text-crimson-600 dark:text-crimson-400 font-bold">
+                                R_t = σ₀² · exp(γ(1 − c_t)) · I₂  (σ₀=0.01, γ=5.0)
+                            </div>
+                            <div class="text-stone-600 dark:text-stone-400">
+                                Q_block = σ_a² · [Δt⁵/20, Δt⁴/8, Δt³/6] (White-Noise Jerk)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: 10-MODULE PYTHON SOFTWARE ARCHITECTURE & DATA CONTRACT -->
+            <section class="p-6 sm:p-10 border-b border-stone-300 dark:border-stone-800 bg-stone-100/60 dark:bg-[#111110]">
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-2">
+                    <div>
+                        <span class="font-mono text-xs uppercase tracking-widest text-crimson-600 dark:text-crimson-400 font-semibold">03 // 10-MODULE PYTHON ARCHITECTURE &amp; IMMUTABLE DATA CONTRACT</span>
+                        <h3 class="font-serif text-3xl sm:text-4xl text-stone-900 dark:text-white mt-1 editable">Shared Foundation → Phase 1 (Frozen) → Phase 2 (EKF, CoG &amp; Benchmark)</h3>
+                    </div>
+                    <p class="font-mono text-xs text-emerald-600 dark:text-emerald-400 font-semibold">MODULES 01–08 COMPLETE · MODULES 09–10 IN FINAL INTEGRATION</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Shared Foundation + Phase 1 Frozen Modules (5 Cols) -->
+                    <div class="lg:col-span-5 bg-white dark:bg-[#191918] border border-stone-300 dark:border-stone-800 rounded-2xl p-5 flex flex-col justify-between space-y-4">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between border-b border-stone-200 dark:border-stone-800 pb-2.5">
+                                <span class="font-mono text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">SHARED + PHASE 1 PIPELINE (FROZEN ✅)</span>
+                                <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-500 font-semibold">PAPER 1 COMPLETE</span>
+                            </div>
+
+                            <div class="space-y-2 font-mono text-xs">
+                                <div class="p-2.5 rounded-lg bg-stone-100 dark:bg-[#131312] border border-stone-200 dark:border-stone-800 flex items-start justify-between gap-2">
+                                    <div>
+                                        <span class="font-bold text-stone-900 dark:text-white">config.py + 01_frame_extractor.py</span>
+                                        <p class="text-[11px] text-stone-500 font-sans mt-0.5">Central config single-source-of-truth; OpenCV frame extraction &amp; 1.00m rod scaling ($S_{px}$).</p>
+                                    </div>
+                                    <span class="text-[10px] text-emerald-500 font-bold shrink-0">DONE ✓</span>
+                                </div>
+
+                                <div class="p-2.5 rounded-lg bg-stone-100 dark:bg-[#131312] border border-stone-200 dark:border-stone-800 flex items-start justify-between gap-2">
+                                    <div>
+                                        <span class="font-bold text-stone-900 dark:text-white">02_pose_inference.py</span>
+                                        <p class="text-[11px] text-stone-500 font-sans mt-0.5">MediaPipe Tasks API (`v0.10.35`, 15 joints) + `yolov8x-pose.pt` (13 joints) normalized to $[0,1]$.</p>
+                                    </div>
+                                    <span class="text-[10px] text-emerald-500 font-bold shrink-0">DONE ✓</span>
+                                </div>
+
+                                <div class="p-2.5 rounded-lg bg-stone-100 dark:bg-[#131312] border border-stone-200 dark:border-stone-800 flex items-start justify-between gap-2">
+                                    <div>
+                                        <span class="font-bold text-stone-900 dark:text-white">03_metrics.py &amp; 04_aggregator.py</span>
+                                        <p class="text-[11px] text-stone-500 font-sans mt-0.5">Vectorized $J_t$, $V_c$, 6 joint angles; per-rep aggregation (`median`, `iqr`, `auc`) curing pseudoreplication.</p>
+                                    </div>
+                                    <span class="text-[10px] text-emerald-500 font-bold shrink-0">DONE ✓</span>
+                                </div>
+
+                                <div class="p-2.5 rounded-lg bg-stone-100 dark:bg-[#131312] border border-stone-200 dark:border-stone-800 flex items-start justify-between gap-2">
+                                    <div>
+                                        <span class="font-bold text-stone-900 dark:text-white">05_statistics.py, 06_overlay &amp; 08_visualiser</span>
+                                        <p class="text-[11px] text-stone-500 font-sans mt-0.5">Shapiro-Wilk, Wilcoxon ($r_{rb}$, Hodges-Lehmann CI), LMM, BH-FDR ($q=0.05$), 300 DPI plots.</p>
+                                    </div>
+                                    <span class="text-[10px] text-emerald-500 font-bold shrink-0">DONE ✓</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-2.5 rounded-lg bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 font-mono text-[10px] text-stone-500">
+                            <strong>IMMUTABLE CSV SCHEMA (FROM 02):</strong><br>
+                            <code>frame, joint_idx, joint_name, x, y, z, confidence, model</code>
+                        </div>
+                    </div>
+
+                    <!-- Phase 2 EKF, CoG & Benchmark Architecture (7 Cols) -->
+                    <div class="lg:col-span-7 bg-white dark:bg-[#191918] border-2 border-crimson-600/60 rounded-2xl p-5 flex flex-col justify-between space-y-4 shadow-lg">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between border-b border-stone-200 dark:border-stone-800 pb-2.5">
+                                <span class="font-mono text-xs font-bold text-crimson-600 dark:text-crimson-400 uppercase">PHASE 2 PIPELINE (PAPER 2: EKF + DE LEVA COG + BENCHMARK)</span>
+                                <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-crimson-600/15 text-crimson-500 font-semibold">ZERO DEPENDENCY ON 03–05</span>
+                            </div>
+
+                            <!-- 3 Phase-2 Modules Grid -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <!-- Module 07 -->
+                                <div class="p-3.5 rounded-xl bg-emerald-500/5 border border-emerald-500/40 flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex items-center justify-between font-mono text-[10px] mb-1">
+                                            <span class="text-emerald-500 font-bold">DAY 1 · BUILT ✅</span>
+                                            <span>MODULE 07</span>
+                                        </div>
+                                        <h5 class="font-mono text-xs font-bold text-stone-900 dark:text-white mb-1.5">07_ekf_filter.py</h5>
+                                        <p class="text-[11px] text-stone-600 dark:text-stone-300 leading-relaxed editable">
+                                            6-state Newtonian EKF with Bar-Shalom <strong>white-noise jerk $Q$</strong>, dynamic $R_t = \sigma_0^2 e^{\gamma(1-c_t)}I_2$, Joseph-form $P$ update, 4 filter modes (`raw`, `skf`, `linear_interp`, `ekf`) &amp; 3 ablation toggles.
+                                        </p>
+                                    </div>
+                                    <div class="mt-3 pt-2 border-t border-emerald-500/20 font-mono text-[10px] text-emerald-500">
+                                        Outputs: `filtered_landmarks.csv` + `ekf_diagnostics.csv`
+                                    </div>
+                                </div>
+
+                                <!-- Module 09 -->
+                                <div class="p-3.5 rounded-xl bg-sky-500/5 border border-sky-500/40 flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex items-center justify-between font-mono text-[10px] mb-1">
+                                            <span class="text-sky-400 font-bold">DAY 2 · ENGINE</span>
+                                            <span>MODULE 09</span>
+                                        </div>
+                                        <h5 class="font-mono text-xs font-bold text-stone-900 dark:text-white mb-1.5">09_cog_tracker.py</h5>
+                                        <p class="text-[11px] text-stone-600 dark:text-stone-300 leading-relaxed editable">
+                                            Synthesizes filtered coordinates with <strong>14 de Leva (1996) body segments</strong> (Trunk 43.46%, Thighs 2×14.16%, Shanks 2×4.33%, etc.) + dynamic stance depth $D_{\text{stance}}$ in meters.
+                                        </p>
+                                    </div>
+                                    <div class="mt-3 pt-2 border-t border-sky-500/20 font-mono text-[10px] text-sky-400">
+                                        Outputs: `cog_timeseries.csv` (`cog_x, cog_y, stance_depth_m`)
+                                    </div>
+                                </div>
+
+                                <!-- Module 10 -->
+                                <div class="p-3.5 rounded-xl bg-amber-500/5 border border-amber-500/40 flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex items-center justify-between font-mono text-[10px] mb-1">
+                                            <span class="text-amber-400 font-bold">DAY 3 · EVAL</span>
+                                            <span>MODULE 10</span>
+                                        </div>
+                                        <h5 class="font-mono text-xs font-bold text-stone-900 dark:text-white mb-1.5">10_filter_benchmark.py</h5>
+                                        <p class="text-[11px] text-stone-600 dark:text-stone-300 leading-relaxed editable">
+                                            Benchmarks all 4 filter modes + 4 ablation variants on Set B vs. Set A proxy ground truth across <strong>MPJPE</strong>, <strong>PCK@0.2</strong>, <strong>Phase Lag</strong>, and <strong>Peak Velocity Preservation Ratio</strong>.
+                                        </p>
+                                    </div>
+                                    <div class="mt-3 pt-2 border-t border-amber-500/20 font-mono text-[10px] text-amber-400">
+                                        Outputs: `benchmark_summary.csv` + Paper 2 Figures
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Ablation Matrix & Segment Weights Strip -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 font-mono text-[11px]">
+                                <div class="p-3 rounded-xl bg-stone-100 dark:bg-[#131312] border border-stone-200 dark:border-stone-800">
+                                    <span class="text-[10px] text-crimson-600 dark:text-crimson-400 font-bold block mb-1">ABLATION MATRIX (§6.7 IN `07_ekf_filter.py`)</span>
+                                    <div class="space-y-0.5 text-[10px] text-stone-600 dark:text-stone-300">
+                                        <div>1. Conf Gating Only: <code>gating=✅, momentum=❌, trigger=❌</code></div>
+                                        <div>2. Momentum Only: <code>gating=❌, momentum=✅, trigger=✅</code></div>
+                                        <div>3. Continuous Dynamic R_t: <code>gating=✅, momentum=❌, trigger=❌</code></div>
+                                        <div class="text-emerald-500 font-bold">4. Full KaratePose EKF: <code>gating=✅, momentum=✅, trigger=✅</code></div>
+                                    </div>
+                                </div>
+                                <div class="p-3 rounded-xl bg-stone-100 dark:bg-[#131312] border border-stone-200 dark:border-stone-800">
+                                    <span class="text-[10px] text-sky-500 font-bold block mb-1">DE LEVA 14-SEGMENT MASS SUM (∑ w_i = 0.9941 ≈ 1.00)</span>
+                                    <div class="space-y-0.5 text-[10px] text-stone-600 dark:text-stone-300">
+                                        <div>• Head/Neck: <code>0.0681</code> | Trunk: <code>0.4346</code></div>
+                                        <div>• Upper Arm (×2): <code>0.0263</code> | Forearm (×2): <code>0.0150</code></div>
+                                        <div>• Hand (×2): <code>0.0059</code> | Thigh (×2): <code>0.1416</code></div>
+                                        <div>• Shank (×2): <code>0.0433</code> | Foot (×2): <code>0.0137</code></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-2.5 rounded-lg bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 font-mono text-[10px] text-stone-500 flex flex-wrap justify-between gap-2">
+                            <span>CLI RUNNER: <code>python run_pipeline.py --phase 2 --step [filter | cog | benchmark]</code></span>
+                            <span class="text-crimson-500 font-semibold">ZERO KIME PHASE LAG</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 5: STANDARDIZED DOJO OPTICAL CAPTURE SOP & 3 TARGET TECHNIQUES -->
+            <section class="p-6 sm:p-10 border-b border-stone-300 dark:border-stone-800">
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-2">
+                    <div>
+                        <span class="font-mono text-xs uppercase tracking-widest text-crimson-600 dark:text-crimson-400 font-semibold">04 // DATA COLLECTION STANDARD OPERATING PROCEDURE (SOP)</span>
+                        <h3 class="font-serif text-3xl sm:text-4xl text-stone-900 dark:text-white mt-1 editable">Optical Geometry, Counterbalancing &amp; Target Kinematics</h3>
+                    </div>
+                    <p class="font-mono text-xs text-stone-500 dark:text-stone-400">24 VIDEO FILES (18 PRIMARY 4K 60FPS + 6 VALIDATION 1080P 240FPS)</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Left 5 Cols: Optical & Spatial Calibration Blueprint -->
+                    <div class="lg:col-span-5 bg-[#10100f] text-stone-200 border border-stone-800 rounded-xl p-5 flex flex-col justify-between font-mono text-xs">
+                        <div>
+                            <div class="flex items-center justify-between text-crimson-400 pb-3 border-b border-stone-800">
+                                <span class="font-bold">OPTICAL &amp; GEOMETRIC CALIBRATION RIG</span>
+                                <span>SOP SEC 2.1–2.3</span>
+                            </div>
+
+                            <!-- Schematic Diagram Box -->
+                            <div class="my-4 p-4 rounded-lg bg-black/60 border border-stone-800/90 space-y-3">
+                                <div class="flex items-center justify-between text-[10px] text-stone-400">
+                                    <span>[MATTE NEUTRAL WALL · ≥500 LUX DIFFUSE]</span>
+                                    <span>CLEAR ZONE: ≥6m × 4m</span>
+                                </div>
+                                <div class="py-3 border-y border-dashed border-stone-800 flex items-center justify-between">
+                                    <div class="text-center">
+                                        <span class="px-2 py-1 rounded bg-crimson-600/20 border border-crimson-500/40 text-crimson-400 text-[10px] font-bold">★ SUBJECT PLANE</span>
+                                        <p class="text-[10px] text-stone-400 mt-1">1.00m Calibration Rod (S_px)</p>
+                                    </div>
+                                    <div class="flex-1 px-3 flex flex-col items-center">
+                                        <span class="text-[10px] text-amber-400">◄─── 4.50m Orthogonal (90°) ───►</span>
+                                        <div class="w-full h-0.5 bg-gradient-to-r from-crimson-500 via-amber-500 to-sky-500 my-1"></div>
+                                        <span class="text-[9px] text-stone-500">0.5m Floor &amp; Overhead Safety Margin</span>
+                                    </div>
+                                    <div class="text-center">
+                                        <span class="px-2 py-1 rounded bg-sky-500/20 border border-sky-500/40 text-sky-400 text-[10px] font-bold">📷 TRIPOD (1.0m)</span>
+                                        <p class="text-[10px] text-stone-400 mt-1">Iliac Crest Height</p>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 text-[10px]">
+                                    <div class="text-stone-400">PRIMARY: <span class="text-white">4K 60fps · 1/500s · H.264</span></div>
+                                    <div class="text-stone-400">VALIDATION: <span class="text-white">1080p 240fps Slo-Mo</span></div>
+                                    <div class="text-stone-400">EXPOSURE: <span class="text-emerald-400">Manual AE/AF Locked</span></div>
+                                    <div class="text-stone-400">COLOR: <span class="text-white">SDR Rec.709 (HDR OFF)</span></div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-1.5 text-[11px] text-stone-300">
+                                <p class="editable">• <strong>Counterbalancing:</strong> P01 &amp; P03 start with Set A; P02 starts with Set B to distribute fatigue evenly.</p>
+                                <p class="editable">• <strong>Fatigue Control:</strong> Mandatory 5–10 min rest between garment blocks + Rating of Perceived Exertion (RPE) logged per take.</p>
+                                <p class="editable">• <strong>Per-Take Sync:</strong> 🔴 Record → 👏 Acoustic/Visual Sync Clap → 🧍 3s Yoi Calibration → 🥋 10 Reps (60 BPM) → 🧍 3s Final Hold.</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-stone-800 text-[10px] text-stone-400 flex justify-between">
+                            <span>NAMING: [SET]_[TECHNIQUE]_[TAKE]_[FPS]FPS.mov</span>
+                            <span class="text-amber-400">CALIB_1m_rod.mov</span>
+                        </div>
+                    </div>
+
+                    <!-- Right 7 Cols: The 3 Standardized Target Techniques & Undergraduate Timeline -->
+                    <div class="lg:col-span-7 flex flex-col justify-between space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1">
+                            <!-- Technique 1 -->
+                            <div class="bg-white dark:bg-[#191918] border border-stone-300 dark:border-stone-800 rounded-xl p-4 flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center justify-between font-mono text-xs mb-2">
+                                        <span class="text-crimson-600 dark:text-crimson-400 font-bold">TECHNIQUE 01</span>
+                                        <span class="font-kanji text-sm text-stone-400">追い突き</span>
+                                    </div>
+                                    <h4 class="font-serif text-2xl text-stone-900 dark:text-white mb-1 editable">Oi-Zuki</h4>
+                                    <p class="font-mono text-[10px] text-stone-500 mb-2">Stepping Lunge Punch in Zenkutsu-dachi</p>
+                                    <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable">
+                                        Right leg drives forward 1.5× shoulder width into deep front stance with full 180° forearm rotation at impact (<em>Chudan Oi-zuki</em>).
+                                    </p>
+                                </div>
+                                <div class="mt-4 pt-2.5 border-t border-stone-200 dark:border-stone-800 font-mono text-[10px] text-stone-500">
+                                    <strong class="text-stone-700 dark:text-stone-300 block">TARGET STRESS:</strong>
+                                    Peak anterior translation, ankle/knee velocity &amp; ballistic elbow lockout (+240 FPS validation).
+                                </div>
+                            </div>
+
+                            <!-- Technique 2 -->
+                            <div class="bg-white dark:bg-[#191918] border border-stone-300 dark:border-stone-800 rounded-xl p-4 flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center justify-between font-mono text-xs mb-2">
+                                        <span class="text-amber-500 font-bold">TECHNIQUE 02</span>
+                                        <span class="font-kanji text-sm text-stone-400">下段払い</span>
+                                    </div>
+                                    <h4 class="font-serif text-2xl text-stone-900 dark:text-white mb-1 editable">Gedan-Barai</h4>
+                                    <p class="font-mono text-[10px] text-stone-500 mb-2">Downward Block in Zenkutsu-dachi</p>
+                                    <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable">
+                                        Right fist chambers at ear level and sweeps downward across the torso with rapid hip snap (<em>Hanmi → Shomen</em>).
+                                    </p>
+                                </div>
+                                <div class="mt-4 pt-2.5 border-t border-stone-200 dark:border-stone-800 font-mono text-[10px] text-stone-500">
+                                    <strong class="text-stone-700 dark:text-stone-300 block">TARGET STRESS:</strong>
+                                    Severe canvas folding across chest/shoulder + self-occlusion + sharp terminal wrist deceleration.
+                                </div>
+                            </div>
+
+                            <!-- Technique 3 -->
+                            <div class="bg-white dark:bg-[#191918] border border-stone-300 dark:border-stone-800 rounded-xl p-4 flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center justify-between font-mono text-xs mb-2">
+                                        <span class="text-sky-500 font-bold">TECHNIQUE 03</span>
+                                        <span class="font-kanji text-sm text-stone-400">前屈→騎馬</span>
+                                    </div>
+                                    <h4 class="font-serif text-2xl text-stone-900 dark:text-white mb-1 editable">Stance Transition</h4>
+                                    <p class="font-mono text-[10px] text-stone-500 mb-2">Zenkutsu-dachi → Kiba-dachi</p>
+                                    <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable">
+                                        90° pivot from front stance (60% forward weight) into horse-riding stance (50/50 weight, wide bilateral knee abduction).
+                                    </p>
+                                </div>
+                                <div class="mt-4 pt-2.5 border-t border-stone-200 dark:border-stone-800 font-mono text-[10px] text-stone-500">
+                                    <strong class="text-stone-700 dark:text-stone-300 block">TARGET STRESS:</strong>
+                                    Maximal pelvic/femoral Gi fold occlusion + multi-planar de Leva CoG vertical/lateral shift.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Undergraduate Research Progress Bar -->
+                        <div class="bg-white dark:bg-[#191918] border border-stone-300 dark:border-stone-800 rounded-xl p-4">
+                            <div class="flex items-center justify-between font-mono text-[10px] text-stone-500 dark:text-stone-400 uppercase mb-2.5">
+                                <span class="font-bold text-stone-800 dark:text-stone-200">BSc AI RESEARCH EXECUTION STATUS (YEAR 1 NOW → YEAR 2 STARTS OCT 2027)</span>
+                                <span class="text-emerald-600 dark:text-emerald-400 font-bold">AHEAD OF SCHEDULE</span>
+                            </div>
+                            <div class="grid grid-cols-2 sm:grid-cols-6 gap-2 font-mono text-[10px]">
+                                <div class="p-2 rounded bg-emerald-500/15 border border-emerald-500/40">
+                                    <span class="text-emerald-600 dark:text-emerald-400 font-bold block">STAGE 1 ✓</span>
+                                    <span class="text-stone-800 dark:text-stone-200">SOP &amp; Protocol Frozen</span>
+                                </div>
+                                <div class="p-2 rounded bg-emerald-500/15 border border-emerald-500/40">
+                                    <span class="text-emerald-600 dark:text-emerald-400 font-bold block">STAGE 2 ✓</span>
+                                    <span class="text-stone-800 dark:text-stone-200">Phase 1 Code (01–08)</span>
+                                </div>
+                                <div class="p-2 rounded bg-emerald-500/15 border border-emerald-500/40">
+                                    <span class="text-emerald-600 dark:text-emerald-400 font-bold block">STAGE 3 ✓</span>
+                                    <span class="text-stone-800 dark:text-stone-200">07_ekf_filter Built</span>
+                                </div>
+                                <div class="p-2 rounded bg-crimson-600/15 border border-crimson-600/40">
+                                    <span class="text-crimson-600 dark:text-crimson-400 font-bold block">STAGE 4 ⚡</span>
+                                    <span class="text-stone-800 dark:text-stone-200">09_cog &amp; 10_bench</span>
+                                </div>
+                                <div class="p-2 rounded bg-amber-500/15 border border-amber-500/30">
+                                    <span class="text-amber-600 dark:text-amber-400 font-bold block">STAGE 5</span>
+                                    <span class="text-stone-800 dark:text-stone-200">N=3 Cohort Filming</span>
+                                </div>
+                                <div class="p-2 rounded bg-sky-500/15 border border-sky-500/30">
+                                    <span class="text-sky-600 dark:text-sky-400 font-bold block">OCT 2027+</span>
+                                    <span class="text-stone-800 dark:text-stone-200">Paper 1 &amp; 2 Submission</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 6: FOOTER / CITATION & HARDWARE STACK -->
+            <footer class="p-6 sm:px-10 sm:py-6 bg-stone-200/60 dark:bg-[#10100f] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="flex items-center gap-3.5">
+                    <div class="hanko-stamp w-10 h-10 rounded flex items-center justify-center font-kanji font-bold text-xl shrink-0">
+                        型
+                    </div>
+                    <div>
+                        <p class="font-serif text-lg text-stone-900 dark:text-white leading-tight editable">
+                            Kusal Nirmala — <span class="italic text-stone-600 dark:text-stone-400">BSc (Hons) Artificial Intelligence · University of Plymouth / NSBM Green University</span>
+                        </p>
+                        <p class="font-mono text-[11px] text-stone-500 dark:text-stone-400 editable">
+                            Stack: Python 3.10+ · MediaPipe v0.10.35 · YOLOv8x-Pose · SciPy · statsmodels (LMM) · pingouin · OpenCV · Seaborn
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:items-end font-mono text-xs gap-1">
+                    <div class="flex items-center gap-3">
+                        <a href="index.html" class="text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white transition flex items-center gap-1 font-semibold">
+                            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                            <span>Portfolio</span>
+                        </a>
+                        <span class="text-stone-400 dark:text-stone-600">·</span>
+                        <a href="karatepose-ai.html" class="text-crimson-600 dark:text-crimson-400 hover:underline font-semibold flex items-center gap-1">
+                            <span>Read Full Academic Proposal</span>
+                            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        </a>
+                    </div>
+                    <span class="text-[10px] text-stone-500 dark:text-stone-500">KARATEPOSE-AI · KINEMATIC REFINEMENT &amp; PHYSICS-INFORMED EKF</span>
+                </div>
+            </footer>
+
+        </div>
+    </main>
+
+    <!-- INTERACTIVE SCRIPT: 3-TECHNIQUE POSE ENGINE + EKF WAVEFORM OSCILLOSCOPE -->
+    <script>
+        lucide.createIcons();
+
+        let currentTech = 'oizuki';
+        let isPlaying = true;
+        let cycleTime = 3.6;
+        let isEditing = false;
+
+        const canvas = document.getElementById('karateCanvas');
+        const ctx = canvas.getContext('2d');
+        const waveCanvas = document.getElementById('waveformCanvas');
+        const wCtx = waveCanvas.getContext('2d');
+
+        const postures = {
+            startGuard: {
+                head:      { x: 0.34, y: 0.21 },
+                neck:      { x: 0.33, y: 0.29 },
+                rShoulder: { x: 0.30, y: 0.31 },
+                rElbow:    { x: 0.25, y: 0.43 },
+                rWrist:    { x: 0.31, y: 0.46 },
+                lShoulder: { x: 0.36, y: 0.31 },
+                lElbow:    { x: 0.42, y: 0.41 },
+                lWrist:    { x: 0.50, y: 0.46 },
+                hipCenter: { x: 0.33, y: 0.53 },
+                rHip:      { x: 0.30, y: 0.54 },
+                rKnee:     { x: 0.23, y: 0.70 },
+                rAnkle:    { x: 0.16, y: 0.86 },
+                lHip:      { x: 0.36, y: 0.53 },
+                lKnee:     { x: 0.44, y: 0.69 },
+                lAnkle:    { x: 0.46, y: 0.86 }
+            },
+            oizukiPeak: {
+                head:      { x: 0.50, y: 0.24 },
+                neck:      { x: 0.49, y: 0.32 },
+                rShoulder: { x: 0.51, y: 0.33 },
+                rElbow:    { x: 0.64, y: 0.35 },
+                rWrist:    { x: 0.78, y: 0.35 },
+                lShoulder: { x: 0.46, y: 0.34 },
+                lElbow:    { x: 0.38, y: 0.45 },
+                lWrist:    { x: 0.43, y: 0.49 },
+                hipCenter: { x: 0.48, y: 0.56 },
+                rHip:      { x: 0.45, y: 0.56 },
+                rKnee:     { x: 0.32, y: 0.71 },
+                rAnkle:    { x: 0.19, y: 0.86 },
+                lHip:      { x: 0.52, y: 0.55 },
+                lKnee:     { x: 0.64, y: 0.69 },
+                lAnkle:    { x: 0.64, y: 0.86 }
+            },
+            gedanPeak: {
+                head:      { x: 0.45, y: 0.23 },
+                neck:      { x: 0.44, y: 0.31 },
+                rShoulder: { x: 0.46, y: 0.33 },
+                rElbow:    { x: 0.54, y: 0.45 },
+                rWrist:    { x: 0.63, y: 0.56 },
+                lShoulder: { x: 0.41, y: 0.33 },
+                lElbow:    { x: 0.34, y: 0.44 },
+                lWrist:    { x: 0.39, y: 0.49 },
+                hipCenter: { x: 0.44, y: 0.55 },
+                rHip:      { x: 0.41, y: 0.55 },
+                rKnee:     { x: 0.29, y: 0.71 },
+                rAnkle:    { x: 0.18, y: 0.86 },
+                lHip:      { x: 0.48, y: 0.55 },
+                lKnee:     { x: 0.59, y: 0.69 },
+                lAnkle:    { x: 0.60, y: 0.86 }
+            },
+            stancePeak: {
+                head:      { x: 0.48, y: 0.26 },
+                neck:      { x: 0.48, y: 0.34 },
+                rShoulder: { x: 0.42, y: 0.35 },
+                rElbow:    { x: 0.36, y: 0.46 },
+                rWrist:    { x: 0.41, y: 0.50 },
+                lShoulder: { x: 0.54, y: 0.35 },
+                lElbow:    { x: 0.61, y: 0.44 },
+                lWrist:    { x: 0.56, y: 0.49 },
+                hipCenter: { x: 0.48, y: 0.58 },
+                rHip:      { x: 0.43, y: 0.58 },
+                rKnee:     { x: 0.33, y: 0.71 },
+                rAnkle:    { x: 0.32, y: 0.86 },
+                lHip:      { x: 0.53, y: 0.58 },
+                lKnee:     { x: 0.63, y: 0.71 },
+                lAnkle:    { x: 0.64, y: 0.86 }
+            }
+        };
+
+        const bones = [
+            ['head', 'neck'],
+            ['neck', 'rShoulder'], ['neck', 'lShoulder'],
+            ['rShoulder', 'rElbow'], ['rElbow', 'rWrist'],
+            ['lShoulder', 'lElbow'], ['lElbow', 'lWrist'],
+            ['neck', 'hipCenter'],
+            ['hipCenter', 'rHip'], ['hipCenter', 'lHip'],
+            ['rHip', 'rKnee'], ['rKnee', 'rAnkle'],
+            ['lHip', 'lKnee'], ['lKnee', 'lAnkle']
+        ];
+
+        function resizeCanvases() {
+            const dpr = window.devicePixelRatio || 1;
+            const r1 = canvas.getBoundingClientRect();
+            canvas.width = r1.width * dpr;
+            canvas.height = r1.height * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+            const r2 = waveCanvas.getBoundingClientRect();
+            waveCanvas.width = r2.width * dpr;
+            waveCanvas.height = r2.height * dpr;
+            wCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+            drawPoseFrame();
+        }
+        window.addEventListener('resize', resizeCanvases);
+
+        function lerp(a, b, t) {
+            return a + (b - a) * t;
+        }
+
+        function getProtocolProgress(tSec) {
+            if (tSec < 3.0) return 0.0;
+            if (tSec >= 3.0 && tSec < 4.0) {
+                const u = (tSec - 3.0) / 1.0;
+                return u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+            }
+            if (tSec >= 4.0 && tSec <= 5.2) return 1.0;
+            if (tSec > 5.2 && tSec <= 7.4) {
+                const u = (tSec - 5.2) / 2.2;
+                return 1.0 - (u * u * (3 - 2 * u));
+            }
+            return 0.0;
+        }
+
+        function getSimulatedConfidence(tSec) {
+            const ballisticDip = Math.exp(-Math.pow((tSec - 3.55) / 0.32, 2)) * 0.62;
+            const recoveryDip = Math.exp(-Math.pow((tSec - 6.1) / 0.45, 2)) * 0.22;
+            return Math.max(0.28, Math.min(0.96, 0.94 - ballisticDip - recoveryDip));
+        }
+
+        function setTechnique(tech) {
+            currentTech = tech;
+            document.querySelectorAll('.tech-btn').forEach(btn => {
+                btn.className = 'tech-btn px-3 py-1.5 rounded-lg font-mono text-xs text-stone-600 dark:text-stone-300 hover:bg-stone-300/50 dark:hover:bg-stone-800 transition';
+            });
+            const active = document.getElementById('tech-' + tech);
+            if (active) {
+                active.className = 'tech-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-crimson-600 text-white font-semibold shadow-sm transition';
+            }
+
+            const labels = {
+                oizuki: 'TECHNIQUE 01: OI-ZUKI (STEPPING LUNGE PUNCH IN ZENKUTSU-DACHI)',
+                gedan:  'TECHNIQUE 02: GEDAN-BARAI (DOWNWARD SWEEPING BLOCK · HANMI → SHOMEN)',
+                stance: 'TECHNIQUE 03: STANCE TRANSITION (ZENKUTSU-DACHI → KIBA-DACHI 90° PIVOT)'
+            };
+            document.getElementById('hudTechniqueLabel').textContent = labels[tech];
+            drawPoseFrame();
+        }
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            document.getElementById('playPauseLabel').textContent = isPlaying ? '⏸ Pause 8s Cycle' : '▶ Play 8s Cycle';
+        }
+
+        function getTargetPoseForCurrentTech() {
+            if (currentTech === 'gedan') return postures.gedanPeak;
+            if (currentTech === 'stance') return postures.stancePeak;
+            return postures.oizukiPeak;
+        }
+
+        function getPoseAtProgress(prog) {
+            const target = getTargetPoseForCurrentTech();
+            const pose = {};
+            for (const k in postures.startGuard) {
+                let arcY = 0;
+                if (k === 'rWrist' && currentTech === 'gedan') {
+                    arcY = -Math.sin(prog * Math.PI) * 0.14;
+                }
+                pose[k] = {
+                    x: lerp(postures.startGuard[k].x, target[k].x, prog),
+                    y: lerp(postures.startGuard[k].y, target[k].y, prog) + arcY
+                };
+            }
+            return pose;
+        }
+
+        function computeDeLevaCoG(pose) {
+            const trunkX = (pose.neck.x + pose.hipCenter.x) / 2;
+            const trunkY = (pose.neck.y + pose.hipCenter.y) / 2;
+            const lThighX = (pose.lHip.x + pose.lKnee.x) / 2;
+            const lThighY = (pose.lHip.y + pose.lKnee.y) / 2;
+            const rThighX = (pose.rHip.x + pose.rKnee.x) / 2;
+            const rThighY = (pose.rHip.y + pose.rKnee.y) / 2;
+            const lShankX = (pose.lKnee.x + pose.lAnkle.x) / 2;
+            const lShankY = (pose.lKnee.y + pose.lAnkle.y) / 2;
+            const rShankX = (pose.rKnee.x + pose.rAnkle.x) / 2;
+            const rShankY = (pose.rKnee.y + pose.rAnkle.y) / 2;
+            const armsX = (pose.rElbow.x + pose.lElbow.x + pose.rWrist.x + pose.lWrist.x) / 4;
+            const armsY = (pose.rElbow.y + pose.lElbow.y + pose.rWrist.y + pose.lWrist.y) / 4;
+
+            const cogX = 0.0681 * pose.head.x + 0.4346 * trunkX + 0.1416 * (lThighX + rThighX) + 0.0433 * (lShankX + rShankX) + 0.1299 * armsX;
+            const cogY = 0.0681 * pose.head.y + 0.4346 * trunkY + 0.1416 * (lThighY + rThighY) + 0.0433 * (lShankY + rShankY) + 0.1299 * armsY;
+            return { x: cogX, y: cogY };
+        }
+
+        function drawPoseFrame() {
+            const rect = canvas.getBoundingClientRect();
+            const w = rect.width;
+            const h = rect.height;
+            if (!w || !h) return;
+
+            ctx.clearRect(0, 0, w, h);
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.035)';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < w; x += 28) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+            }
+            for (let y = 0; y < h; y += 28) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+            }
+
+            const floorY = h * 0.86;
+            const rodTopY = h * 0.34;
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(w * 0.06, rodTopY);
+            ctx.lineTo(w * 0.06, floorY);
+            ctx.stroke();
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = '10px "JetBrains Mono", monospace';
+            ctx.fillText('1.00m ROD (S_px)', w * 0.03, rodTopY - 6);
+
+            ctx.strokeStyle = 'rgba(220, 38, 38, 0.35)';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(w * 0.04, floorY);
+            ctx.lineTo(w * 0.96, floorY);
+            ctx.stroke();
+
+            const prog = getProtocolProgress(cycleTime);
+            const conf = getSimulatedConfidence(cycleTime);
+            const isOccluded = conf < 0.50;
+            const pose = getPoseAtProgress(prog);
+
+            const showRawGi = document.getElementById('toggleRawGi').checked;
+            const showEKF = document.getElementById('toggleEKF').checked;
+            const showDeLeva = document.getElementById('toggleDeLeva').checked;
+
+            if (showRawGi) {
+                ctx.fillStyle = isOccluded ? 'rgba(220, 38, 38, 0.09)' : 'rgba(255, 255, 255, 0.035)';
+                ctx.strokeStyle = isOccluded ? 'rgba(248, 113, 113, 0.35)' : 'rgba(255, 255, 255, 0.12)';
+                ctx.lineWidth = 1.2;
+                ctx.beginPath();
+                ctx.moveTo((pose.rShoulder.x - 0.04) * w, pose.rShoulder.y * h);
+                ctx.lineTo((pose.lShoulder.x + 0.04) * w, pose.lShoulder.y * h);
+                ctx.lineTo((pose.lKnee.x + 0.05) * w, pose.lKnee.y * h);
+                ctx.lineTo((pose.rKnee.x - 0.05) * w, pose.rKnee.y * h);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+
+                const jitterAmp = (1.0 - conf) * 26.0;
+                ctx.strokeStyle = 'rgba(245, 158, 11, 0.55)';
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([3, 3]);
+                bones.forEach(([a, b], idx) => {
+                    const jxA = Math.sin(cycleTime * 35 + idx * 1.7) * jitterAmp;
+                    const jyA = Math.cos(cycleTime * 29 + idx * 2.3) * jitterAmp;
+                    const jxB = Math.sin(cycleTime * 35 + (idx + 1) * 1.7) * jitterAmp;
+                    const jyB = Math.cos(cycleTime * 29 + (idx + 1) * 2.3) * jitterAmp;
+                    ctx.beginPath();
+                    ctx.moveTo(pose[a].x * w + jxA, pose[a].y * h + jyA);
+                    ctx.lineTo(pose[b].x * w + jxB, pose[b].y * h + jyB);
+                    ctx.stroke();
+                });
+                ctx.setLineDash([]);
+            }
+
+            if (showEKF) {
+                ctx.strokeStyle = '#10b981';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                for (let s = 0; s <= 36; s++) {
+                    const st = s / 36;
+                    const p = getPoseAtProgress(st);
+                    const px = p.rWrist.x * w;
+                    const py = p.rWrist.y * h;
+                    if (s === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.stroke();
+            }
+
+            const cog = computeDeLevaCoG(pose);
+            if (showDeLeva) {
+                const cx = cog.x * w;
+                const cy = cog.y * h;
+
+                ctx.strokeStyle = 'rgba(56, 189, 248, 0.6)';
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([4, 4]);
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(cx, floorY);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.fillStyle = '#38bdf8';
+                ctx.beginPath();
+                ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#0b0b0a';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                ctx.font = '10px "JetBrains Mono", monospace';
+                ctx.fillText('de Leva CoG', cx + 10, cy + 4);
+
+                const rAx = pose.rAnkle.x * w;
+                const lAx = pose.lAnkle.x * w;
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(rAx, floorY + 10);
+                ctx.lineTo(lAx, floorY + 10);
+                ctx.stroke();
+                const dMeters = (Math.abs(pose.lAnkle.x - pose.rAnkle.x) * 2.4).toFixed(2);
+                ctx.fillText(`D_stance = ${dMeters}m`, (rAx + lAx) / 2 - 42, floorY + 23);
+            }
+
+            bones.forEach(([a, b]) => {
+                const pA = pose[a];
+                const pB = pose[b];
+                const isStrike = (a === 'rShoulder' && b === 'rElbow') || (a === 'rElbow' && b === 'rWrist');
+                const isHipOrKnee = (a === 'hipCenter' || a === 'lHip' || a === 'rHip');
+
+                ctx.strokeStyle = isStrike ? '#ef4444' : (isHipOrKnee ? '#10b981' : '#e7e5e4');
+                ctx.lineWidth = isStrike ? 4 : 3;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(pA.x * w, pA.y * h);
+                ctx.lineTo(pB.x * w, pB.y * h);
+                ctx.stroke();
+            });
+
+            const hx = pose.head.x * w;
+            const hy = pose.head.y * h;
+            ctx.fillStyle = '#1c1917';
+            ctx.strokeStyle = '#f5f5f4';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.arc(hx, hy, 13, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            const sixMarkers = ['lAnkle', 'lKnee', 'lHip', 'rShoulder', 'rElbow', 'rWrist'];
+            for (const key in pose) {
+                if (key === 'head') continue;
+                const pt = pose[key];
+                const px = pt.x * w;
+                const py = pt.y * h;
+                const isMarker = sixMarkers.includes(key);
+
+                if (isMarker) {
+                    ctx.fillStyle = isOccluded ? 'rgba(245, 158, 11, 0.3)' : 'rgba(16, 185, 129, 0.28)';
+                    ctx.beginPath();
+                    ctx.arc(px, py, 9, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.fillStyle = isMarker ? '#10b981' : '#fafaf9';
+                ctx.strokeStyle = '#09090b';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.arc(px, py, isMarker ? 4.8 : 3.2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+            }
+
+            if (isOccluded) {
+                ctx.fillStyle = 'rgba(220, 38, 38, 0.9)';
+                ctx.fillRect(w * 0.52, h * 0.08, 295, 24);
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 10px "JetBrains Mono", monospace';
+                ctx.fillText('⚡ c_t < 0.50: NEWTONIAN MOMENTUM PROJECTION ACTIVE', w * 0.52 + 8, h * 0.08 + 15);
+            }
+
+            drawWaveformOscilloscope();
+            updateSidebarTelemetry(prog, conf, cog, pose);
+        }
+
+        function drawWaveformOscilloscope() {
+            const rect = waveCanvas.getBoundingClientRect();
+            const w = rect.width;
+            const h = rect.height;
+            if (!w || !h) return;
+
+            wCtx.clearRect(0, 0, w, h);
+
+            const phases = [3.0, 4.0, 5.0];
+            wCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            wCtx.lineWidth = 1;
+            phases.forEach(pSec => {
+                const px = (pSec / 8.0) * w;
+                wCtx.beginPath();
+                wCtx.moveTo(px, 0);
+                wCtx.lineTo(px, h);
+                wCtx.stroke();
+            });
+
+            const N = 140;
+            wCtx.strokeStyle = 'rgba(168, 162, 158, 0.55)';
+            wCtx.lineWidth = 1.5;
+            wCtx.setLineDash([3, 3]);
+            wCtx.beginPath();
+            for (let i = 0; i <= N; i++) {
+                const t = (i / N) * 8.0;
+                const vel = Math.exp(-Math.pow((t - 3.85) / 0.55, 2)) * 0.55;
+                const x = (i / N) * w;
+                const y = h - 14 - vel * (h - 24);
+                if (i === 0) wCtx.moveTo(x, y);
+                else wCtx.lineTo(x, y);
+            }
+            wCtx.stroke();
+            wCtx.setLineDash([]);
+
+            wCtx.strokeStyle = 'rgba(245, 158, 11, 0.65)';
+            wCtx.lineWidth = 1.2;
+            wCtx.beginPath();
+            for (let i = 0; i <= N; i++) {
+                const t = (i / N) * 8.0;
+                const trueVel = Math.exp(-Math.pow((t - 3.6) / 0.28, 2)) * 0.88;
+                const giNoise = (t > 3.1 && t < 4.2) ? Math.sin(i * 4.3) * 0.24 : Math.sin(i * 2.1) * 0.04;
+                const x = (i / N) * w;
+                const y = h - 14 - Math.max(0, trueVel + giNoise) * (h - 24);
+                if (i === 0) wCtx.moveTo(x, y);
+                else wCtx.lineTo(x, y);
+            }
+            wCtx.stroke();
+
+            wCtx.strokeStyle = '#10b981';
+            wCtx.lineWidth = 2.2;
+            wCtx.beginPath();
+            for (let i = 0; i <= N; i++) {
+                const t = (i / N) * 8.0;
+                const trueVel = Math.exp(-Math.pow((t - 3.6) / 0.28, 2)) * 0.88 + Math.exp(-Math.pow((t - 6.0) / 0.5, 2)) * 0.25;
+                const x = (i / N) * w;
+                const y = h - 14 - trueVel * (h - 24);
+                if (i === 0) wCtx.moveTo(x, y);
+                else wCtx.lineTo(x, y);
+            }
+            wCtx.stroke();
+
+            const playX = (cycleTime / 8.0) * w;
+            wCtx.strokeStyle = '#ef4444';
+            wCtx.lineWidth = 2;
+            wCtx.beginPath();
+            wCtx.moveTo(playX, 0);
+            wCtx.lineTo(playX, h);
+            wCtx.stroke();
+
+            wCtx.fillStyle = '#ef4444';
+            wCtx.font = '10px "JetBrains Mono", monospace';
+            wCtx.fillText(`t = ${cycleTime.toFixed(1)}s`, Math.min(w - 55, playX + 5), 12);
+        }
+
+        function updateSidebarTelemetry(prog, conf, cog, pose) {
+            const isOccluded = conf < 0.50;
+            const badge = document.getElementById('ekfGateBadge');
+            const statusDot = document.getElementById('statusDot');
+
+            if (isOccluded) {
+                badge.textContent = 'MOMENTUM PROJECTION';
+                badge.className = 'font-mono text-[11px] px-2.5 py-1 rounded font-semibold bg-crimson-600/20 text-crimson-500 border border-crimson-500/40 animate-pulse';
+                statusDot.className = 'w-2.5 h-2.5 rounded-full bg-crimson-500 animate-ping';
+            } else {
+                badge.textContent = 'MEASUREMENT UPDATE';
+                badge.className = 'font-mono text-[11px] px-2.5 py-1 rounded font-semibold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30';
+                statusDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
+            }
+
+            let phaseText = '[0.0s–3.0s] STATIC CALIBRATION (YOI)';
+            if (cycleTime >= 3.0 && cycleTime < 4.0) phaseText = '[3.0s–4.0s] BALLISTIC INITIATION (>8m/s)';
+            else if (cycleTime >= 4.0 && cycleTime < 5.0) phaseText = '[4.0s–5.0s] PEAK KIME & ISOMETRIC HOLD';
+            else if (cycleTime >= 5.0) phaseText = '[5.0s–8.0s] CONTROLLED RECOVERY';
+            document.getElementById('valPhaseName').textContent = phaseText;
+
+            document.getElementById('valConf').textContent = `${conf.toFixed(2)} (${isOccluded ? '< T_thresh 0.50' : '≥ T_thresh 0.50'})`;
+            document.getElementById('valConf').className = isOccluded ? 'font-semibold text-crimson-500' : 'font-semibold text-emerald-500';
+            document.getElementById('barConf').style.width = `${(conf * 100).toFixed(0)}%`;
+            document.getElementById('barConf').className = isOccluded ? 'h-full bg-crimson-500 rounded-full transition-all duration-75' : 'h-full bg-emerald-500 rounded-full transition-all duration-75';
+
+            const rMult = Math.exp(5.0 * (1.0 - conf));
+            document.getElementById('valRScale').textContent = `${rMult.toFixed(2)}× σ₀²`;
+            document.getElementById('barRScale').style.width = `${Math.min(100, (rMult / 35) * 100).toFixed(0)}%`;
+
+            const rawJ = (1.8 + (1.0 - conf) * 14.5).toFixed(2);
+            const ekfE = (1.15 + (1.0 - conf) * 0.85).toFixed(2);
+            document.getElementById('valRawJitter').textContent = `${rawJ} cm`;
+            document.getElementById('valEkfError').textContent = `${ekfE} cm`;
+
+            const cogXm = ((cog.x - 0.30) * 2.2).toFixed(2);
+            const cogYm = ((1.0 - cog.y) * 1.85).toFixed(2);
+            document.getElementById('valCoG').textContent = `(${cogXm}m, ${cogYm}m)`;
+
+            const dStance = (Math.abs(pose.lAnkle.x - pose.rAnkle.x) * 2.4).toFixed(2);
+            document.getElementById('valStanceDepth').textContent = `${dStance} m (S_px Calibrated)`;
+        }
+
+        function animateLoop() {
+            if (isPlaying) {
+                cycleTime += 0.022;
+                if (cycleTime > 8.0) cycleTime = 0.0;
+                drawPoseFrame();
+            }
+            requestAnimationFrame(animateLoop);
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            document.getElementById('themeLabel').textContent = isDark ? 'Theme: Obsidian' : 'Theme: Washi Paper';
+        }
+
+        function toggleEditableMode() {
+            isEditing = !isEditing;
+            document.querySelectorAll('.editable').forEach(el => {
+                el.setAttribute('contenteditable', isEditing ? 'true' : 'false');
+            });
+            document.getElementById('editBtnLabel').textContent = isEditing ? 'Edit Text: ON' : 'Edit Text: OFF';
+            const toast = document.getElementById('toastBanner');
+            toast.classList.remove('hidden');
+            document.getElementById('toastMessage').textContent = isEditing
+                ? 'Inline editing enabled — click any highlighted text to customize.'
+                : 'Inline editing disabled — changes locked for export.';
+            setTimeout(() => toast.classList.add('hidden'), 3500);
+        }
+
+        window.onload = function () {
+            resizeCanvases();
+            animateLoop();
+        };
+    </script>
+</body>
+</html>
